@@ -1,0 +1,12 @@
+/*!
+ * projekktor zwei V NOISREV 
+ * http://www.projekktor.com
+ * Copyright 2010 - 2013 by Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
+ * under GNU General Public License
+ * http://www.projekktor.com/license/
+ *
+ * You can use, modify and distribute the software, but do so in the spirit of Open Source.
+ * You need to leave the copyright notices intact.
+ * You need to be able to share any modifications you make to the Projekktor source (not the software Projekktor is integrated to).
+ * Give credit where credit is due, spread the word, link to us if you can.
+ */
