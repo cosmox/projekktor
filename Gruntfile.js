@@ -44,7 +44,7 @@ module.exports = function (grunt) {
           "src/models/player.NA.js",
           { flag: "playlist", src: "src/models/player.playlist.js" },
           { flag: "native", src: "src/models/player.audio.video.js" },
-          { flag: "flash", src: "src/models/player.video.flash.js", alt: "src/models/player.jwflash.js" },
+          { flag: "flash", src: "src/models/player.audio.video.flash.js", alt: "src/models/player.video.jwflash.js" },
           { flag: "youtube", src: "src/models/player.youtube.js" },
           { flag: "html", src: "src/models/player.image.html.js" },
           { flag: "plugins/display", src: "src/plugins/projekktor.display.js" },
