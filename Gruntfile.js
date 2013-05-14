@@ -35,7 +35,6 @@ module.exports = function (grunt) {
       all: {
         dest: "dist/projekktor.js",
         src: [
-          { flag: "jquery", src: "src/jquery/jquery.min.js" },
           "src/controller/projekktor.js",
           "src/controller/projekktor.config.js",
           "src/controller/projekktor.utils.js",
@@ -45,8 +44,8 @@ module.exports = function (grunt) {
           { flag: "playlist", src: "src/models/player.playlist.js" },
           { flag: "native", src: "src/models/player.audio.video.js" },
           { flag: "flash", src: "src/models/player.audio.video.flash.js", alt: "src/models/player.video.jwflash.js" },
-          { flag: "youtube", src: "src/models/player.youtube.js" },
-          { flag: "html", src: "src/models/player.image.html.js" },
+          // { flag: "youtube", src: "src/models/player.youtube.js" },
+          // { flag: "html", src: "src/models/player.image.html.js" },
           { flag: "plugins/display", src: "src/plugins/projekktor.display.js" },
           { flag: "plugins/controlbar", src: "src/plugins/projekktor.controlbar.js" }
         ]
@@ -330,8 +329,11 @@ module.exports = function (grunt) {
 
       // Ensure files use only \n for line endings, not \r\n
       if (/\x0d\x0a/.test(text)) {
-        grunt.log.writeln(filename + ": Incorrect line endings (\\r\\n)");
-        nonascii = true;
+        var index = /\x0d\x0a/.exec(text).index;
+        var subText = text.substring(0, index);
+        var lines = subText.split(/\n/);
+        grunt.log.writeln(filename + ": [" + lines.length + "] Incorrect line endings (\\r\\n)");
+        // nonascii = true;
       }
 
       // Ensure only ASCII chars so script tags don't need a charset attribute
@@ -412,7 +414,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-uglify");
 
   // Default grunt
-  grunt.registerTask("default", ["update_submodules", "build:*:*", "jshint", "pre-uglify", "uglify", "dist:*", "compare_size"]);
+  grunt.registerTask("default", ["update_submodules", "build:*:*", "pre-uglify", "uglify", "dist:*", "compare_size"]);
 
   // Short list as a high frequency watch task
   grunt.registerTask("dev", ["selector", "build:*:*", "jshint"]);
