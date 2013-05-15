@@ -1461,10 +1461,11 @@ jQuery(function ($) {
 
                     $.each($p._compTableCache[st] || [], function (key, val) {
                         if (plt != null) {
-                            if (key == plt) {
-                                checkIn = $.merge(checkIn, this);
+                            if (key != plt) {
+                                return true;
                             }
                         }
+                        checkIn = $.merge(checkIn, this);
                     })
                 })
 

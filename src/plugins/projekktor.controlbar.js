@@ -49,7 +49,19 @@ jQuery(function ($) {
             'loaded': null, // { on:['touchstart', 'click'], call:'scrubberClk'},
             'scrubber': null, // { on:['touchstart', 'click'], call:'scrubberClk'},
             'scrubbertip': null,
-            'scrubberknob': null,
+            'scrubberknob': [{
+                on: ['mouseenter'],
+                call: 'scrubberShowTooltip'
+            }, {
+                on: ['mouseout'],
+                call: 'scrubberHideTooltip'
+            }, {
+                on: ['mousemove'],
+                call: 'scrubberdragTooltip'
+            }, {
+                on: ['mousedown'],
+                call: 'scrubberdragStartDragListener'
+            }],
             'scrubberdrag': [{
                 on: ['mouseenter'],
                 call: 'scrubberShowTooltip'
@@ -1025,6 +1037,11 @@ jQuery(function ($) {
             if (this.getConfig('disallowSkip') == true) return;
             this._sSliderAct = true;
 
+            if (this.pp.getState('PLAYING')) {
+                var playing = true;
+                this.pp.setPause();
+            }
+
             var ref = this,
                 slider = $(this.controlElements['scrubberdrag'][0]),
                 loaded = $(this.controlElements['loaded'][0]),
@@ -1056,6 +1073,10 @@ jQuery(function ($) {
                     slider.unbind('mousemove', mouseMove);
                     slider.unbind('mouseup', mouseUp);
                     ref._sSliderAct = false;
+
+                    if (playing) {
+                        ref.pp.setPlay();
+                    }
 
                     return false;
                 },

@@ -42,12 +42,15 @@ module.exports = function (grunt) {
           "src/models/player.js",
           "src/models/player.NA.js",
           { flag: "playlist", src: "src/models/player.playlist.js" },
-          { flag: "native", src: "src/models/player.audio.video.js" },
-          { flag: "flash", src: "src/models/player.audio.video.flash.js", alt: "src/models/player.video.jwflash.js" },
-          // { flag: "youtube", src: "src/models/player.youtube.js" },
-          // { flag: "html", src: "src/models/player.image.html.js" },
-          { flag: "plugins/display", src: "src/plugins/projekktor.display.js" },
-          { flag: "plugins/controlbar", src: "src/plugins/projekktor.controlbar.js" }
+          "src/models/player.audio.video.js",
+          { flag: "jwflash", src: "src/models/player.audio.video.flash.js", alt: "src/models/player.video.jwflash.js" },
+          { flag: "youtube", src: "src/models/player.youtube.js" },
+          { flag: "html", src: "src/models/player.image.html.js" },
+          "src/plugins/projekktor.display.js",
+          "src/plugins/projekktor.controlbar.js",
+          { flag: "plugins/lgoo", src: "src/plugins/projekktor.logo.js" },
+          { flag: "plugins/title", src: "src/plugins/projekktor.postertitle.js" },
+          { flag: "plugins/share", src: "src/plugins/projekktor.share.js" }
         ]
       }
     },
@@ -333,7 +336,7 @@ module.exports = function (grunt) {
         var subText = text.substring(0, index);
         var lines = subText.split(/\n/);
         grunt.log.writeln(filename + ": [" + lines.length + "] Incorrect line endings (\\r\\n)");
-        // nonascii = true;
+        nonascii = true;
       }
 
       // Ensure only ASCII chars so script tags don't need a charset attribute
@@ -413,8 +416,21 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-contrib-uglify");
 
-  // Default grunt
-  grunt.registerTask("default", ["update_submodules", "build:*:*", "pre-uglify", "uglify", "dist:*", "compare_size"]);
+  // Default minimal -- only required plugins
+  grunt.registerTask("default", ["update_submodules", "build", "pre-uglify", "uglify", "dist:*", "compare_size"]);
+
+  // Build complete package
+  grunt.registerTask("build-complete", ["update_submodules", "build:*:*", "pre-uglify", "uglify", "dist:*", "compare_size"]);
+
+  // Minimal build
+  grunt.registerTask("build-user", [
+    "update_submodules",
+    "build:*:*:+plugins/logo:+playlist:-plugins/title:-plugins/share:-html:-youtube:-jwflash",
+    "pre-uglify",
+    "uglify",
+    "dist:*",
+    "compare_size"
+  ]);
 
   // Short list as a high frequency watch task
   grunt.registerTask("dev", ["selector", "build:*:*", "jshint"]);
