@@ -32,7 +32,7 @@ Make sure you have `grunt` installed by testing:
 grunt -version
 ```
 
-Then, to get a complete, minified (w/ Uglify.js), linted (w/ JSHint) version of Projekktor, type the following:
+Then, to get a complete, minified (w/ Uglify.js), linted (w/ JSHint - coming soon) version of Projekktor, type the following:
 
 ```bash
 grunt
