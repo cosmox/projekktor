@@ -48,10 +48,12 @@ Special builds can be created that exclude subsets of Projekktor functionality.
 See the documentation here: (http://www.projekktor.com/docs/build)
 
 - **playlist**: Playlist functionality.
-- **native**: Native audio / video support.
 - **jwflash**: Default uses Flash audio / video support featuring Jarisplayer, use this flag for JWPlayer instead.
 - **youtube**: Youtube API support.
 - **html**:  Displays images and HTML pages as regular content.
+- **plugin/logo**:  Include the logo plugin
+- **plugin/title**: Include the title plugin
+- **plugin/share**: Include the share plugin
 
 To create a custom build of the latest stable version, first check out the version:
 
