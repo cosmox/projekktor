@@ -48,9 +48,13 @@ module.exports = function (grunt) {
           { flag: "html", src: "src/models/player.image.html.js" },
           "src/plugins/projekktor.display.js",
           "src/plugins/projekktor.controlbar.js",
-          { flag: "plugins/lgoo", src: "src/plugins/projekktor.logo.js" },
-          { flag: "plugins/title", src: "src/plugins/projekktor.postertitle.js" },
-          { flag: "plugins/share", src: "src/plugins/projekktor.share.js" }
+          { user:true, flag: "plugins/ima", src: "plugins/projekktor.ima.js" },
+          { user:true, flag: "plugins/logo", src: "plugins/projekktor.logo.js" },
+          { user:true, flag: "plugins/postertitle", src: "plugins/projekktor.postertitle.js" },
+          { user:true, flag: "plugins/share", src: "plugins/projekktor.share.js" },
+          { user:true, flag: "plugins/tacking", src: "plugins/projekktor.tracking.js" },
+          { user:true, flag: "plugins/tracks", src: "plugins/projekktor.tracks.js" },
+          { user:true, flag: "plugins/audioslideshow", src: "plugins/projekktor.audioslideshow.js" }
         ]
       }
     },
@@ -158,7 +162,6 @@ module.exports = function (grunt) {
     "Concatenate source (include/exclude modules with +/- flags), embed date/version",
 
   function () {
-
     // Concat specified files.
     var compiled = "",
       modules = this.flags,
@@ -208,14 +211,24 @@ module.exports = function (grunt) {
     // examples:
     //  *                  none (implicit exclude)
     //  *:*                all (implicit include)
-    //  *:*:-css           all except css and dependents (explicit > implicit)
-    //  *:*:-css:+effects  same (excludes effects because explicit include is trumped by explicit exclude of dependency)
-    //  *:+effects         none except effects and its dependencies (explicit include trumps implicit exclude of dependency)
-    src.forEach(function (filepath) {
+    //  *:*:-html           all except css and dependents (explicit > implicit)
+    //  *:*:-html:+youtube  same (excludes effects because explicit include is trumped by explicit exclude of dependency)
+    //  *:+youtube         none except effects and its dependencies (explicit include trumps implicit exclude of dependency)
+    src.forEach(function (filepath, index) {
+      // check for user plugins
+      var user = filepath.user;
+      if (user && filepath.src) {
+        console.log('checking', filepath.src);
+        if (!grunt.file.exists(filepath.src)) {
+          console.log('removing', index, filepath);
+          delete src[index];
+          return;
+        }
+      }
+
       var flag = filepath.flag;
 
       if (flag) {
-
         excluder(flag);
 
         // check for dependencies
@@ -431,6 +444,8 @@ module.exports = function (grunt) {
     "dist:*",
     "compare_size"
   ]);
+
+  grunt.registerTask("nada", "compare_size");
 
   // Short list as a high frequency watch task
   grunt.registerTask("dev", ["selector", "build:*:*", "jshint"]);

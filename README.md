@@ -55,6 +55,15 @@ See the documentation here: (http://www.projekktor.com/docs/build)
 - **plugin/title**: Include the title plugin
 - **plugin/share**: Include the share plugin
 
+## User plugins (download from (http://shop.projekktorxl.com/)) and place in the "plugins" directory
+- **plugins/ima**:  VAST IMA ads.
+- **plugins/logo**:  Display a logo watermark.
+- **plugins/share**:  Sharing overlay options.
+- **plugins/tracking**:  Tracking plugin.
+- **plugins/tracks**:  Synchronized captions and subtitles.
+- **plugins/postertitle**:  Display title of current idling media item.
+- **plugins/audioslideshow**:  Time-index controlled image slideshows.
+
 To create a custom build of the latest stable version, first check out the version:
 
 ```bash
