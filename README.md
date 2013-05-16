@@ -54,7 +54,11 @@ See the documentation here: (http://www.projekktor.com/docs/build)
 - **youtube**: Youtube API support.
 - **html**:  Displays images and HTML pages as regular content.
 
-User plugins (download from (http://shop.projekktorxl.com/)) and place in the "plugins" directory
+User plugins (download from (http://shop.projekktorxl.com/)) and place in a ./plugins directory:
+
+```bash
+mkdir plugins
+```
 
 - **plugins/ima**:  VAST IMA ads.
 - **plugins/logo**:  Display a logo watermark.
