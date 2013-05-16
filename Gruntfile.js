@@ -438,14 +438,12 @@ module.exports = function (grunt) {
   // Minimal build
   grunt.registerTask("build-user", [
     "update_submodules",
-    "build:*:*:+plugins/logo:+playlist:-plugins/title:-plugins/share:-html:-youtube:-jwflash",
+    "build:*:*:+plugins/logo:+playlist:-plugins/postertitle:-plugins/share:-html:-youtube:-jwflash",
     "pre-uglify",
     "uglify",
     "dist:*",
     "compare_size"
   ]);
-
-  grunt.registerTask("nada", "compare_size");
 
   // Short list as a high frequency watch task
   grunt.registerTask("dev", ["selector", "build:*:*", "jshint"]);
