@@ -51,9 +51,6 @@ See the documentation here: (http://www.projekktor.com/docs/build)
 - **jwflash**: Default uses Flash audio / video support featuring Jarisplayer, use this flag for JWPlayer instead.
 - **youtube**: Youtube API support.
 - **html**:  Displays images and HTML pages as regular content.
-- **plugin/logo**:  Include the logo plugin
-- **plugin/title**: Include the title plugin
-- **plugin/share**: Include the share plugin
 
 ## User plugins (download from (http://shop.projekktorxl.com/)) and place in the "plugins" directory
 - **plugins/ima**:  VAST IMA ads.
