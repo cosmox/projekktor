@@ -1,5 +1,4 @@
-### Projekktor
-### ==========
+## Projekktor
 
 This is a fork of the [Projekktor](http://www.projekktor.com) project.
 
