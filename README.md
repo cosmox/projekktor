@@ -87,3 +87,9 @@ Exclude all **playlist** functionality:
 ```bash
 grunt custom:-playlist
 ```
+
+Exclude all **playlist** functionality, but add **youtube** functionality:
+
+```bash
+grunt custom:-playlist,+youtube
+```
