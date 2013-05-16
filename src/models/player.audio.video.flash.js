@@ -92,7 +92,6 @@ jQuery(function ($) {
                     streamtype: (this.pp.getConfig('streamType') != 'rtmp') ? 'file' : 'rtmp',
                     server: (this.pp.getConfig('streamType') == 'rtmp') ? this.pp.getConfig('streamServer') : '',
                     autostart: "false",
-                    hardwarescaling: "true",
                     controls: 'false',
                     jsapi: 'true',
                     aspectratio: this.pp.getConfig('videoScaling')

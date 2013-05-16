@@ -263,7 +263,7 @@ jQuery(function ($) {
             showOnIdle: false,
 
             /* Default layout */
-            controlsTemplate: '<ul class="left"><li><div %{play}></div><div %{pause}></div></li><li><div %{title}></div></li></ul><ul class="right"><li><div %{fsexit}></div><div %{fsenter}></div></li><li><div %{loquality}></div><div %{hiquality}></div></li><li><div %{vmax}></div></li><li><div %{vslider}><div %{vmarker}></div><div %{vknob}></div></div></li><li><div %{mute}></div></li><li><div %{timeleft}>%{hr_elp}:%{min_elp}:%{sec_elp} | %{hr_dur}:%{min_dur}:%{sec_dur}</div></li><li><div %{next}></div></li><li><div %{prev}></div></li></ul><ul class="bottom"><li><div %{scrubber}><div %{loaded}></div><div %{playhead}></div><div %{scrubberdrag}></div></div></li></ul>'
+            controlsTemplate: '<ul class="left"><li><div %{play}></div><div %{pause}></div></li></ul><ul class="right"><li><div %{fsexit}></div><div %{fsenter}></div></li><li><div %{loquality}></div><div %{hiquality}></div></li><li><div %{vmax}></div></li><li><div %{vslider}><div %{vmarker}></div><div %{vknob}></div></div></li><li><div %{mute}></div></li><li><div %{timeleft}>%{hr_elp}:%{min_elp}:%{sec_elp} | %{hr_dur}:%{min_dur}:%{sec_dur}</div></li><li><div %{next}></div></li><li><div %{prev}></div></li></ul><ul class="bottom"><li><div %{scrubber}><div %{loaded}></div><div %{playhead}></div><div %{scrubberdrag}></div></div></li></ul>'
         },
 
         initialize: function () {
@@ -646,44 +646,42 @@ jQuery(function ($) {
 
             if (this.pp.getHasGUI()) return;
 
-            try {
-                var percent = (pct != undefined) ? pct : this.pp.getLoadPlaybackProgress(),
-                    duration = (dur != undefined) ? dur : this.pp.getDuration(),
-                    position = (pos != undefined) ? pos : this.pp.getPosition();
-            } catch (e) {
-                var percent = pct || 0,
-                    duration = dur || 0,
-                    position = pos || 0;
-            }
+            var percent = Math.round((pct || this.pp.getLoadPlaybackProgress() || 0) * 10) / 10,
+                duration = dur || this.pp.getDuration() || 0,
+                position = pos || this.pp.getPosition() || 0,
+                times = $.extend({}, this._clockDigits(duration, 'dur'), this._clockDigits(position, 'elp'), this._clockDigits(duration - position, 'rem'));
 
-            // update scrubber:
-            this.controlElements['playhead'].data('pct', percent).css({
-                width: percent + "%"
-            });
-            this.controlElements['scrubberknob'].css({
-                left: percent + "%"
-            });
+            // limit updates
+            if (this.controlElements['playhead'].data('pct') != percent) {
 
-            // update knob
-            // if (!this._sSliderAct)
-            //    this.controlElements['sknob'].css("left", percent+"%");
+                // update scrubber:
+                this.controlElements['playhead'].data('pct', percent).css({
+                    width: percent + "%"
+                });
+                this.controlElements['scrubberknob'].css({
+                    left: percent + "%"
+                });
 
-            // update numeric displays
-            var times = $.extend({}, this._clockDigits(duration, 'dur'), this._clockDigits(position, 'elp'), this._clockDigits(duration - position, 'rem'));
+                // update numeric displays
+                for (var key in this.controlElements) {
+                    if (key == 'cb') break;
 
-            for (var key in this.controlElements) {
-                if (key == 'cb') break;
-
-                if (times[key]) {
-                    $.each(this.controlElements[key], function () {
-                        $(this).html(times[key]);
-                    });
+                    if (times[key]) {
+                        $.each(this.controlElements[key], function () {
+                            $(this).html(times[key]);
+                        });
+                    }
                 }
             }
         },
 
         displayProgress: function () {
-            this.controlElements['loaded'].css("width", this.pp.getLoadProgress() + "%");
+            var percent = Math.round(this.pp.getLoadProgress() * 10) / 10;
+
+            // limit updates
+            if (this.controlElements['loaded'].data('pct') != percent) {
+                this.controlElements['loaded'].data('pct', percent).css("width", percent + "%");
+            };
         },
 
         displayVolume: function (volume) {

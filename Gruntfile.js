@@ -218,9 +218,7 @@ module.exports = function (grunt) {
       // check for user plugins
       var user = filepath.user;
       if (user && filepath.src) {
-        console.log('checking', filepath.src);
         if (!grunt.file.exists(filepath.src)) {
-          console.log('removing', index, filepath);
           delete src[index];
           return;
         }
@@ -438,7 +436,7 @@ module.exports = function (grunt) {
   // Minimal build
   grunt.registerTask("build-user", [
     "update_submodules",
-    "build:*:*:+plugins/logo:+playlist:-plugins/postertitle:-plugins/share:-html:-youtube:-jwflash",
+    "build:*:*:+plugins/logo:+playlist:-plugins/postertitle:-plugins/share:-html:-youtube:-jwflash:+plugins/ima",
     "pre-uglify",
     "uglify",
     "dist:*",

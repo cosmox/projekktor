@@ -1,9 +1,12 @@
-projekktor
-==========
-
-Projekktor source and build files
+### Projekktor
+### ==========
 
 This is a fork of the [Projekktor](http://www.projekktor.com) project.
+
+Tracking https://projekktorxl.svn.beanstalkapp.com/core/trunk
+
+Current revision: 242
+
 
 How to build your own Projekktor
 ----------------------------
