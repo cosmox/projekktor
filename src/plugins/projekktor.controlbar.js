@@ -1010,7 +1010,7 @@ jQuery(function ($) {
                 pageX = (evt.originalEvent.touches) ? evt.originalEvent.touches[0].pageX : evt.pageX,
                 pageY = (evt.originalEvent.touches) ? evt.originalEvent.touches[0].pageY : evt.pageY,
                 newPos = pageX - slider.offset().left - (tip.outerWidth() / 2),
-                times = this._clockDigits(newPos, 'tip');
+                times = this._clockDigits(this.pp.getDuration()/100*((pageX - slider.offset().left)*100/slider.width()), 'tip');
 
             for (var key in this.controlElements) {
                 if (key == 'cb') break;
