@@ -4,7 +4,7 @@ This is a fork of the [Projekktor](http://www.projekktor.com) project.
 
 Tracking https://projekktorxl.svn.beanstalkapp.com/core/trunk
 
-Current revision: 242
+Current revision: 246
 
 
 How to build your own Projekktor
