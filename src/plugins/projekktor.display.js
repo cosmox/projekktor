@@ -199,6 +199,10 @@ jQuery(function ($) {
             }
         },
 
+        qualityChangeHandler: function() {
+            this.hideBufferIcon();
+        },
+
         /*****************************************,
         DISPLAY: Mouse Handling
     *****************************************/

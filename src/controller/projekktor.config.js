@@ -100,15 +100,9 @@ projekktorConfig.prototype = {
     _debug: false,
 
     /* the width of the player - 0= use destNodes width */
-    _width: 0,
+    _width: null,
 
-    /* guess what.... the hight of the player - 0 = use destNodes width */
-    _height: 0,
-
-    /* if height is <=0 use this to scale the player to a minimum height
-	if minHeight is actually applied, autorescaling is enabled
-	*/
-    _minHeight: 40,
+    _ratio: false,
 
     /* if width is <=0 use this to scale the player to a minimum width
 	if minWidth is actually applied, autorescaling is enabled
@@ -117,12 +111,6 @@ projekktorConfig.prototype = {
 
     /* An array of objects featuring keycode=>function sets for keyboard-controls-customizing */
     _keys: [],
-
-    /* some shortcuts to simulate an altered platforms array */
-    _enableNativePlatform: true,
-    _enableFlashPlatform: true,
-    _enableIosPlatform: true,
-    _enableBrowserPlatform: true,
 
     /* cross domain */
     _isCrossDomain: false,

@@ -282,8 +282,8 @@ jQuery(function ($) {
         setResize: function () {
             var destContainer = this.pp.getMediaContainer();
             this.sendUpdate('scaled', {
-                realWidth: this.videoWidth || null,
-                realHeight: this.videoHeight || null,
+                realWidth: this.media.videoWidth || null,
+                realHeight: this.media.videoHeight || null,
                 displayWidth: destContainer.width(),
                 displayHeight: destContainer.height()
             });
@@ -452,6 +452,13 @@ jQuery(function ($) {
             return this.mediaElement || $('<video/>');
         },
 
+        getMediaDimensions: function() {
+            return {
+                width: this.media.videoWidth || 0,
+                height: this.media.videoHeight || 0
+            }
+        },
+
         /*******************************
          *      ELEMENT LISTENERS
          *******************************/
@@ -618,8 +625,7 @@ jQuery(function ($) {
         },
 
         seekedListener: function (obj) {
-            if (this._isPlaying) this._setState('PLAYING');
-            else this._setState('PAUSED');
+            this._setState('SEEKED');
         },
 
         volumeListener: function (obj) {
@@ -634,19 +640,17 @@ jQuery(function ($) {
 
         metaDataListener: function (obj) {
             try {
-                this.videoWidth = obj.videoWidth;
-                this.videoHeight = obj.videoHeight;
+                this.media.videoWidth = obj.videoWidth;
+                this.media.videoHeight = obj.videoHeight;
             } catch (e) {};
             this._scaleVideo();
         },
 
         setTestcard: function (code, txt) {
 
-            var destContainer = this.pp.getMediaContainer(),
+            var destContainer = this.pp.getMediaContainer().html('').css({width:'100%',height:'100%'}),
                 messages = this.pp.getConfig('messages'),
-                msgTxt = (messages[code] != undefined) ? messages[code] : messages[0];
-
-            msgTxt = (txt != undefined && txt != '') ? txt : msgTxt;
+                msgTxt = (txt!=undefined && txt!='') ? txt : (messages[code]!=undefined) ? messages[code] : messages[0];
 
             if (this.pp.getConfig('skipTestcard') && this.pp.getItemCount() > 1) {
                 this._setState('completed');
@@ -668,19 +672,11 @@ jQuery(function ($) {
                 title: this.pp.getConfig('title')
             }));
 
-            destContainer.html('')
-                .css({
-                width: '100%',
-                height: '100%'
-            });
-
             this.mediaElement = $('<div\>')
                 .addClass(this.pp.getNS() + 'testcard')
                 .attr('id', this.pp.getId() + '_testcard_media')
                 .html('<p>' + msgTxt + '</p>')
                 .appendTo(destContainer);
-
-            $p.utils.blockSelection(this.mediaElement);
 
             this._setState('error');
         },
@@ -857,8 +853,8 @@ jQuery(function ($) {
             try {
                 var wid = destContainer.width(),
                     hei = destContainer.height(),
-                    tw = this.videoWidth,
-                    th = this.videoHeight;
+                    tw = this.media.videoWidth,
+                    th = this.media.videoHeight;
 
                 if ($p.utils.stretch(this.pp.getConfig('videoScaling'), this.mediaElement, wid, hei, tw, th)) {
                     this.sendUpdate('scaled', {

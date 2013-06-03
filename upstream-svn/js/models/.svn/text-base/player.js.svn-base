@@ -276,8 +276,8 @@ playerModel.prototype = {
     setResize: function() {
         var destContainer = this.pp.getMediaContainer();
         this.sendUpdate('scaled', {
-            realWidth: this.videoWidth || null,
-            realHeight: this.videoHeight || null,
+            realWidth: this.media.videoWidth || null,
+            realHeight: this.media.videoHeight || null,
             displayWidth: destContainer.width(),
             displayHeight: destContainer.height()
         });
@@ -449,6 +449,12 @@ playerModel.prototype = {
 	return this.mediaElement || $('<video/>');
     },
     
+    getMediaDimensions: function() {
+        return {
+            width: this.media.videoWidth || 0,
+            height: this.media.videoHeight || 0
+        }    
+    },
     
     
     /*******************************
@@ -618,10 +624,7 @@ playerModel.prototype = {
     },
     
     seekedListener: function(obj) {
-        if (this._isPlaying)
-            this._setState('PLAYING');
-        else
-            this._setState('PAUSED');
+        this._setState('SEEKED');
     },
         
 
@@ -637,8 +640,8 @@ playerModel.prototype = {
     
     metaDataListener: function(obj) {
 	try {
-	    this.videoWidth = obj.videoWidth;
-	    this.videoHeight = obj.videoHeight;	
+	    this.media.videoWidth = obj.videoWidth;
+	    this.media.videoHeight = obj.videoHeight;	
 	} catch(e) {};
 	this._scaleVideo();
     },
@@ -646,11 +649,9 @@ playerModel.prototype = {
 
     setTestcard: function(code, txt) {
 	
-        var destContainer = this.pp.getMediaContainer(),
+        var destContainer = this.pp.getMediaContainer().html('').css({width:'100%',height:'100%'}),
 	    messages  = this.pp.getConfig('messages'),
-	    msgTxt = (messages[code]!=undefined) ? messages[code] : messages[0];
-	    
-	msgTxt = (txt!=undefined && txt!='') ? txt : msgTxt;
+	    msgTxt = (txt!=undefined && txt!='') ? txt : (messages[code]!=undefined) ? messages[code] : messages[0];
 	
         if (this.pp.getConfig('skipTestcard') && this.pp.getItemCount() > 1) {
             this._setState('completed');            
@@ -661,9 +662,11 @@ playerModel.prototype = {
 	    // "press next to continue"
             msgTxt += ' ' + messages[99];
         }        
+
 	if (msgTxt.length<3) {
 	    msgTxt = 'ERROR';
 	}
+
 	if (code==100) {
 	    msgTxt = txt;
 	}
@@ -672,18 +675,12 @@ playerModel.prototype = {
 	    {},this.media,{title: this.pp.getConfig('title')})
 	);
 	
-        destContainer
-	    .html('')
-	    .css({width:'100%',height:'100%'});
-	   
 	this.mediaElement  = $('<div\>')
 	    .addClass(this.pp.getNS()+'testcard')
 	    .attr('id', this.pp.getId()+'_testcard_media')
             .html('<p>'+msgTxt+'</p>')
 	    .appendTo(destContainer);
             
-        $p.utils.blockSelection(this.mediaElement);
-	        
 	this._setState('error'); 	
     },
 
@@ -721,6 +718,7 @@ playerModel.prototype = {
         imageObj.attr('src', url);
 
 	var onReFull = function(imgObj, destObj) {
+        
 	    if (destObj.is(':visible')===false) {
 		ref.pp.removeListener('fullscreen', arguments.callee);
 	    }
@@ -851,9 +849,9 @@ playerModel.prototype = {
 	try {	    
 	    var wid = destContainer.width(),
 		hei = destContainer.height(),	
-		tw = this.videoWidth,
-	    	th = this.videoHeight;
-		
+		tw = this.media.videoWidth,
+	    	th = this.media.videoHeight;
+	
 	    if ($p.utils.stretch(this.pp.getConfig('videoScaling'), this.mediaElement, wid, hei, tw, th)) {
 		this.sendUpdate('scaled', {
 		    realWidth: tw,
@@ -873,4 +871,3 @@ playerModel.prototype = {
 
 };
 });
-

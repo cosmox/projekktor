@@ -2,6 +2,47 @@ PROJEKKTOR - simply mighty <video>
 http://www.projekktor.com
 
 
+V1.2.30
+=======
+
+ fixes:
+ * [core] fullscreen issues in case dimensions are set via config options
+
+
+V1.2.29
+=======
+
+ fixes:
+ * [core] .getConfig() now returns proper plugin cfg data
+
+
+V1.2.28
+=======
+
+ additions:
+ * [core] config option "ratio" - "16/9" by default
+ * [core] .setSize() now automatically sets "height" by "ratio"
+
+ fixes:
+ * [core] .getMediaDimensions() now returns proper data
+ * [core] general liquid layout fixes
+ 
+ changes:
+ * [core] config option "_minWidth" depreciated
+ * [core] config option "_minHeight" depreciated
+ * [core] .setResize() depreciated
+ 
+
+V1.2.27
+=======
+
+ fixes:
+ * [core] "pause" event not longer triggered on start of media while on flash fallback
+ * [core] "seeked" and "seeking" event are now properly triggered. 
+ * [flash component] stripped useless code, several performance relevant fixes.
+
+
+
 V1.2.26
 =======
 

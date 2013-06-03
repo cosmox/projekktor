@@ -198,6 +198,10 @@ projekktorDisplay.prototype = {
             this.display.height( (100 - pctCtrl) + "%").data('sc', true);
         }
     },
+    
+    qualityChangeHandler: function() {
+        this.hideBufferIcon();
+    },
 
     /*****************************************,
         DISPLAY: Mouse Handling

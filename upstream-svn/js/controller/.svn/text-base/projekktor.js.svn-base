@@ -3,7 +3,7 @@
  * projekktor zwei
  * http://www.projekktor.com
  *
- * Copyright 2010, 2011, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
+ * Copyright 2010-2013, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.projekktor.com/license/
  * ,------------------------------------------,      .    _  .
@@ -22,19 +22,16 @@
  *                                                (____(____)
  */
 jQuery(function($) {
+var projekktors = [];
+
 // apply IE8 html5 fix - thanx to Remy Sharp - http://remysharp.com/2009/01/07/html5-enabling-script/
 if (!!document.createElement('video').canPlayType) {
-
     (function(){
 	if(!/*@cc_on!@*/0) return;
 	var e = "audio,video,track,source".split(',');
 	for(var i=0;i<e.length;i++){document.createElement(e[i])}}
     )();
 }
-
-// container for player instances
-var projekktors = [];
-
 
 // this object is returned when multiple player's are requested
 function Iterator(arr) {
@@ -112,7 +109,7 @@ projekktor = $p = function() {
 
     function PPlayer(srcNode, cfg, onReady) {
 
-	this.config = new projekktorConfig('1.2.26');
+	this.config = new projekktorConfig('1.2.30');
 
 	this.env = {
 	    muted: false,
@@ -121,12 +118,10 @@ projekktor = $p = function() {
 	    agent: 'standard',
 	    mouseIsOver: false,
 	    loading: false,  // important
-	    autoSize: false,
 	    className: '',
 	    onReady: onReady
 
 	};
-
 
 	this.media = [];
 	this._plugins = [];
@@ -458,17 +453,13 @@ projekktor = $p = function() {
                     this.getDC().attr("class", classes.join(" "));
                                         
 		    switch (value) {
-			case 'IDLE':
-			    break;
+
 			case 'AWAKENING':
 			    var modelRef = this.playerModel;
 			    this._syncPlugins(function() {
 				if (modelRef.getState('AWAKENING'))
 				    modelRef.displayItem(true);
 			    });
-			    break;
-			case 'BUFFERING':
-			case 'PLAYING':
 			    break;
 
 			case 'ERROR':
@@ -489,19 +480,13 @@ projekktor = $p = function() {
 			case 'COMPLETED':                           
 			    // all items in PL completed:
 			    if (this._currentItem+1>=this.media.length && !this.getConfig('loop')) {
-				this.setFullscreen(false);
+				this.setFullscreen(false);            
 				this._promote('done', {});
 			    }
 			    // next one, pls:
 			    this.setActiveItem('next');
 			    break;
 		    }
-		    break;
-
-		case 'buffer':
-		    this._promote('buffer', value);
-		    // update time and progress
-		    // this._promote('time');
 		    break;
 
 		case 'modelReady':
@@ -540,13 +525,6 @@ projekktor = $p = function() {
                     break;
                 */
                 
-		case 'FFreinit':
-		    break;
-
-		case 'seek':
-		    this._promote('seek', value);
-		    break;
-
 		case 'volume':
 		    this.setConfig({volume: value});
 		    this._promote('volume', value);
@@ -567,20 +545,6 @@ projekktor = $p = function() {
 		case 'config':
 		    this.setConfig(value);
 		    break;
-
-		case 'scaled':
-		    // experimental
-		    if (this.env.autoSize===true) {                       
-			this.env.playerDom.css({
-			    height: value.realHeight+"px",
-			    width: value.realWidth+"px"
-			});
-			this._promote('resize', value);
-			this.env.autoSize = false;
-			break;
-		    }
-		    this._promote('scaled', value);
-		    break;
             
                 case 'time':
                     // track quartiles
@@ -596,13 +560,6 @@ projekktor = $p = function() {
                         if (evt!=false) this._promote(evt, value);
                         this._maxElapsed = (this.getDuration() * pct / 100);
                     }
-/*
-		case 'time':
-		case 'resume':
-		case 'progress':
-		case 'fullscreen':
-		case 'resize':
-*/
 
 		default:                    
 		    this._promote(type, value);
@@ -661,7 +618,7 @@ projekktor = $p = function() {
 		// .bind('touchstart', function(){ref._MD})
 		
 	    $(window)
-		.bind('resize.projekktor'+this.getId(), function() {ref.playerModel.applyCommand('resize');})
+		.bind('resize.projekktor'+this.getId(), function() {ref.setSize();})
 		.bind('touchstart', function(){ref._windowTouchListener(event);});
 
 	    // keyboard interface get rid of this moz.warning
@@ -707,6 +664,10 @@ projekktor = $p = function() {
 		pluginObj.pp = this;
 		pluginObj.playerDom = this.env.playerDom;
 		pluginObj._init( this.config['plugin_'+plugins[i].toLowerCase()] || {} );
+
+                if (this.config['plugin_'+pluginObj.name]==null)
+                    this.config['plugin_'+pluginObj.name] = {};
+                this.config['plugin_'+pluginObj.name] = $.extend(true, {}, pluginObj.config || {});
                 
                 for (var propName in pluginObj) {
                     if (propName.indexOf('Handler')>1) {
@@ -830,7 +791,12 @@ projekktor = $p = function() {
                 case 'mousedown':
                     if (this.env.mouseIsOver==false)
                         break;
-
+            
+                    // make sure we don´t mess with input-overlays here:
+                    if ( "|TEXTAREA|INPUT".indexOf('|' + evt.target.tagName.toUpperCase()) > -1){		
+                        return;
+                    }
+                    
                     // prevent context-menu
                     if (evt.which==3) {
                         if ($(evt.target).hasClass('context')) break;
@@ -1048,7 +1014,7 @@ projekktor = $p = function() {
 	this.getConfig = function(name, itemIdx) {
 	    var idx = itemIdx || this._currentItem,
 		result = this.config['_'+name] || this.config[name];
-            
+           
 	    // get value from item-specific config (beats them all)
 	    if (this.config['_'+name]==undefined) {
 		
@@ -1062,7 +1028,7 @@ projekktor = $p = function() {
 	    if (name.indexOf('plugin_')>-1) {
 		try {
 		    if (this.media[idx]['config'][name]) {
-			result = $.extend(true, {}, this.config[name], this.media[idx]['config'][name]);			
+			result = $.extend(true, {}, this.config[name], this.media[idx]['config'][name]);
 		    }
 		} catch(e){}
 	    }
@@ -1323,7 +1289,7 @@ projekktor = $p = function() {
 
         /* kept for historical reasons */
 	this.getCanPlayNatively = function(type) {
-	    return this._canPlay(type, 'NATIVE');
+	    return this._canPlay(type, 'native');
 	}
 
 	this._canPlay = function(type, platform, streamType) {
@@ -1528,8 +1494,9 @@ projekktor = $p = function() {
 
 		    // $(target).unbind(this.prefix + "fullscreenchange.projekktor");
 		    // seems to cause errors in FF		   
-
-		    if (this.prefix == '')
+                    if (target.exitFullScreen)
+                        target.exitFullScreen();
+		    else if (this.prefix == '')
 			target.cancelFullScreen();
 		    else
 			target[this.prefix + 'CancelFullScreen']();
@@ -1575,11 +1542,11 @@ projekktor = $p = function() {
 	};
 
 	this.getPlayerDimensions = function() {
-	    return {width: this.config._width, height: this.config._height};
+	    return {width: this.getDC().width(), height: this.getDC().height()};
 	};
 
 	this.getMediaDimensions = function() {
-	    return {width: this.config._width, height: this.config._height};
+	    return this.playerModel.getMediaDimensions() || {width:0, height:0};
 	};
         
         this.getAppropriateQuality = function() {
@@ -1590,7 +1557,7 @@ projekktor = $p = function() {
             
             if (quals.length==0)
                 return [];
-            
+           
 	    var wid = this.env.playerDom.width(),
 		hei = this.env.playerDom.height(),
 		ratio = $p.utils.roundNumber(wid/hei,2),		
@@ -2063,43 +2030,41 @@ projekktor = $p = function() {
             return this;
         };
 
-	this.setResize = function() {
-	    this._modelUpdateListener('resize');
-	    return this;
-	};
-
 	this.setSize = function(data) {
+        
+        if (this.getInFullscreen())
+            return;
+        
 
-            var w = data.width || this.config._width,
-                h = data.height || this.config._height;
-
-            if (w.indexOf('px')==-1 && w.indexOf('%')==-1)
-                 data.width += "px";
-
-            if (h.indexOf('px')==-1 && h.indexOf('%')==-1)
-                 data.height += "px";
-
-	    this.getDC().css({
-		width: data.width,
-		height: data.height
-	    });
-
+        var w = (data && data.width!=null) ? data.width : 
+                (this.getConfig('width')!=null) ? this.getConfig('width') : false,
                 
-	    this.config._width = this.getDC().width();
-	    this.config._height = this.getDC().height();
-          
-	    this._modelUpdateListener('resize');
-	}
+            h = (data && data.height!=null) ? data.height :
+                (this.getConfig('height')==null && this.getConfig('ratio')) ? Math.round( (w || this.getDC().width()) / this.getConfig('ratio')) :
+                (this.getConfig('height')!=null) ? this.getConfig('height') : false;
+
+        if (this.getConfig('iframe')) {
+            w = $(window).width();
+            h = $(window).height()
+        }
+
+        // apply width
+        if (w) this.getDC().css({width:  w + "px" });
+        if (h) this.getDC().css({height: h + "px" });
+
+        try { this.playerModel.applyCommand('resize'); } catch(e) {}
+  
+	};
 
 	this.setLoop = function(value) {
 	    this.config._loop = value || !this.config._loop;
-	}
+	};
 
 	this.setDebug = function(value) {
             $p.utils.logging = value || !$p.utils.logging;
             if ($p.utils.logging)
                 $p.utils.log('DEBUG MODE for player #' + this.getId());
-	}
+	};
 
 	this.addListener = function(evt, callback) {
 	    var ref=this;
@@ -2296,6 +2261,7 @@ projekktor = $p = function() {
 	    this.removePlugins();
 	    this._removeGUIListeners();
 	    this.env.mediaContainer = null;
+	    this._currentItem = null;
 
 	    for (var i in this.config) {
 		cleanConfig[(i.substr(0,1)=='_') ? i.substr(1) : i] = this.config[i];
@@ -2306,7 +2272,7 @@ projekktor = $p = function() {
 	    }
 
 	    this._init(this.env.playerDom, cleanConfig);
-            
+
 	    return this;
 	},
 
@@ -2560,7 +2526,7 @@ projekktor = $p = function() {
 				msg.command(ref);
 			    }
 			}
-		    } catch(e) {}
+		    } catch(e) {console.log(e)}
 
 		    if (ref._queue.length==0){
 			if (ref._isReady===false ) {
@@ -2665,20 +2631,6 @@ projekktor = $p = function() {
 	    return result;
 	};
         
-	this._raiseError = function(txt) {
-	    this.env.playerDom
-		.html(txt)
-		.css({
-		    color: '#fdfdfd',
-		    backgroundColor: '#333',
-		    lineHeight: this.config.height+"px",
-		    textAlign: 'center',
-		    display: 'block'
-
-		});
-		this._promote('error');
-	};
-
 	this._readMediaTag = function(domNode) {
 	    var result = {},
 		htmlTag='',
@@ -2698,8 +2650,8 @@ projekktor = $p = function() {
 		    loop: ( (domNode.attr('autoplay')!==undefined || domNode.prop('loop')!==undefined) && domNode.prop('loop')!==false) ? true : false,
 		    title: (domNode.attr('title')!==undefined && domNode.attr('title')!==false) ? domNode.attr('title') : '',
 		    poster: (domNode.attr('poster')!==undefined && domNode.attr('poster')!==false) ? domNode.attr('poster') : '',
-		    width: (domNode.attr('width')!==undefined && domNode.attr('width')!==false) ? domNode.attr('width') : false,
-		    height: (domNode.attr('height')!==undefined && domNode.attr('height')!==false) ? domNode.attr('height') : false
+		    width: (domNode.attr('width')!==undefined && domNode.attr('width')!==false) ? domNode.attr('width') : null,
+		    height: (domNode.attr('height')!==undefined && domNode.attr('height')!==false) ? domNode.attr('height') : null
 		};
 	    }
 	    
@@ -2783,41 +2735,27 @@ projekktor = $p = function() {
 	    }
 
 	    return result;
-	};
+	};        
         
-	this._applyDimensions = function() {
-	    // trim dimension config
-	    if (this.config._height!==false && this.config._width!==false) {
-
-		if (this.config._width<=this.config._minWidth && this.config._iframe!=true) {
-		    this.config._width = this.config._minWidth;
-		    this.env.autoSize = true;
-		}
-
-		if (this.config._height<=this.config._minHeight && this.config._iframe!=true) {
-		    this.config._height = this.config._minHeight;
-		    this.env.autoSize = true;
-		}
-	    }
-
+	this._raiseError = function(txt) {
 	    this.env.playerDom
+		.html(txt)
 		.css({
-		   //  'max-width': '100%'
+		    color: '#fdfdfd',
+		    backgroundColor: '#333',
+		    lineHeight: this.config.height+"px",
+		    textAlign: 'center',
+		    display: 'block'
+
 		});
-
-	    if (this.config._height!==false)
-		this.env.playerDom.css('height', this.config._height+"px")
-
-	    if (this.config._width!==false)
-	        this.env.playerDom.css('width', this.config._width+"px")
-
+		this._promote('error');
 	};
 
 	this._init = function(customNode, customCfg) {
 
 	    var theNode = customNode || srcNode,
 		theCfg = customCfg || cfg,
-		cfgBySource = this._readMediaTag(theNode);
+		cfgByTag = this._readMediaTag(theNode);
 
 	    // -----------------------------------------------------------------------------
 	    // - 1. GENERAL CONFIG ---------------------------------------------------------
@@ -2829,14 +2767,11 @@ projekktor = $p = function() {
             
 	    // remember initial classes
 	    this.env.className = theNode.attr('class') || '';
-
-	    // reset playlist pointer
-	    this._currentItem = null;
 	    
             // remember ID
             this._id = theNode[0].id || $p.utils.randomId(8);            
 
-	    if (cfgBySource!==false) {
+	    if (cfgByTag!==false) {
 		// swap videotag->playercontainer
 		this.env.playerDom = $('<div/>')
 		    .attr({
@@ -2853,22 +2788,15 @@ projekktor = $p = function() {
                 } catch(e) {}
                 
                 $('<div/>').append(theNode).get(0).innerHTML='';
-                delete(theNode);
                 theNode = null;
                 
-	    }
-	    else {
-		cfgBySource = {
-		    width:  theNode.attr('width') || theNode.css('width') || theNode.width(),
-		    height: theNode.attr('height') || theNode.css('height') || theNode.height()
-		};
-		this.env.playerDom = theNode;
-	    }
+	    } else {
+                this.env.playerDom = theNode;    
+            }
 
+	    // merge configs we got so far:
+	    theCfg = $.extend(true, {}, cfgByTag, theCfg);
             
-
-	    // merge configs so far:
-	    theCfg = $.extend(true, {}, cfgBySource, theCfg)
 	    for (var i in theCfg) {
 		if (this.config['_'+i]!=null) {
 		    this.config['_'+i] = theCfg[i];
@@ -2879,6 +2807,9 @@ projekktor = $p = function() {
 	    }
 
             $p.utils.logging = this.config._debug;
+            
+            // initial DOM scaling
+            this.setSize();
             
 	    // force autoplay false on mobile devices:
 	    if  (this.getIsMobileClient()) {
@@ -2900,11 +2831,10 @@ projekktor = $p = function() {
 	    if (this.config._theme) {
 		switch(typeof this.config._theme) {
 		    case 'string':
-			// this.getFromUrl(this.parseTemplate(this.config._themeRepo, {id:this.config._theme, ver:this.config._version}), this, "_applyTheme", false, 'jsonp');
+			// later: this.getFromUrl(this.parseTemplate(this.config._themeRepo, {id:this.config._theme, ver:this.config._version}), this, "_applyTheme", false, 'jsonp');
 			break;
 		    case 'object':
 			this._applyTheme(this.config._theme)
-
 		}
 	    }
 	    else {
@@ -2912,19 +2842,13 @@ projekktor = $p = function() {
 	    }
 
 	    return this;
-
 	};
 
 
 	this._start = function(data) {
 
-	    var ref = this, files=[];
-
-
-	    // -----------------------------------------------------------------------------
-	    // - 5. FINAL STEPS ------------------------------------------------------------
-	    // -----------------------------------------------------------------------------
-	    this._applyDimensions();
+	    var ref = this,
+                files=[];
 
 	    // load and initialize plugins´
 	    this._registerPlugins();
@@ -2939,7 +2863,6 @@ projekktor = $p = function() {
 		} else {
 		    ref._enterFullViewport(true, false);
 		}
-
 	    }
 
             // cross domain
@@ -2947,7 +2870,6 @@ projekktor = $p = function() {
                 this.config._isCrossDomain = true;
             }
              
-
 	    if (typeof onReady==='function') {
 		this._enqueue(function() {onReady(ref);});
 	    }

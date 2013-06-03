@@ -946,7 +946,7 @@ jQuery(function ($) {
             $($(evt.currentTarget).attr('class').split(/\s+/)).each(function (key, value) {
                 if (value.indexOf('toggle') == -1) return;
                 ref.playerDom.find('.' + value.substring(6)).slideToggle('slow', function () {
-                    ref.pp.setResize();
+                    ref.pp.setSize();
                 });
                 ref.controlElements['open'].toggle();
                 ref.controlElements['close'].toggle()
@@ -1035,19 +1035,26 @@ jQuery(function ($) {
             if (this.getConfig('disallowSkip') == true) return;
             this._sSliderAct = true;
 
-            if (this.pp.getState('PLAYING')) {
-                var playing = true;
-                this.pp.setPause();
-            }
+            // if (this.pp.getState('PLAYING')) {
+            //     var playing = true;
+            //     this.pp.setPause();
+            // }
 
             var ref = this,
                 slider = $(this.controlElements['scrubberdrag'][0]),
                 loaded = $(this.controlElements['loaded'][0]),
+                knob = $(this.controlElements['scrubberknob'][0]),
+
                 second = 0,
                 dx = Math.abs(parseInt(slider.offset().left) - event.clientX),
 
-                applyValue = function (event) {
+                moveKnob = function (event) {
+                    knob.css({
+                        left: event.clientX
+                    });
+                },
 
+                applyValue = function (event) {
                     var newPos = Math.abs(slider.offset().left - event.clientX);
                     newPos = (newPos > slider.width()) ? slider.width() : newPos;
                     newPos = (newPos > loaded.width()) ? loaded.width() : newPos;
@@ -1059,7 +1066,6 @@ jQuery(function ($) {
                         second = newPos;
                         ref.pp.setPlayhead(second);
                     }
-
                 },
 
                 mouseUp = function (evt) {
@@ -1072,14 +1078,16 @@ jQuery(function ($) {
                     slider.unbind('mouseup', mouseUp);
                     ref._sSliderAct = false;
 
-                    if (playing) {
-                        ref.pp.setPlay();
-                    }
+                    // if (playing) {
+                    //     ref.pp.setPlay();
+                    // }
 
                     return false;
                 },
 
                 mouseMove = function (evt) {
+                    // if (knob) moveKnob(evt);
+
                     clearTimeout(ref._cTimer);
                     evt.stopPropagation();
                     evt.preventDefault();

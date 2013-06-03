@@ -786,7 +786,7 @@ projekktorControlbar.prototype = {
 	$($(evt.currentTarget).attr('class').split(/\s+/)).each(function(key, value) {
 	    if (value.indexOf('toggle')==-1) return;
 	    ref.playerDom.find('.'+value.substring(6)).slideToggle('slow', function() {
-		ref.pp.setResize();
+		ref.pp.setSize();
 	    });
 	    ref.controlElements['open'].toggle();
 	    ref.controlElements['close'].toggle()

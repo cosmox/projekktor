@@ -3,7 +3,7 @@
  * projekktor zwei
  * http://www.projekktor.com
  *
- * Copyright 2010, 2011, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
+ * Copyright 2010-2013, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.projekktor.com/license/
  * ,------------------------------------------,      .    _  .
@@ -22,6 +22,8 @@
  *                                                (____(____)
  */
 jQuery(function ($) {
+    var projekktors = [];
+
     // apply IE8 html5 fix - thanx to Remy Sharp - http://remysharp.com/2009/01/07/html5-enabling-script/
     if ( !! document.createElement('video').canPlayType) {
 
@@ -33,9 +35,6 @@ jQuery(function ($) {
             }
         })();
     }
-
-    // container for player instances
-    var projekktors = [];
 
     // this object is returned when multiple player's are requested
 
@@ -135,7 +134,7 @@ jQuery(function ($) {
 
         function PPlayer(srcNode, cfg, onReady) {
 
-            this.config = new projekktorConfig('1.2.26');
+            this.config = new projekktorConfig('1.2.30');
 
             this.env = {
                 muted: false,
@@ -144,7 +143,6 @@ jQuery(function ($) {
                 agent: 'standard',
                 mouseIsOver: false,
                 loading: false, // important
-                autoSize: false,
                 className: '',
                 onReady: onReady
 
@@ -213,10 +211,10 @@ jQuery(function ($) {
                 }
 
                 if (itemIdx == null) this._addItem(this._prepareMedia({
-                    file: '',
-                    config: {},
-                    errorCode: 97
-                }));
+                        file: '',
+                        config: {},
+                        errorCode: 97
+                    }));
 
                 this.env.loading = false;
                 this._promote('scheduled', this.getItemCount());
@@ -323,12 +321,12 @@ jQuery(function ($) {
                 // incoming file is a string only, no array
                 if (typeof data.file == 'string') {
                     data.file = [{
-                        'src': data.file
+                            'src': data.file
                     }];
                     if (typeof data.type == 'string') {
                         data.file = [{
-                            'src': data.file,
-                            'type': data.type
+                                'src': data.file,
+                                'type': data.type
                         }];
                     }
                 }
@@ -336,7 +334,7 @@ jQuery(function ($) {
                 // incoming file is ... bullshit
                 if ($.isEmptyObject(data) || data.file === false || data.file === null) {
                     data.file = [{
-                        'src': null
+                            'src': null
                     }];
                 }
 
@@ -469,86 +467,76 @@ jQuery(function ($) {
                 }
 
                 switch (type) {
-                    case 'state':
+                case 'state':
 
-                        this._promote('state', value); // IMPORTANT: STATES must be promoted first!
+                    this._promote('state', value); // IMPORTANT: STATES must be promoted first!
 
-                        var classes = $.map(this.getDC().attr("class").split(" "), function (item) {
-                            return item.indexOf(ref.getConfig('ns') + "state") === -1 ? item : "";
+                    var classes = $.map(this.getDC().attr("class").split(" "), function (item) {
+                        return item.indexOf(ref.getConfig('ns') + "state") === -1 ? item : "";
+                    });
+                    classes.push(this.getConfig('ns') + "state" + value.toLowerCase());
+                    this.getDC().attr("class", classes.join(" "));
+
+                    switch (value) {
+
+                    case 'AWAKENING':
+                        var modelRef = this.playerModel;
+                        this._syncPlugins(function () {
+                            if (modelRef.getState('AWAKENING')) modelRef.displayItem(true);
                         });
-                        classes.push(this.getConfig('ns') + "state" + value.toLowerCase());
-                        this.getDC().attr("class", classes.join(" "));
+                        break;
 
-                        switch (value) {
-                            case 'IDLE':
-                                break;
-                            case 'AWAKENING':
-                                var modelRef = this.playerModel;
-                                this._syncPlugins(function () {
-                                    if (modelRef.getState('AWAKENING')) modelRef.displayItem(true);
-                                });
-                                break;
-                            case 'BUFFERING':
-                            case 'PLAYING':
-                                break;
+                    case 'ERROR':
+                        this._addGUIListeners();
+                        this._promote('error', {});
+                        break;
 
-                            case 'ERROR':
-                                this._addGUIListeners();
-                                this._promote('error', {});
-                                break;
+                    case 'STOPPED':
+                        this._promote('stopped', {});
+                        break;
 
-                            case 'STOPPED':
-                                this._promote('stopped', {});
-                                break;
-
-                            case 'PAUSED':
-                                if (this.getConfig('disablePause') === true) {
-                                    this.playerModel.applyCommand('play', 0);
-                                }
-                                break;
-
-                            case 'COMPLETED':
-                                // all items in PL completed:
-                                if (this._currentItem + 1 >= this.media.length && !this.getConfig('loop')) {
-                                    this.setFullscreen(false);
-                                    this._promote('done', {});
-                                }
-                                // next one, pls:
-                                this.setActiveItem('next');
-                                break;
+                    case 'PAUSED':
+                        if (this.getConfig('disablePause') === true) {
+                            this.playerModel.applyCommand('play', 0);
                         }
                         break;
 
-                    case 'buffer':
-                        this._promote('buffer', value);
-                        // update time and progress
-                        // this._promote('time');
+                    case 'COMPLETED':
+                        // all items in PL completed:
+                        if (this._currentItem + 1 >= this.media.length && !this.getConfig('loop')) {
+                            this.setFullscreen(false);
+                            this._promote('done', {});
+                        }
+                        // next one, pls:
+                        this.setActiveItem('next');
                         break;
+                    }
+                    break;
 
-                    case 'modelReady':
-                        this._maxElapsed = 0;
-                        this._promote('item', ref._currentItem);
-                        break;
+                case 'modelReady':
+                    this._maxElapsed = 0;
+                    this._promote('item', ref._currentItem);
+                    break;
 
-                    case 'displayReady':
-                        this._promote('displayReady', true);
-                        var modelRef = this.playerModel;
-                        this._syncPlugins(function () {
-                            ref._promote('ready');
-                            ref._addGUIListeners();
-                            if (!modelRef.getState('IDLE')) modelRef.start();
-                        });
+                case 'displayReady':
+                    this._promote('displayReady', true);
+                    var modelRef = this.playerModel;
+                    this._syncPlugins(function () {
+                        ref._promote('ready');
+                        ref._addGUIListeners();
+                        if (!modelRef.getState('IDLE')) modelRef.start();
+                    });
 
-                        break;
+                    break;
 
-                    case 'qualityChange':
-                        this.setConfig({
-                            playbackQuality: value
-                        });
-                        this._promote('qualityChange', value);
-                        break;
+                case 'qualityChange':
+                    this.setConfig({
+                        playbackQuality: value
+                    });
+                    this._promote('qualityChange', value);
+                    break;
 
-                        /*
+                    /*
                 case 'durationChange':
                     console.log( this.getConfig('start')>0, this.playerModel.allowRandomSeek )
                     if (this.playerModel.allowRandomSeek==true) {
@@ -562,86 +550,58 @@ jQuery(function ($) {
                     break;
                 */
 
-                    case 'FFreinit':
-                        break;
+                case 'volume':
+                    this.setConfig({
+                        volume: value
+                    });
+                    this._promote('volume', value);
 
-                    case 'seek':
-                        this._promote('seek', value);
-                        break;
+                    if (value <= 0) {
+                        this.env.muted = true;
+                        this._promote('mute', value);
+                    } else if (this.env.muted == true) {
+                        this.env.muted = false;
+                        this._promote('unmute', value);
+                    }
+                    break;
 
-                    case 'volume':
-                        this.setConfig({
-                            volume: value
-                        });
-                        this._promote('volume', value);
+                case 'playlist':
+                    this.setFile(value.file, value.type);
+                    break;
 
-                        if (value <= 0) {
-                            this.env.muted = true;
-                            this._promote('mute', value);
-                        } else if (this.env.muted == true) {
-                            this.env.muted = false;
-                            this._promote('unmute', value);
+                case 'config':
+                    this.setConfig(value);
+                    break;
+
+                case 'time':
+                    // track quartiles
+                    if (this._maxElapsed < value) {
+                        var pct = Math.round(value * 100 / this.getDuration()),
+                            evt = false;
+
+                        if (pct < 25) {
+                            pct = 25;
                         }
-                        break;
-
-                    case 'playlist':
-                        this.setFile(value.file, value.type);
-                        break;
-
-                    case 'config':
-                        this.setConfig(value);
-                        break;
-
-                    case 'scaled':
-                        // experimental
-                        if (this.env.autoSize === true) {
-                            this.env.playerDom.css({
-                                height: value.realHeight + "px",
-                                width: value.realWidth + "px"
-                            });
-                            this._promote('resize', value);
-                            this.env.autoSize = false;
-                            break;
+                        if (pct > 25 && pct < 50) {
+                            evt = 'firstquartile';
+                            pct = 50;
                         }
-                        this._promote('scaled', value);
-                        break;
-
-                    case 'time':
-                        // track quartiles
-                        if (this._maxElapsed < value) {
-                            var pct = Math.round(value * 100 / this.getDuration()),
-                                evt = false;
-
-                            if (pct < 25) {
-                                pct = 25;
-                            }
-                            if (pct > 25 && pct < 50) {
-                                evt = 'firstquartile';
-                                pct = 50;
-                            }
-                            if (pct > 50 && pct < 75) {
-                                evt = 'midpoint';
-                                pct = 75;
-                            }
-                            if (pct > 75 && pct < 100) {
-                                evt = 'thirdquartile';
-                                pct = 100;
-                            }
-
-                            if (evt != false) this._promote(evt, value);
-                            this._maxElapsed = (this.getDuration() * pct / 100);
+                        if (pct > 50 && pct < 75) {
+                            evt = 'midpoint';
+                            pct = 75;
                         }
-                        /*
-		case 'time':
-		case 'resume':
-		case 'progress':
-		case 'fullscreen':
-		case 'resize':
-*/
+                        if (pct > 75 && pct < 100) {
+                            evt = 'thirdquartile';
+                            pct = 100;
+                        }
 
-                    default:
-                        this._promote(type, value);
-                        break;
+                        if (evt != false) this._promote(evt, value);
+                        this._maxElapsed = (this.getDuration() * pct / 100);
+                    }
+
+                default:
+                    this._promote(type, value);
+                    break;
                 }
 
             };
@@ -686,9 +646,9 @@ jQuery(function ($) {
                 if (this.getDC().get(0).addEventListener) this.getDC().get(0).addEventListener("mousedown", this._MD, true);
                 else
                 // IE
-                this.getDC().mousedown(function (event) {
-                    ref._playerFocusListener(event);
-                });
+                    this.getDC().mousedown(function (event) {
+                        ref._playerFocusListener(event);
+                    });
 
                 this.getDC()
                     .mousemove(function (event) {
@@ -710,7 +670,7 @@ jQuery(function ($) {
 
                 $(window)
                     .bind('resize.projekktor' + this.getId(), function () {
-                    ref.playerModel.applyCommand('resize');
+                    ref.setSize();
                 })
                     .bind('touchstart', function () {
                     ref._windowTouchListener(event);
@@ -762,6 +722,10 @@ jQuery(function ($) {
                     pluginObj.pp = this;
                     pluginObj.playerDom = this.env.playerDom;
                     pluginObj._init(this.config['plugin_' + plugins[i].toLowerCase()] || {});
+
+                    if (this.config['plugin_' + pluginObj.name] == null)
+                        this.config['plugin_' + pluginObj.name] = {};
+                    this.config['plugin_' + pluginObj.name] = $.extend(true, {}, pluginObj.config || {});
 
                     for (var propName in pluginObj) {
                         if (propName.indexOf('Handler') > 1) {
@@ -878,38 +842,43 @@ jQuery(function ($) {
                 var type = evt.type.toLowerCase();
 
                 switch (type) {
-                    case 'mousedown':
-                        if (this.env.mouseIsOver == false) break;
+                case 'mousedown':
+                    if (this.env.mouseIsOver == false) break;
 
-                        // prevent context-menu
-                        if (evt.which == 3) {
-                            if ($(evt.target).hasClass('context')) break;
-                            $(document).bind('contextmenu', function (evt) {
-                                $(document).unbind('contextmenu');
-                                return false;
-                            });
-                        }
-                        break;
+                    // make sure we don't mess with input-overlays here:
+                    if ("|TEXTAREA|INPUT".indexOf('|' + evt.target.tagName.toUpperCase()) > -1) {
+                        return;
+                    }
 
-                    case 'mousemove':
-                        if (this.env.mouseX != evt.clientX && this.env.mouseY != evt.clientY) {
-                            this.env.mouseIsOver = true;
-                        }
-                        // prevent strange chrome issues with cursor changes:
-                        if (this.env.clientX == evt.clientX && this.env.clientY == evt.clientY) return;
-                        this.env.clientX = evt.clientX;
-                        this.env.clientY = evt.clientY;
-                        break;
+                    // prevent context-menu
+                    if (evt.which == 3) {
+                        if ($(evt.target).hasClass('context')) break;
+                        $(document).bind('contextmenu', function (evt) {
+                            $(document).unbind('contextmenu');
+                            return false;
+                        });
+                    }
+                    break;
 
-                    case 'focus':
-                    case 'mouseenter':
+                case 'mousemove':
+                    if (this.env.mouseX != evt.clientX && this.env.mouseY != evt.clientY) {
                         this.env.mouseIsOver = true;
-                        break;
+                    }
+                    // prevent strange chrome issues with cursor changes:
+                    if (this.env.clientX == evt.clientX && this.env.clientY == evt.clientY) return;
+                    this.env.clientX = evt.clientX;
+                    this.env.clientY = evt.clientY;
+                    break;
 
-                    case 'blur':
-                    case 'mouseleave':
-                        this.env.mouseIsOver = false;
-                        break;
+                case 'focus':
+                case 'mouseenter':
+                    this.env.mouseIsOver = true;
+                    break;
+
+                case 'blur':
+                case 'mouseleave':
+                    this.env.mouseIsOver = false;
+                    break;
                 }
 
                 this._promote(type, evt);
@@ -927,44 +896,44 @@ jQuery(function ($) {
 
                 var ref = this,
                     set = (this.getConfig('keys').length > 0) ? this.getConfig('keys') : [{
-                        27: function (player) {
-                            player.setStop();
-                        }, // ESC
-                        32: function (player, evt) {
-                            player.setPlayPause();
-                            evt.preventDefault();
-                        },
-                        70: function (player) {
-                            player.setFullscreen();
-                        }, // f
-                        39: function (player, evt) {
-                            player.setPlayhead('+5');
-                            evt.preventDefault();
-                        },
-                        37: function (player, evt) {
-                            player.setPlayhead('-5');
-                            evt.preventDefault();
-                        },
-                        38: function (player, evt) {
-                            player.setVolume('+0.05');
-                            evt.preventDefault();
-                        },
-                        40: function (player, evt) {
-                            player.setVolume('-0.05');
-                            evt.preventDefault();
-                        },
-                        68: function (player) {
-                            player.setDebug();
-                        }, // D
-                        67: function (player) {
-                            $p.utils.log('Config Dump', player.config);
-                        }, // C
-                        80: function (player) {
-                            $p.utils.log('Schedule Dump', player.media);
-                        }, // P
-                        84: function (player) {
-                            $p.utils.log('Cuepoints Dump', player.getCuePoints());
-                        } // T
+                            27: function (player) {
+                                player.setStop();
+                            }, // ESC
+                            32: function (player, evt) {
+                                player.setPlayPause();
+                                evt.preventDefault();
+                            },
+                            70: function (player) {
+                                player.setFullscreen();
+                            }, // f
+                            39: function (player, evt) {
+                                player.setPlayhead('+5');
+                                evt.preventDefault();
+                            },
+                            37: function (player, evt) {
+                                player.setPlayhead('-5');
+                                evt.preventDefault();
+                            },
+                            38: function (player, evt) {
+                                player.setVolume('+0.05');
+                                evt.preventDefault();
+                            },
+                            40: function (player, evt) {
+                                player.setVolume('-0.05');
+                                evt.preventDefault();
+                            },
+                            68: function (player) {
+                                player.setDebug();
+                            }, // D
+                            67: function (player) {
+                                $p.utils.log('Config Dump', player.config);
+                            }, // C
+                            80: function (player) {
+                                $p.utils.log('Schedule Dump', player.media);
+                            }, // P
+                            84: function (player) {
+                                $p.utils.log('Cuepoints Dump', player.getCuePoints());
+                            } // T
                     }];
 
                 this._promote('key', evt);
@@ -1151,17 +1120,17 @@ jQuery(function ($) {
 
                 if (typeof result == 'string') {
                     switch (result) {
-                        case 'true':
-                            result = true;
-                            break;
-                        case 'false':
-                            result = false;
-                            break;
-                        case 'NaN':
-                        case 'undefined':
-                        case 'null':
-                            result = null;
-                            break;
+                    case 'true':
+                        result = true;
+                        break;
+                    case 'false':
+                        result = false;
+                        break;
+                    case 'NaN':
+                    case 'undefined':
+                    case 'null':
+                        result = null;
+                        break;
                     }
                 }
 
@@ -1225,16 +1194,16 @@ jQuery(function ($) {
                 }
                 // some shortcuts
                 switch (arguments[0] || 'current') {
-                    case 'next':
-                        return $.extend(true, [], this.media[this._currentItem + 1]);
-                    case 'prev':
-                        return $.extend(true, [], this.media[this._currentItem - 1]);
-                    case 'current':
-                        return $.extend(true, [], this.media[this._currentItem]);
-                    case '*':
-                        return $.extend(true, [], this.media);
-                    default:
-                        return $.extend(true, [], this.media[arguments[0] || this._currentItem]);
+                case 'next':
+                    return $.extend(true, [], this.media[this._currentItem + 1]);
+                case 'prev':
+                    return $.extend(true, [], this.media[this._currentItem - 1]);
+                case 'current':
+                    return $.extend(true, [], this.media[this._currentItem]);
+                case '*':
+                    return $.extend(true, [], this.media);
+                default:
+                    return $.extend(true, [], this.media[arguments[0] || this._currentItem]);
                 }
             };
 
@@ -1440,7 +1409,7 @@ jQuery(function ($) {
 
             /* kept for historical reasons */
             this.getCanPlayNatively = function (type) {
-                return this._canPlay(type, 'NATIVE');
+                return this._canPlay(type, 'native');
             }
 
             this._canPlay = function (type, platform, streamType) {
@@ -1473,18 +1442,18 @@ jQuery(function ($) {
 
                 switch (typeof type) {
 
-                    case 'undefined':
-                        return checkIn.length > 0
+                case 'undefined':
+                    return checkIn.length > 0
 
-                    case 'string':
-                        if (type == '*') return checkIn;
+                case 'string':
+                    if (type == '*') return checkIn;
 
-                        checkFor.push(type);
-                        break;
+                    checkFor.push(type);
+                    break;
 
-                    case 'array':
-                        checkFor = type;
-                        break;
+                case 'array':
+                    checkFor = type;
+                    break;
 
                 }
 
@@ -1584,14 +1553,14 @@ jQuery(function ($) {
                      * */
                     var dest = (ref.getIframe()) ? parent.window.document : document;
                     switch (this.prefix) {
-                        case '':
-                            return dest.fullScreen;
-                        case 'webkit':
-                            return dest.webkitIsFullScreen;
-                        case 'moz':
-                            return dest[this.prefix + 'FullScreen'] || (ref.getDC().hasClass('fullscreen') && esc !== true);
-                        default:
-                            return dest[this.prefix + 'FullScreen'];
+                    case '':
+                        return dest.fullScreen;
+                    case 'webkit':
+                        return dest.webkitIsFullScreen;
+                    case 'moz':
+                        return dest[this.prefix + 'FullScreen'] || (ref.getDC().hasClass('fullscreen') && esc !== true);
+                    default:
+                        return dest[this.prefix + 'FullScreen'];
                     }
 
                 }
@@ -1649,7 +1618,10 @@ jQuery(function ($) {
                         // $(target).unbind(this.prefix + "fullscreenchange.projekktor");
                         // seems to cause errors in FF
 
-                        if (this.prefix == '') target.cancelFullScreen();
+                        if (target.exitFullScreen)
+                            target.exitFullScreen();
+                        else if (this.prefix == '')
+                            target.cancelFullScreen();
                         else target[this.prefix + 'CancelFullScreen']();
                         var win = ref.getIframeWindow() || $(window),
                             fsData = win.data('fsdata');
@@ -1695,15 +1667,15 @@ jQuery(function ($) {
 
             this.getPlayerDimensions = function () {
                 return {
-                    width: this.config._width,
-                    height: this.config._height
+                    width: this.getDC().width(),
+                    height: this.getDC().height()
                 };
             };
 
             this.getMediaDimensions = function () {
-                return {
-                    width: this.config._width,
-                    height: this.config._height
+                return this.playerModel.getMediaDimensions() || {
+                    width: 0,
+                    height: 0
                 };
             };
 
@@ -1853,12 +1825,12 @@ jQuery(function ($) {
                 if (typeof mixedData == 'string') {
                     // prev/next shortcuts
                     switch (mixedData) {
-                        case 'previous':
-                            newItem = this._currentItem - 1;
-                            break;
-                        case 'next':
-                            newItem = this._currentItem + 1;
-                            break;
+                    case 'previous':
+                        newItem = this._currentItem - 1;
+                        break;
+                    case 'next':
+                        newItem = this._currentItem + 1;
+                        break;
                     }
                 } else if (typeof mixedData == 'number') {
                     // index number given
@@ -2000,26 +1972,26 @@ jQuery(function ($) {
 
                 var initalVolume = this.getVolume();
                 switch (typeof vol) {
-                    case 'string':
-                        var dir = vol.substr(0, 1);
-                        vol = parseFloat(vol.substr(1));
-                        switch (dir) {
-                            case '+':
-                                vol = this.getVolume() + vol;
-                                break;
-                            case '-':
-                                vol = this.getVolume() - vol;
-                                break;
-                            default:
-                                vol = this.getVolume();
-                        }
-                    case 'number':
-                        vol = parseFloat(vol);
-                        vol = (vol > 1) ? 1 : vol;
-                        vol = (vol < 0) ? 0 : vol;
+                case 'string':
+                    var dir = vol.substr(0, 1);
+                    vol = parseFloat(vol.substr(1));
+                    switch (dir) {
+                    case '+':
+                        vol = this.getVolume() + vol;
+                        break;
+                    case '-':
+                        vol = this.getVolume() - vol;
                         break;
                     default:
-                        return this;
+                        vol = this.getVolume();
+                    }
+                case 'number':
+                    vol = parseFloat(vol);
+                    vol = (vol > 1) ? 1 : vol;
+                    vol = (vol < 0) ? 0 : vol;
+                    break;
+                default:
+                    return this;
                 }
 
                 if (vol > initalVolume && fadeDelay) {
@@ -2187,39 +2159,43 @@ jQuery(function ($) {
                 return this;
             };
 
-            this.setResize = function () {
-                this._modelUpdateListener('resize');
-                return this;
-            };
-
             this.setSize = function (data) {
 
-                var w = data.width || this.config._width,
-                    h = data.height || this.config._height;
+                if (this.getInFullscreen())
+                    return;
 
-                if (w.indexOf('px') == -1 && w.indexOf('%') == -1) data.width += "px";
+                var w = (data && data.width != null) ? data.width :
+                    (this.getConfig('width') != null) ? this.getConfig('width') : false,
 
-                if (h.indexOf('px') == -1 && h.indexOf('%') == -1) data.height += "px";
+                    h = (data && data.height != null) ? data.height :
+                        (this.getConfig('height') == null && this.getConfig('ratio')) ? Math.round((w || this.getDC().width()) / this.getConfig('ratio')) :
+                        (this.getConfig('height') != null) ? this.getConfig('height') : false;
 
-                this.getDC().css({
-                    width: data.width,
-                    height: data.height
-                });
+                if (this.getConfig('iframe')) {
+                    w = $(window).width();
+                    h = $(window).height()
+                }
 
-                this.config._width = this.getDC().width();
-                this.config._height = this.getDC().height();
+                if (w) this.getDC().css({
+                        width: w + "px"
+                    });
+                if (h) this.getDC().css({
+                        height: h + "px"
+                    });
 
-                this._modelUpdateListener('resize');
-            }
+                try {
+                    this.playerModel.applyCommand('resize');
+                } catch (e) {}
+            };
 
             this.setLoop = function (value) {
                 this.config._loop = value || !this.config._loop;
-            }
+            };
 
             this.setDebug = function (value) {
                 $p.utils.logging = value || !$p.utils.logging;
                 if ($p.utils.logging) $p.utils.log('DEBUG MODE for player #' + this.getId());
-            }
+            };
 
             this.addListener = function (evt, callback) {
                 var ref = this;
@@ -2412,7 +2388,7 @@ jQuery(function ($) {
             this._reset = function () {
 
                 var cleanConfig = {},
-                ref = this;
+                    ref = this;
 
                 this.setFullscreen(false);
 
@@ -2426,6 +2402,7 @@ jQuery(function ($) {
                 this.removePlugins();
                 this._removeGUIListeners();
                 this.env.mediaContainer = null;
+                this._currentItem = null;
 
                 for (var i in this.config) {
                     cleanConfig[(i.substr(0, 1) == '_') ? i.substr(1) : i] = this.config[i];
@@ -2472,7 +2449,7 @@ jQuery(function ($) {
                         _stateListener: function (state, player) {
                             if ('STOPPED|COMPLETED|DESTROYING'.indexOf(state) > -1) {
                                 if (this._active) try {
-                                    this.callback(false, this, player);
+                                        this.callback(false, this, player);
                                 } catch (e) {}
                                 this._active = false;
                                 this._lastTime = -1;
@@ -2594,7 +2571,7 @@ jQuery(function ($) {
 
             this.removeCuePoints = function (idx, group) {
                 var cuePoints = this.getCuePoints(idx) || {},
-                kill = [];
+                    kill = [];
 
                 for (var cIdx = 0; cIdx < cuePoints.length; cIdx++) {
                     if (cuePoints[cIdx].group == group) {
@@ -2697,14 +2674,16 @@ jQuery(function ($) {
                             if (msg != null) {
                                 if (typeof msg.command == 'string') {
                                     if (msg.delay > 0) setTimeout(function () {
-                                        ref.playerModel.applyCommand(msg.command, msg.params);
-                                    }, msg.delay);
+                                            ref.playerModel.applyCommand(msg.command, msg.params);
+                                        }, msg.delay);
                                     else ref.playerModel.applyCommand(msg.command, msg.params);
                                 } else {
                                     msg.command(ref);
                                 }
                             }
-                        } catch (e) {}
+                        } catch (e) {
+                            console.log(e)
+                        }
 
                         if (ref._queue.length == 0) {
                             if (ref._isReady === false) {
@@ -2755,7 +2734,7 @@ jQuery(function ($) {
             this._testMediaSupport = function () {
 
                 var result = {},
-                streamType = '',
+                    streamType = '',
                     ref = this;
 
                 for (var i = 0; i < $p.mmap.length; i++) {
@@ -2805,26 +2784,14 @@ jQuery(function ($) {
                 return result;
             };
 
-            this._raiseError = function (txt) {
-                this.env.playerDom.html(txt)
-                    .css({
-                    color: '#fdfdfd',
-                    backgroundColor: '#333',
-                    lineHeight: this.config.height + "px",
-                    textAlign: 'center',
-                    display: 'block'
-
-                });
-                this._promote('error');
-            };
-
             this._readMediaTag = function (domNode) {
                 var result = {},
-                htmlTag = '',
+                    htmlTag = '',
                     attr = [],
                     ref = this;
 
-                if ("VIDEOAUDIO".indexOf(domNode[0].tagName.toUpperCase()) == -1) return false;
+                if ("VIDEOAUDIO".indexOf(domNode[0].tagName.toUpperCase()) == -1)
+                    return false;
 
                 // gather general config attributes:
                 // - Safari does not supply default-bools here:
@@ -2835,8 +2802,8 @@ jQuery(function ($) {
                         loop: ((domNode.attr('autoplay') !== undefined || domNode.prop('loop') !== undefined) && domNode.prop('loop') !== false) ? true : false,
                         title: (domNode.attr('title') !== undefined && domNode.attr('title') !== false) ? domNode.attr('title') : '',
                         poster: (domNode.attr('poster') !== undefined && domNode.attr('poster') !== false) ? domNode.attr('poster') : '',
-                        width: (domNode.attr('width') !== undefined && domNode.attr('width') !== false) ? domNode.attr('width') : false,
-                        height: (domNode.attr('height') !== undefined && domNode.attr('height') !== false) ? domNode.attr('height') : false
+                        width: (domNode.attr('width') !== undefined && domNode.attr('width') !== false) ? domNode.attr('width') : null,
+                        height: (domNode.attr('height') !== undefined && domNode.attr('height') !== false) ? domNode.attr('height') : null
                     };
                 }
 
@@ -2873,23 +2840,23 @@ jQuery(function ($) {
                         childNode = childNode.next('source,track');
                         if (childNode.attr('src')) {
                             switch (childNode.get(0).tagName.toUpperCase()) {
-                                case 'SOURCE':
-                                    result.playlist[0].push({
+                            case 'SOURCE':
+                                result.playlist[0].push({
+                                    src: childNode.attr('src'),
+                                    type: childNode.attr('type') || this._getTypeFromFileExtension(childNode.attr('src')),
+                                    quality: childNode.attr('data-quality') || ''
+                                });
+                                break;
+                            case 'TRACK':
+                                if ($(this).attr('src')) {
+                                    result.playlist[0]['config']['tracks'].push({
                                         src: childNode.attr('src'),
-                                        type: childNode.attr('type') || this._getTypeFromFileExtension(childNode.attr('src')),
-                                        quality: childNode.attr('data-quality') || ''
+                                        kind: childNode.attr('kind') || 'subtitle',
+                                        lang: childNode.attr('srclang') || null,
+                                        label: childNode.attr('label') || null
                                     });
-                                    break;
-                                case 'TRACK':
-                                    if ($(this).attr('src')) {
-                                        result.playlist[0]['config']['tracks'].push({
-                                            src: childNode.attr('src'),
-                                            kind: childNode.attr('kind') || 'subtitle',
-                                            lang: childNode.attr('srclang') || null,
-                                            label: childNode.attr('label') || null
-                                        });
-                                    }
-                                    break;
+                                }
+                                break;
                             }
                         }
                     } while (childNode.attr('src'))
@@ -2900,21 +2867,21 @@ jQuery(function ($) {
                     domNode.children('source,track').each(function () {
                         if ($(this).attr('src')) {
                             switch ($(this).get(0).tagName.toUpperCase()) {
-                                case 'SOURCE':
-                                    result.playlist[0].push({
-                                        src: $(this).attr('src'),
-                                        type: $(this).attr('type') || ref._getTypeFromFileExtension($(this).attr('src')),
-                                        quality: $(this).attr('data-quality') || ''
-                                    });
-                                    break;
-                                case 'TRACK':
-                                    result.playlist[0]['config']['tracks'].push({
-                                        src: $(this).attr('src'),
-                                        kind: $(this).attr('kind') || 'subtitle',
-                                        lang: $(this).attr('srclang') || null,
-                                        label: $(this).attr('label') || null
-                                    });
-                                    break;
+                            case 'SOURCE':
+                                result.playlist[0].push({
+                                    src: $(this).attr('src'),
+                                    type: $(this).attr('type') || ref._getTypeFromFileExtension($(this).attr('src')),
+                                    quality: $(this).attr('data-quality') || ''
+                                });
+                                break;
+                            case 'TRACK':
+                                result.playlist[0]['config']['tracks'].push({
+                                    src: $(this).attr('src'),
+                                    kind: $(this).attr('kind') || 'subtitle',
+                                    lang: $(this).attr('srclang') || null,
+                                    label: $(this).attr('label') || null
+                                });
+                                break;
                             }
                         }
                     });
@@ -2923,36 +2890,25 @@ jQuery(function ($) {
                 return result;
             };
 
-            this._applyDimensions = function () {
-                // trim dimension config
-                if (this.config._height !== false && this.config._width !== false) {
+            this._raiseError = function (txt) {
+                this.env.playerDom
+                    .html(txt)
+                    .css({
+                    color: '#fdfdfd',
+                    backgroundColor: '#333',
+                    lineHeight: this.config.height + "px",
+                    textAlign: 'center',
+                    display: 'block'
 
-                    if (this.config._width <= this.config._minWidth && this.config._iframe != true) {
-                        this.config._width = this.config._minWidth;
-                        this.env.autoSize = true;
-                    }
-
-                    if (this.config._height <= this.config._minHeight && this.config._iframe != true) {
-                        this.config._height = this.config._minHeight;
-                        this.env.autoSize = true;
-                    }
-                }
-
-                this.env.playerDom.css({
-                    //  'max-width': '100%'
                 });
-
-                if (this.config._height !== false) this.env.playerDom.css('height', this.config._height + "px")
-
-                if (this.config._width !== false) this.env.playerDom.css('width', this.config._width + "px")
-
+                this._promote('error');
             };
 
             this._init = function (customNode, customCfg) {
 
                 var theNode = customNode || srcNode,
                     theCfg = customCfg || cfg,
-                    cfgBySource = this._readMediaTag(theNode);
+                    cfgByTag = this._readMediaTag(theNode);
 
                 // -----------------------------------------------------------------------------
                 // - 1. GENERAL CONFIG ---------------------------------------------------------
@@ -2965,13 +2921,10 @@ jQuery(function ($) {
                 // remember initial classes
                 this.env.className = theNode.attr('class') || '';
 
-                // reset playlist pointer
-                this._currentItem = null;
-
                 // remember ID
                 this._id = theNode[0].id || $p.utils.randomId(8);
 
-                if (cfgBySource !== false) {
+                if (cfgByTag !== false) {
                     // swap videotag->playercontainer
                     this.env.playerDom = $('<div/>')
                         .attr({
@@ -2988,19 +2941,15 @@ jQuery(function ($) {
                     } catch (e) {}
 
                     $('<div/>').append(theNode).get(0).innerHTML = '';
-                    delete(theNode);
                     theNode = null;
 
                 } else {
-                    cfgBySource = {
-                        width: theNode.attr('width') || theNode.css('width') || theNode.width(),
-                        height: theNode.attr('height') || theNode.css('height') || theNode.height()
-                    };
                     this.env.playerDom = theNode;
                 }
 
-                // merge configs so far:
-                theCfg = $.extend(true, {}, cfgBySource, theCfg)
+                // merge configs we got so far:
+                theCfg = $.extend(true, {}, cfgByTag, theCfg);
+
                 for (var i in theCfg) {
                     if (this.config['_' + i] != null) {
                         this.config['_' + i] = theCfg[i];
@@ -3011,6 +2960,9 @@ jQuery(function ($) {
                 }
 
                 $p.utils.logging = this.config._debug;
+
+                // initial DOM scaling
+                this.setSize();
 
                 // force autoplay false on mobile devices:
                 if (this.getIsMobileClient()) {
@@ -3030,30 +2982,23 @@ jQuery(function ($) {
                 // -----------------------------------------------------------------------------
                 if (this.config._theme) {
                     switch (typeof this.config._theme) {
-                        case 'string':
-                            // this.getFromUrl(this.parseTemplate(this.config._themeRepo, {id:this.config._theme, ver:this.config._version}), this, "_applyTheme", false, 'jsonp');
-                            break;
-                        case 'object':
-                            this._applyTheme(this.config._theme)
-
+                    case 'string':
+                        // later: this.getFromUrl(this.parseTemplate(this.config._themeRepo, {id:this.config._theme, ver:this.config._version}), this, "_applyTheme", false, 'jsonp');
+                        break;
+                    case 'object':
+                        this._applyTheme(this.config._theme)
                     }
                 } else {
                     this._start(false);
                 }
 
                 return this;
-
             };
 
             this._start = function (data) {
 
                 var ref = this,
                     files = [];
-
-                // -----------------------------------------------------------------------------
-                // - 5. FINAL STEPS ------------------------------------------------------------
-                // -----------------------------------------------------------------------------
-                this._applyDimensions();
 
                 // load and initialize plugins
                 this._registerPlugins();
@@ -3067,7 +3012,6 @@ jQuery(function ($) {
                     } else {
                         ref._enterFullViewport(true, false);
                     }
-
                 }
 
                 // cross domain
@@ -3108,17 +3052,17 @@ jQuery(function ($) {
                 }
 
                 /*
-    	    // check projekktor version
-	    if (typeof data. == 'string') {
-		if (
-		    (parseInt(this.config._version.split('.')[0]) || 0) < (parseInt(data.version.split('.')[0]) || 0) ||
-		    (parseInt(this.config._version.split('.')[1]) || 0) < (parseInt(data.version.split('.')[1]) || 0)
-		){
-		    this._raiseError('You are using Projekktor V'+this.config._version+' but the applied theme requires at least V'+data.version+'.');
-		    return false;
-		}
-	    }
-	    */
+            // check projekktor version
+        if (typeof data. == 'string') {
+        if (
+            (parseInt(this.config._version.split('.')[0]) || 0) < (parseInt(data.version.split('.')[0]) || 0) ||
+            (parseInt(this.config._version.split('.')[1]) || 0) < (parseInt(data.version.split('.')[1]) || 0)
+        ){
+            this._raiseError('You are using Projekktor V'+this.config._version+' but the applied theme requires at least V'+data.version+'.');
+            return false;
+        }
+        }
+        */
 
                 // inject CSS & parse {relpath} tag (sprites)
                 if (typeof data.css == 'string') {

@@ -55,7 +55,7 @@ $p.newModel({
         };
 	
 	this.createFlash(domOptions, destContainer);
-
+console.log(this.getSource())
     },
     
     applySrc: function() {

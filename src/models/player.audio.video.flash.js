@@ -93,7 +93,6 @@ jQuery(function ($) {
                     server: (this.pp.getConfig('streamType') == 'rtmp') ? this.pp.getConfig('streamServer') : '',
                     autostart: "false",
                     controls: 'false',
-                    jsapi: 'true',
                     aspectratio: this.pp.getConfig('videoScaling')
                 }
             };

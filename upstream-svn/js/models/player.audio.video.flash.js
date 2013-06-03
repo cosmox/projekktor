@@ -64,8 +64,7 @@ $p.newModel({
 		streamtype: (this.pp.getConfig('streamType')!='rtmp') ? 'file' : 'rtmp',
 		server: (this.pp.getConfig('streamType')=='rtmp') ? this.pp.getConfig('streamServer') : '',
 		autostart: "false",
-		controls: 'false',
-		jsapi: 'true',
+		controls: 'false',		
 		aspectratio: this.pp.getConfig('videoScaling')
 	    }
         };

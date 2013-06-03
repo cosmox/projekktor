@@ -413,8 +413,8 @@ jQuery(function ($) {
         },
 
         cssTransitions: function () {
-            m = document.createElement('z');
-            s = m.style;
+            var m = document.createElement('z'),
+                s = m.style;
 
             function test_props(p) {
                 for (var i in p) {
@@ -426,9 +426,9 @@ jQuery(function ($) {
             }
 
             function test_props_all(prop) {
-                d = 'Webkit Moz O ms Khtml'.split(' ');
-                var u = prop.charAt(0).toUpperCase() + prop.substr(1);
-                e = (prop + ' ' + d.join(u + ' ') + u).split(' ');
+                var d = 'Webkit Moz O ms Khtml'.split(' '),
+                    u = prop.charAt(0).toUpperCase() + prop.substr(1),
+                    e = (prop + ' ' + d.join(u + ' ') + u).split(' ');
                 return test_props(e);
             }
             return test_props_all('animationName');
