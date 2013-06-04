@@ -2161,8 +2161,9 @@ jQuery(function ($) {
 
             this.setSize = function (data) {
 
-                if (this.getInFullscreen())
-                    return;
+                // @TODO: Why was this added? breaks fullscreen in Chrome.
+                // if (this.getInFullscreen())
+                //     return;
 
                 var w = (data && data.width != null) ? data.width :
                     (this.getConfig('width') != null) ? this.getConfig('width') : false,
