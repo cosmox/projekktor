@@ -52,7 +52,7 @@ module.exports = function (grunt) {
           { user:true, flag: "plugins/logo", src: "plugins/projekktor.logo.js" },
           { user:true, flag: "plugins/postertitle", src: "plugins/projekktor.postertitle.js" },
           { user:true, flag: "plugins/share", src: "plugins/projekktor.share.js" },
-          { user:true, flag: "plugins/tacking", src: "plugins/projekktor.tracking.js" },
+          { user:true, flag: "plugins/tracking", src: "plugins/projekktor.tracking.js" },
           { user:true, flag: "plugins/tracks", src: "plugins/projekktor.tracks.js" },
           { user:true, flag: "plugins/audioslideshow", src: "plugins/projekktor.audioslideshow.js" }
         ]
@@ -436,7 +436,7 @@ module.exports = function (grunt) {
   // Minimal build
   grunt.registerTask("build-user", [
     "update_submodules",
-    "build:*:*:+plugins/logo:+playlist:-plugins/postertitle:-plugins/share:-html:-youtube:-jwflash:+plugins/ima",
+    "build:*:*:+plugins/logo:+playlist:-plugins/postertitle:-plugins/share:-html:-youtube:-jwflash:+plugins/ima:-plugins/tracking",
     "pre-uglify",
     "uglify",
     "dist:*",
