@@ -427,16 +427,26 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-contrib-uglify");
 
-  // Default minimal -- only required plugins
-  grunt.registerTask("default", ["update_submodules", "build", "pre-uglify", "uglify", "dist:*", "compare_size"]);
+  // Default build that mirrors the Projekktor distribution
+  grunt.registerTask("default", [
+    "update_submodules",
+    "build:*:*:+playlist:+youtube:+html:-jwflash:-plugins/logo:-plugins/ima:-plugins/postertitle:-plugins/share:-plugins/tracking",
+    "pre-uglify",
+    "uglify",
+    "dist:*",
+    "compare_size"
+  ]);
 
-  // Build complete package
+  // Build minimal -- only required plugins
+  grunt.registerTask("build-minimal", ["update_submodules", "build", "pre-uglify", "uglify", "dist:*", "compare_size"]);
+
+  // Build complete -- all plugins present
   grunt.registerTask("build-complete", ["update_submodules", "build:*:*", "pre-uglify", "uglify", "dist:*", "compare_size"]);
 
   // Minimal build
   grunt.registerTask("build-user", [
     "update_submodules",
-    "build:*:*:+plugins/logo:+playlist:-plugins/postertitle:-plugins/share:-html:-youtube:-jwflash:+plugins/ima:-plugins/tracking",
+    "build:*:*:+plugins/logo:+playlist:+plugins/ima:-plugins/postertitle:-plugins/share:-html:-youtube:-jwflash:-plugins/tracking",
     "pre-uglify",
     "uglify",
     "dist:*",
