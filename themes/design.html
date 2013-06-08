@@ -10,48 +10,48 @@
 	    padding: 10px;
 	    width: 800px;
 	}
-	
+
 	.pplogo {
 	    width: 50px;
 	    height: 50px;
 	    background-color: #30FCFC;
 	}
-	
+
 	/*
 	    in case you add the class "fade" to your control-bar make sure it is
 	    also set invisible once inactive - e.g. via "display: none / block"
 	*/
-	
+
 	.ppcontrols {
 	    padding: 10px;
 	    margin: 5px;
 	}
-	
+
 	.ppcontrols.inactive {
 	    background-color: transparent;
 	    border: 1px solid red;
-	    color: #333333;	
+	    color: #333333;
 	    /* display: none;  */
 	}
-    
+
 	.ppcontrols.active {
 	    background-color: transparent;
 	    border: 1px solid green;
 	    color: #333333;
 	    /* display: block;  */
 	}
-    
-    
+
+
 	.inactive {
 	    color: #333333;
 	    background-color: #ccc;
 	}
-	
+
 	.active {
 	    background-color: green;
 	    color: #fdfdfd;
 	}
-	
+
 	/*
 	    if you want the display to stretch on "fullscreen" mode you
 	    have to work with relative dimensions and absolute positioning
@@ -64,25 +64,25 @@
 	    background-color: #FF1EB0;
 	    margin: 10px;
 	}
-	
+
 	.ppvslider, .ppscrubber {
 	    width: 350px;
 	    height: 25px;
 	    border: 1px solid blue;
 	    position: relative;
 	}
-	
+
 	.ppvmarker, .pploaded, .ppplayhead {
 	    background-color: blue;
 	    height: 25px;
 	    position: absolute !important;
 	    cursor: pointer;
 	}
-	
+
 	.ppplayhead {
 	    background-color: red;
 	}
-	
+
 	.ppvknob {
 	    border: 1px solid #000;
 	    height: 25px;
@@ -90,7 +90,7 @@
 	    position: absolute;
 	    cursor: pointer;
 	}
-	
+
     </style>
 
     <!-- Load jquery -->
@@ -106,55 +106,55 @@
 
     <!-- display holds all visual media elements to be played back -->
     <div class="ppdisplay"></div>
-    	
+
     <!-- and optional logo the operator may set -->
     <img class="pplogo" src="yourlogo.png" />
-    
+
     <!-- the buffering-indicator - typically an animated gif or something -->
     <div class="ppbuffering">buffering</div>
-    
+
     <!-- the start button - typically centered to "display" -->
-    <div class="ppstart">start</div>    
-    
-    
-    
+    <div class="ppstart">start</div>
+
+
+
     <!-- Adding the class "fade" to "ppcontrols" will cause the controlbar-DOM to: -->
     <!-- 1. Be invisible if player is IDLE -->
     <!-- 2. Fade in on mouse over player -->
     <!-- 3. Fade out if mouse leaves player -->
     <!-- Make sure you set appropriate .active and .inactive CSS then (see design.css) -->
-    
+
     <!-- controlbar / wrapping it up this way is optional-->
     <div class="ppcontrols">
-	
+
 	<b>controlbar plugin:</b>
-	
+
 	<h3 class="pptitle">title display</h3>
-	
+
 	<div class="ppplay">play</div>
-	
+
 	<div class="pppause">pause</div>
-	
+
 	<div class="ppstop">stop</div>
-	
+
 	<div class="ppprev">prev</div>
-	
+
 	<div class="ppnext">next</div>
-	
+
 	<div class="pprewind">rewind</div>
-	
+
 	<div class="ppforward">forward</div>
-	
+
 	<div class="ppfsexit">exit fullscreen</div>
-	
+
 	<div class="ppfsenter">enter fullscreen</div>
-	
+
 	<div class="pploopon">loop ON</div>
-	
-	<div class="pploopoff">loop OFF</div>	
-	
+
+	<div class="pploopoff">loop OFF</div>
+
 	<b>scrubber / time control</b>
-	
+
 	<!-- start: scrubber bar -->
 	<div class="ppscrubber"> <!-- the rail  -->
 	    <div class="pploaded"></div> <!-- percent buffered indicator (width in %), clickable -->
@@ -167,8 +167,8 @@
 	    Remaining : <span class="pphr_rem"></span> hours <span class="ppmin_rem"></span> minutes and <span class="ppsec_rem"></span> seconds<br/>
 	    Elapsed   : <span class="pphr_elp"></span> hours <span class="ppmin_elp"></span> minutes and <span class="ppsec_elp"></span> seconds<br/>
 	</p>
-	
-	
+
+
 	<b>volume control</b>
 
 	<!-- start: volume slider -->
@@ -177,20 +177,20 @@
 	    <div class="ppvknob"></div> <!-- draggable knob -->
 	</div>
 	<!-- end: volume slider -->
-	
-	
+
+
 	<!-- adding the class "toggle" to one or more of the following DOMs will -->
 	<!-- toggle them accordingly to their function and current volume -->
 	<!-- e.g. "mute" will be set to "inactive" if volume is "0" because at volume zero -->
 	<!-- the player is already muted. -->
-	
+
 	<div class="ppmute">mute</div>
-	
+
 	<div class="ppvmax">maximum volume</div>
-	
+
 	<div class="ppunmute">unmute (restore volume)</div>
-	
-	
+
+
     </div>
 </div>
 
@@ -207,7 +207,7 @@
 	    controls: true,			// controls are disabled (inactive) if set to FALSE
 	    autoplay: false, 			// autoplay sometimes saves one click while testing new layouts
 	    poster: 'layout-grid.gif',
-	    
+
 	    // this playlist adds a dummy video with a duration of 2 hours:
 	    playlist: [
 		{
@@ -231,9 +231,9 @@
 		}
 	    ]
 	    */
-	}); 
+	});
     });
-    
+
 </script>
 </body>
 </html>
