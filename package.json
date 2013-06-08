@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "projekktor",
   "title": "Projekktor",
   "description": "Video (and audio) player for the web, written in JavaScript",
