@@ -5,7 +5,9 @@ This is a fork of the [Projekktor](http://www.projekktor.com) project.
 Tracking https://projekktorxl.svn.beanstalkapp.com/core/trunk
 
 Current revision: 272
+
 Current jarisplayer.swf revision: 270 (bugs in current file at upstream)
+
 Bugfix for fullscreen problems in projekktor.js, will be merged when upstream addresses
 
 
