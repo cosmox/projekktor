@@ -42,10 +42,20 @@ Make sure you have `grunt` installed by testing:
 grunt -version
 ```
 
-Then, to get a complete, minified (w/ Uglify.js), linted (w/ JSHint - coming soon) version of Projekktor, type the following:
+Then, to get a build of Projekktor that mirrors the main project, minified (w/ Uglify.js) and linted (w/ JSHint - coming soon) type the following:
 
 ```bash
 grunt
+```
+
+Other built in presets are:
+
+```bash
+grunt build-complete
+```
+
+```bash
+grunt build-minimal
 ```
 
 The built version of Projekktor will be put in the `dist/` subdirectory, along with the minified copy and associated map file.
