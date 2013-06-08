@@ -6,13 +6,17 @@ Tracking https://projekktorxl.svn.beanstalkapp.com/core/trunk
 
 Current revision: 272
 
-Current jarisplayer.swf revision: 270 (bugs in current file at upstream)
+### Alter Log
 
-Bugfix for fullscreen problems in projekktor.js, will be merged when upstream addresses
+Here are some modifications I've made relative to the current state of SVN trunk
 
+*All code is reformatted for more readability, and has had problematic non-ASCII characters removed
+*Current jarisplayer.swf revision: 270 (bugs in current file at upstream).
+*Bugfix for fullscreen problems in projekktor.js, will be merged when addressed upstream.
+*Small change to controlbar plugin that attaches same bindings to scrubberknob as exist on the progress bar.
 
 How to build your own Projekktor
-----------------------------
+--------------------------------
 
 First, clone a copy of the main Projekktor git repo by running:
 
