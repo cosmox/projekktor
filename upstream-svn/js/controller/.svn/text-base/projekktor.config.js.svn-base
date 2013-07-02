@@ -99,22 +99,22 @@ projekktorConfig.prototype = {
 	/* debug on / off */
 	_debug: 			false,
 	
-	/* the width of the player - >0= overwrite destNodes width, 0= keep destNode´s width, false=maintain ratio */
+	/* the width of the player - >0= overwrite destNodes width, 0= keep destNodeÂ´s width, false=maintain ratio */
 	_width: 			null,
 	
-	/* guess what.... the hight of the player - >0= overwrite destNodes height, 0 = keep destNode´s width, false=maintain ratio */
+	/* guess what.... the hight of the player - >0= overwrite destNodes height, 0 = keep destNodeÂ´s width, false=maintain ratio */
 	_height:			null,
 	
-        _ratio:                         false,
-        
-        /* An array of objects featuring keycode=>function sets for keyboard-controls-customizing */
-        _keys: [],          
-        
-        /* cross domain */
-        _isCrossDomain:                 false,
-        
-        /* foce full viewport if browser supports native media-element-fullscreen (e.g. iPad) */
-        _forceFullViewport:             false,
+    _ratio:                         false,
+    
+    /* An array of objects featuring keycode=>function sets for keyboard-controls-customizing */
+    _keys: [],          
+    
+    /* cross domain */
+    _isCrossDomain:                 false,
+    
+    /* foce full viewport if browser supports native media-element-fullscreen (e.g. iPad) */
+    _forceFullViewport:             false,
 
 	/**************************************************************
 	    Config options available per playlist item:
@@ -226,6 +226,6 @@ projekktorConfig.prototype = {
 	/* sets the duration for media items without a duration (images & html pages) */
 	duration:			0,
 	
-	/* sets the player´s additional CSS class */
+	/* sets the playerÂ´s additional CSS class */
 	className:			''
 };

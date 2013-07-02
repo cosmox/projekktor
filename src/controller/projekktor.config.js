@@ -10,8 +10,8 @@
 projekktorConfig.prototype = {
 
     /**************************************************************
-	    Config options to be customized prior initialization only:
-	***************************************************************/
+        Config options to be customized prior initialization only:
+    ***************************************************************/
 
     _playerName: 'Projekktor',
 
@@ -24,9 +24,9 @@ projekktorConfig.prototype = {
     _cookieExpiry: 356,
 
     /* Plugins to load on instance initialization, plugins are automatically extening the projekktorPluginInterface class.
-	The order how the plugins are set here is important because they are added from z-index 0 to n one by one to the player DOM.
-	As such it is usefull to add the "Display" plugin always first.
-	*/
+    The order how the plugins are set here is important because they are added from z-index 0 to n one by one to the player DOM.
+    As such it is usefull to add the "Display" plugin always first.
+    */
     _plugins: ['display', 'controlbar'],
 
     /* Add one plugin or more plugins to the player. Alternative to "plugins" above. Will be merged with it. */
@@ -99,15 +99,13 @@ projekktorConfig.prototype = {
     /* debug on / off */
     _debug: false,
 
-    /* the width of the player - 0= use destNodes width */
+    /* the width of the player - >0= overwrite destNodes width, 0= keep destNode's width, false=maintain ratio */
     _width: null,
 
-    _ratio: false,
+    /* guess what.... the hight of the player - >0= overwrite destNodes height, 0 = keep destNode's width, false=maintain ratio */
+    _height: null,
 
-    /* if width is <=0 use this to scale the player to a minimum width
-	if minWidth is actually applied, autorescaling is enabled
-	*/
-    _minWidth: 40,
+    _ratio: false,
 
     /* An array of objects featuring keycode=>function sets for keyboard-controls-customizing */
     _keys: [],
@@ -119,8 +117,8 @@ projekktorConfig.prototype = {
     _forceFullViewport: false,
 
     /**************************************************************
-	    Config options available per playlist item:
-	***************************************************************/
+        Config options available per playlist item:
+    ***************************************************************/
 
     /* unique itemID for the item currently played - dynamically generated if not provided via config */
     ID: 0,
@@ -170,9 +168,9 @@ projekktorConfig.prototype = {
     playerFlashMP3: 'jarisplayer.swf',
 
     /* defines the streamtype of the current item.
-	    'http':		http  streaming
-	    'rtmp':		RTMP streaming - requires "flashRTMPServer" to be set.
-	*/
+        'http':     http  streaming
+        'rtmp':     RTMP streaming - requires "flashRTMPServer" to be set.
+    */
     streamType: 'http',
 
     /* it streamType is 'rtmp' you have to provide the serverURL here. */
@@ -181,15 +179,15 @@ projekktorConfig.prototype = {
     startParameter: 'start',
 
     /* Youtube offers two different player APIs: fLaSh and "iFrame" for HTML5 . Make your choice here:
-	  For mobile devices this is forced to TRUE
-	*/
+      For mobile devices this is forced to TRUE
+    */
     useYTIframeAPI: true,
 
     /* enable/disable automatic flash fallback */
-    /* enableFlashFallback:		true,  OBSOLETE */
+    /* enableFlashFallback:     true,  OBSOLETE */
 
     /* enable/disable native players */
-    /* enableNativePlayback:		true,	OBSOLETE */
+    /* enableNativePlayback:        true,   OBSOLETE */
 
     /* enable/disable fetching of keyboard events - works in "fullscreen" only */
     enableKeyboard: true,
@@ -198,83 +196,83 @@ projekktorConfig.prototype = {
     enableFullscreen: true,
 
     /*
-	small: Player height is 240px, and player dimensions are at least 320px by 240px for 4:3 aspect ratio.
-	medium: Player height is 360px, and player dimensions are 640px by 360px (for 16:9 aspect ratio) or 480px by 360px (for 4:3 aspect ratio).
-	large: Player height is 480px, and player dimensions are 853px by 480px (for 16:9 aspect ratio) or 640px by 480px (for 4:3 aspect ratio).
-	hd720: Player height is 720px, and player dimensions are 1280px by 720px (for 16:9 aspect ratio) or 960px by 720px (for 4:3 aspect ratio).
-	hd1080: Player height is 1080px, and player dimensions are 1920px by 1080px (for 16:9 aspect ratio) or 1440px by 1080px (for 4:3 aspect ratio).
-	highres: Player height is greater than 1080px, which means that the player's aspect ratio is greater than 1920px by 1080px.
-	*/
+    small: Player height is 240px, and player dimensions are at least 320px by 240px for 4:3 aspect ratio.
+    medium: Player height is 360px, and player dimensions are 640px by 360px (for 16:9 aspect ratio) or 480px by 360px (for 4:3 aspect ratio).
+    large: Player height is 480px, and player dimensions are 853px by 480px (for 16:9 aspect ratio) or 640px by 480px (for 4:3 aspect ratio).
+    hd720: Player height is 720px, and player dimensions are 1280px by 720px (for 16:9 aspect ratio) or 960px by 720px (for 4:3 aspect ratio).
+    hd1080: Player height is 1080px, and player dimensions are 1920px by 1080px (for 16:9 aspect ratio) or 1440px by 1080px (for 4:3 aspect ratio).
+    highres: Player height is greater than 1080px, which means that the player's aspect ratio is greater than 1920px by 1080px.
+    */
     playbackQuality: 'default',
 
     _playbackQualities: [
         {
-        key: 'small',
-        minHeight: 240,
-        minWidth: 240
-    },
+            key: 'small',
+            minHeight: 240,
+            minWidth: 240
+        },
         {
-        key: 'medium',
-        minHeight: 360,
-        minWidth: [{
-            ratio: 1.77,
-            minWidth: 640
-        }, {
-            ratio: 1.33,
-            minWidth: 480
-        }]
-    },
+            key: 'medium',
+            minHeight: 360,
+            minWidth: [{
+                    ratio: 1.77,
+                    minWidth: 640
+                }, {
+                    ratio: 1.33,
+                    minWidth: 480
+                }]
+        },
         {
-        key: 'large',
-        minHeight: 480,
-        minWidth: [{
-            ratio: 1.77,
-            minWidth: 853
-        }, {
-            ratio: 1.33,
-            minWidth: 640
-        }]
-    },
+            key: 'large',
+            minHeight: 480,
+            minWidth: [{
+                    ratio: 1.77,
+                    minWidth: 853
+                }, {
+                    ratio: 1.33,
+                    minWidth: 640
+                }]
+        },
         {
-        key: 'hd1080',
-        minHeight: 1080,
-        minWidth: [{
-            ratio: 1.77,
-            minWidth: 1920
-        }, {
-            ratio: 1.33,
-            minWidth: 1440
-        }]
-    },
+            key: 'hd1080',
+            minHeight: 1080,
+            minWidth: [{
+                    ratio: 1.77,
+                    minWidth: 1920
+                }, {
+                    ratio: 1.33,
+                    minWidth: 1440
+                }]
+        },
         {
-        key: 'hd720',
-        minHeight: 720,
-        minWidth: [{
-            ratio: 1.77,
-            minWidth: 1280
-        }, {
-            ratio: 1.33,
-            minWidth: 960
-        }]
-    },
+            key: 'hd720',
+            minHeight: 720,
+            minWidth: [{
+                    ratio: 1.77,
+                    minWidth: 1280
+                }, {
+                    ratio: 1.33,
+                    minWidth: 960
+                }]
+        },
         {
-        key: 'highres',
-        minHeight: 1081,
-        minWidth: 0
-    }
+            key: 'highres',
+            minHeight: 1081,
+            minWidth: 0
+        }
     ],
 
     /* if testcard is disabled, the player will force a filedowload in case no native- or flashplayer
-	is available. oterhwise (enableTestcard=true) a testcard with an errormessage is shown in case of issues */
+    is available. oterhwise (enableTestcard=true) a testcard with an errormessage is shown in case of issues */
     enableTestcard: true,
 
     /* if the scheduled playlist holds more than one item an "skipTestcard" is set to TRUE in case of an error
-	the player will proceed to the next item without showing a testcard */
+    the player will proceed to the next item without showing a testcard */
     skipTestcard: false,
 
     /* sets the duration for media items without a duration (images & html pages) */
     duration: 0,
 
-    /* sets the player?s additional CSS class */
+    /* sets the player's additional CSS class */
     className: ''
 };

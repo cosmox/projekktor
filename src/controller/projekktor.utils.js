@@ -22,16 +22,18 @@ jQuery(function ($) {
          * @param (Object) Object
          */
         blockSelection: function (dest) {
-            if (dest) dest.css({
-                "-khtml-user-select": "none",
-                "-webkit-user-select": "none",
-                "MozUserSelect": "none",
-                "user-select": "none"
-            })
-                .attr('unselectable', 'on')
-                .bind("selectstart", function () {
-                return false;
-            })
+            if (dest)
+                dest
+                    .css({
+                    "-khtml-user-select": "none",
+                    "-webkit-user-select": "none",
+                    "MozUserSelect": "none",
+                    "user-select": "none"
+                })
+                    .attr('unselectable', 'on')
+                    .bind("selectstart", function () {
+                    return false;
+                })
             return dest;
         },
 
@@ -126,10 +128,11 @@ jQuery(function ($) {
             if (typeof t != 'string') return t;
             if (t) {
                 var p = t.split(':');
-                if (p.length > 3) p = p.slice(0, 3);
+                if (p.length > 3)
+                    p = p.slice(0, 3);
 
                 for (i = 0; i < p.length; i++)
-                s = s * 60 + parseFloat(p[i].replace(',', '.'))
+                    s = s * 60 + parseFloat(p[i].replace(',', '.'))
             }
 
             return parseFloat(s);
@@ -159,7 +162,7 @@ jQuery(function ($) {
         embeddFlash: function (destObj, domOptions, shield, shrinkShield) {
 
             var flashVars = domOptions.FlashVars || {},
-            result = '',
+                result = '',
                 htmlEmbedObj = '',
                 htmlEmbed = '',
                 tmpStr = '',
@@ -167,20 +170,22 @@ jQuery(function ($) {
                 id = '';
 
             // add flashVars
-            if (domOptions.src.indexOf('?') == -1) domOptions.src += "?";
-            else domOptions.src += "&";
+            if (domOptions.src.indexOf('?') == -1)
+                domOptions.src += "?";
+            else
+                domOptions.src += "&";
 
             for (var key in flashVars) {
                 if (typeof flashVars[key] != 'function') {
                     tmpStr = flashVars[key];
 
                     /*
-			    // support "{tags}" to add media properties
-			    for(var i in this.media) {
-				if (typeof tmpStr != 'string') continue;
-				tmpStr = tmpStr.replace('{'+i+'}', this.media[i]);
-			    }
-			    */
+                // support "{tags}" to add media properties
+                for(var i in this.media) {
+                if (typeof tmpStr != 'string') continue;
+                tmpStr = tmpStr.replace('{'+i+'}', this.media[i]);
+                }
+                */
                     domOptions.src += key + '=' + encodeURIComponent(tmpStr) + '&';
                 }
             }
@@ -204,7 +209,8 @@ jQuery(function ($) {
                 result = htmlEmbed;
             }
 
-            if (dest === null) return result;
+            if (dest === null)
+                return result;
 
             // jquerx 1.4.2 IE flash <object> issue workaround:
             // this doesn't work in IE: destObj.append(result);
@@ -212,7 +218,7 @@ jQuery(function ($) {
 
             if (shield !== false) {
                 dest.append(
-                $('<div/>').attr('id', domOptions.id + '_cc')
+                    $('<div/>').attr('id', domOptions.id + '_cc')
                     .css({
                     width: (shrinkShield) ? '1px' : '100%',
                     height: (shrinkShield) ? '1px' : '100%',
@@ -233,14 +239,14 @@ jQuery(function ($) {
                 all = div.getElementsByTagName('i');
 
             while (
-            div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
-            all[0]);
+                div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+                all[0]);
 
             return v > 4 ? v : undefined;
         },
 
         /**
-         * replaces {}-tags with parameter?s equialents
+         * replaces {}-tags with parameter's equialents
          * @public
          * @param (String) Da string to get processed
          * @param (Object) Object holding data to fill in
@@ -269,9 +275,11 @@ jQuery(function ($) {
          * @return (Boolean) Returns TRUE if <target> was resized in any way, otherwise FALSE
          */
         stretch: function (stretchStyle, target, wid, hei, twf, thf) {
-            if (target == null) return false;
+            if (target == null)
+                return false;
 
-            if ((target instanceof $) == false) target = $(target)
+            if ((target instanceof $) == false)
+                target = $(target)
 
             if (!target.data('od')) {
                 target.data('od', {
@@ -289,37 +297,38 @@ jQuery(function ($) {
 
             // fill area
             switch (stretchStyle) {
-                case 'none':
-                    rw = tw;
-                    rh = th;
-                    break;
+            case 'none':
+                rw = tw;
+                rh = th;
+                break;
 
-                case 'fill':
-                    if (xsc > ysc) {
-                        rw = tw * xsc;
-                        rh = th * xsc;
-                    } else if (xsc < ysc) {
-                        rw = tw * ysc;
-                        rh = th * ysc;
-                    }
-                    break;
+            case 'fill':
+                if (xsc > ysc) {
+                    rw = tw * xsc;
+                    rh = th * xsc;
+                } else if (xsc < ysc) {
+                    rw = tw * ysc;
+                    rh = th * ysc;
+                }
+                break;
 
-                case 'aspectratio':
-                default:
-                    // scale, keep aspect ratio
-                    if (xsc > ysc) {
-                        rw = tw * ysc;
-                        rh = th * ysc;
-                    } else if (xsc < ysc) {
-                        rw = tw * xsc;
-                        rh = th * xsc;
-                    }
-                    break;
+            case 'aspectratio':
+            default:
+                // scale, keep aspect ratio
+                if (xsc > ysc) {
+                    rw = tw * ysc;
+                    rh = th * ysc;
+                } else if (xsc < ysc) {
+                    rw = tw * xsc;
+                    rh = th * xsc;
+                }
+                break;
             }
-            wid = $p.utils.roundNumber((rw / wid) * 100, 0) + 2;
-            hei = $p.utils.roundNumber((rh / hei) * 100, 0) + 2;
+            wid = $p.utils.roundNumber((rw / wid) * 100, 0);
+            hei = $p.utils.roundNumber((rh / hei) * 100, 0);
 
-            if (wid == 0 || hei == 0) return false;
+            if (wid == 0 || hei == 0)
+                return false;
 
             target.css({
                 'margin': 0,
@@ -354,7 +363,7 @@ jQuery(function ($) {
                     loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
                 }
             },
-            m = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
+                m = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
                 uri = {},
                 i = 14;
 
@@ -372,41 +381,43 @@ jQuery(function ($) {
         // http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/
         log: function () {
 
-            if (this.logging == false) return;
+            if (this.logging == false)
+                return;
 
             this.history = this.history || []; // store logs to an array for reference
             this.history.push(arguments);
-            if (window.console) console.log(Array.prototype.slice.call(arguments));
+            if (window.console)
+                console.log(Array.prototype.slice.call(arguments));
         },
 
         cleanResponse: function (responseText, type) {
             var data = false;
 
             switch (type) {
-                case 'html':
-                case 'xml':
-                    // Create the xml document from the responseText string.
-                    if (window.DOMParser) {
-                        data = new DOMParser()
-                        data = data.parseFromString(responseText, "text/xml");
-                    } else { // Internet Explorer
-                        data = new ActiveXObject("Microsoft.XMLDOM");
-                        data.async = "false";
-                        data.loadXML(responseText);
-                    }
-                    break;
+            case 'html':
+            case 'xml':
+                // Create the xml document from the responseText string.
+                if (window.DOMParser) {
+                    data = new DOMParser()
+                    data = data.parseFromString(responseText, "text/xml");
+                } else { // Internet Explorer
+                    data = new ActiveXObject("Microsoft.XMLDOM");
+                    data.async = "false";
+                    data.loadXML(responseText);
+                }
+                break;
 
-                case 'json':
-                    data = responseText;
-                    if (typeof data == 'string') {
-                        data = $.parseJSON(data);
-                    }
-                    break;
-                case 'jsonp':
-                    break;
-                default:
-                    data = responseText;
-                    break;
+            case 'json':
+                data = responseText;
+                if (typeof data == 'string') {
+                    data = $.parseJSON(data);
+                }
+                break;
+            case 'jsonp':
+                break;
+            default:
+                data = responseText;
+                break;
 
             }
             return data;
@@ -444,17 +455,17 @@ jQuery(function ($) {
     $p.platforms = {
 
         /*
-	VLC: function() {
+    VLC: function() {
                         return 3;
             console.log("VLC", navigator.plugins)
-	    try {
-		return navigator.plugins['VLC Multimedia Plug-in'].version.match(/^,?(.+),?$/)[1].match(/\d+/g)[0]
-	    } catch(e) {}
-	    return '0,0,0'.match(/\d+/g)[0];
-	},
+        try {
+        return navigator.plugins['VLC Multimedia Plug-in'].version.match(/^,?(.+),?$/)[1].match(/\d+/g)[0]
+        } catch(e) {}
+        return '0,0,0'.match(/\d+/g)[0];
+    },
         */
 
-        /* returns the version of the flash player installed for user?s browser. returns 0 on none. */
+        /* returns the version of the flash player installed for user's browser. returns 0 on none. */
         FLASH: function (typ) {
             try {
                 try {
@@ -499,16 +510,17 @@ jQuery(function ($) {
             try {
                 var testObject = document.createElement((type.indexOf('video') > -1) ? 'video' : 'audio');
                 if (testObject.canPlayType != null) {
-                    if (type == '*') return 1;
+                    if (type == '*')
+                        return 1;
 
                     switch (testObject.canPlayType(type)) {
-                        case "no":
-                        case "":
-                            return 0;
-                            // case "maybe":
-                            // case "probably":
-                        default:
-                            return 1;
+                    case "no":
+                    case "":
+                        return 0;
+                        // case "maybe":
+                        // case "probably":
+                    default:
+                        return 1;
                     }
                 }
             } catch (e) {

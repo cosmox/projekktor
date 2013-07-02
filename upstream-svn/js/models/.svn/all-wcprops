@@ -1,13 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 34
-/core/!svn/ver/252/trunk/js/models
+/core/!svn/ver/279/trunk/js/models
 END
 player.youtube.js
 K 25
 svn:wc:ra_dav:version-url
 V 52
-/core/!svn/ver/118/trunk/js/models/player.youtube.js
+/core/!svn/ver/273/trunk/js/models/player.youtube.js
 END
 player.NA.js
 K 25
@@ -19,7 +19,7 @@ player.js
 K 25
 svn:wc:ra_dav:version-url
 V 44
-/core/!svn/ver/252/trunk/js/models/player.js
+/core/!svn/ver/279/trunk/js/models/player.js
 END
 player.playlist.js
 K 25
@@ -31,13 +31,13 @@ player.audio.video.flash.js
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/core/!svn/ver/247/trunk/js/models/player.audio.video.flash.js
+/core/!svn/ver/273/trunk/js/models/player.audio.video.flash.js
 END
 player.video.jwflash.js
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/core/!svn/ver/250/trunk/js/models/player.video.jwflash.js
+/core/!svn/ver/279/trunk/js/models/player.video.jwflash.js
 END
 player.image.html.js
 K 25

@@ -17,6 +17,7 @@ jQuery(function ($) {
         // all the player states
         _currentState: null,
         _currentBufferState: null,
+        _currentSeekState: null,
 
         _ap: false, // autday
         _volume: 0, // async
@@ -134,7 +135,8 @@ jQuery(function ($) {
 
             this._setState('STARTING');
 
-            if (!this.getState('STOPPED')) this.addListeners();
+            if (!this.getState('STOPPED'))
+                this.addListeners();
 
             if (this.pp.getIsMobileClient('ANDROID') && !this.getState('PLAYING')) {
                 setTimeout(function () {
@@ -159,7 +161,8 @@ jQuery(function ($) {
         destroy: function (silent) {
             this.removeListeners();
 
-            if (!this.getState('IDLE')) this._setState('destroying');
+            if (!this.getState('IDLE'))
+                this._setState('destroying');
 
             this.detachMedia();
 
@@ -200,56 +203,53 @@ jQuery(function ($) {
 
         applyCommand: function (command, value) {
             switch (command) {
-                case 'quality':
-                    this.setQuality(value);
+            case 'quality':
+                this.setQuality(value);
+                break;
+            case 'play':
+                if (this.getState('ERROR')) break;
+                if (this.getState('IDLE')) {
+                    this._setState('awakening');
                     break;
-                case 'play':
-                    if (this.getState('ERROR')) break;
-                    if (this.getState('IDLE')) {
-                        this._setState('awakening');
-                        break;
-                    }
-                    this.setPlay();
-                    break;
-                case 'pause':
-                    if (this.getState('ERROR')) break;
-                    this.setPause();
-                    break;
-                case 'volume':
-                    if (this.getState('ERROR')) break;
-                    if (!this.setVolume(value)) {
-                        this._volume = value;
-                        this.sendUpdate('volume', value);
-                    }
-                    break;
-                case 'stop':
-                    this.setStop();
-                    break;
-                case 'frame':
-                    this.setFrame(value);
-                    break;
-                case 'seek':
-                    if (this.getState('ERROR')) break;
-                    if (this.getState('SEEKING')) break;
-                    if (this.getState('IDLE')) break;
-                    if (this.media.loadProgress == -1) break;
-
-                    this._setState('seeking');
-                    this.sendUpdate('seek', value);
-                    this.setSeek(value);
-
-                    break;
-                case 'fullscreen':
-                    if (value == this._isFullscreen) break;
-                    this._isFullscreen = value;
-                    this.sendUpdate('fullscreen', this._isFullscreen);
-                    this.setFullscreen(value);
-                    this.reInit();
-                    break;
-                case 'resize':
-                    this.setResize();
-                    this.sendUpdate('resize', value);
-                    break;
+                }
+                this.setPlay();
+                break;
+            case 'pause':
+                if (this.getState('ERROR')) break;
+                this.setPause();
+                break;
+            case 'volume':
+                if (this.getState('ERROR')) break;
+                if (!this.setVolume(value)) {
+                    this._volume = value;
+                    this.sendUpdate('volume', value);
+                }
+                break;
+            case 'stop':
+                this.setStop();
+                break;
+            case 'frame':
+                this.setFrame(value);
+                break;
+            case 'seek':
+                if (this.getState('ERROR')) break;
+                if (this.getState('SEEKING')) break;
+                if (this.getState('IDLE')) break;
+                if (this.media.loadProgress == -1) break;
+                this._setSeekState('seeking', value);
+                this.setSeek(value);
+                break;
+            case 'fullscreen':
+                if (value == this._isFullscreen) break;
+                this._isFullscreen = value;
+                this.sendUpdate('fullscreen', this._isFullscreen);
+                this.reInit();
+                this.setResize();
+                break;
+            case 'resize':
+                this.setResize();
+                this.sendUpdate('resize', value);
+                break;
             }
         },
 
@@ -287,7 +287,6 @@ jQuery(function ($) {
                 displayWidth: destContainer.width(),
                 displayHeight: destContainer.height()
             });
-
         },
 
         setPosterLive: function () {},
@@ -299,10 +298,11 @@ jQuery(function ($) {
             if (this._quality == quality) return;
             this._quality = quality;
 
-            if (this.getState('PLAYING') || this.getState('PAUSED')) this.applySrc();
+            try {
+                this.applySrc();
+            } catch (e) {}
 
             this.qualityChangeListener();
-
         },
 
         applySrc: function () {},
@@ -317,7 +317,8 @@ jQuery(function ($) {
             $.each(this.media.file || [], function () {
 
                 // set proper quality source
-                if (ref._quality != this.quality && ref._quality != null) return true;
+                if (ref._quality != this.quality && ref._quality != null)
+                    return true;
 
                 // nothing todo
                 if (!pseudoQuery || !offset) {
@@ -343,15 +344,18 @@ jQuery(function ($) {
                 return true;
             })
 
-            if (resultSrc.length == 0) return this.media.file;
-            else return resultSrc;
+            if (resultSrc.length == 0)
+                return this.media.file;
+            else
+                return resultSrc;
         },
 
         /*******************************
             ELEMENT GETTERS
     *******************************/
         getVolume: function () {
-            if (this.mediaElement == null) return this._volume;
+            if (this.mediaElement == null)
+                return this._volume;
 
             return (this.mediaElement.prop('muted') == true) ? 0 : this.mediaElement.prop('volume');
         },
@@ -428,7 +432,8 @@ jQuery(function ($) {
                 qual = 'default',
                 quals = [];
 
-            if (typeof result != 'object') return result;
+            if (typeof result != 'object')
+                return result;
 
             for (var i in result) {
                 if (result[i].quality) {
@@ -452,7 +457,7 @@ jQuery(function ($) {
             return this.mediaElement || $('<video/>');
         },
 
-        getMediaDimensions: function() {
+        getMediaDimensions: function () {
             return {
                 width: this.media.videoWidth || 0,
                 height: this.media.videoHeight || 0
@@ -547,11 +552,11 @@ jQuery(function ($) {
                 }
 
                 /*else {
-	    try {
-		this.media.loadProgress = (this.allowRandomSeek===true) ? 100 : -1;
-		this.sendUpdate('progress', this.media.loadProgress);
-	    } catch(e){};
-	   return;
+        try {
+        this.media.loadProgress = (this.allowRandomSeek===true) ? 100 : -1;
+        this.sendUpdate('progress', this.media.loadProgress);
+        } catch(e){};
+       return;
             } */
 
             }
@@ -615,7 +620,8 @@ jQuery(function ($) {
 
         startListener: function (obj) {
             this.applyCommand('volume', this.pp.getConfig('volume'));
-            if (!this.isPseudoStream) this.setSeek(this.media.position || 0);
+            if (!this.isPseudoStream)
+                this.setSeek(this.media.position || 0);
 
             this._setState('playing');
         },
@@ -625,7 +631,7 @@ jQuery(function ($) {
         },
 
         seekedListener: function (obj) {
-            this._setState('SEEKED');
+            this._setSeekState('SEEKED', this.media.position);
         },
 
         volumeListener: function (obj) {
@@ -647,10 +653,12 @@ jQuery(function ($) {
         },
 
         setTestcard: function (code, txt) {
-
-            var destContainer = this.pp.getMediaContainer().html('').css({width:'100%',height:'100%'}),
+            var destContainer = this.pp.getMediaContainer().html('').css({
+                width: '100%',
+                height: '100%'
+            }),
                 messages = this.pp.getConfig('messages'),
-                msgTxt = (txt!=undefined && txt!='') ? txt : (messages[code]!=undefined) ? messages[code] : messages[0];
+                msgTxt = (txt != undefined && txt != '') ? txt : (messages[code] != undefined) ? messages[code] : messages[0];
 
             if (this.pp.getConfig('skipTestcard') && this.pp.getItemCount() > 1) {
                 this._setState('completed');
@@ -661,9 +669,11 @@ jQuery(function ($) {
                 // "press next to continue"
                 msgTxt += ' ' + messages[99];
             }
+
             if (msgTxt.length < 3) {
                 msgTxt = 'ERROR';
             }
+
             if (code == 100) {
                 msgTxt = txt;
             }
@@ -722,6 +732,7 @@ jQuery(function ($) {
             imageObj.attr('src', url);
 
             var onReFull = function (imgObj, destObj) {
+
                 if (destObj.is(':visible') === false) {
                     ref.pp.removeListener('fullscreen', arguments.callee);
                 }
@@ -787,7 +798,8 @@ jQuery(function ($) {
                 var dest = ref.mediaElement;
 
                 try {
-                    if ($(dest).attr('id').indexOf('testcard') > -1) return;
+                    if ($(dest).attr('id').indexOf('testcard') > -1)
+                        return;
                 } catch (e) {}
 
                 counter++;
@@ -828,7 +840,8 @@ jQuery(function ($) {
                     this._isPlaying = true;
                 }
 
-                if (state == 'PAUSED') this._isPlaying = false;
+                if (state == 'PAUSED')
+                    this._isPlaying = false;
 
                 if (state == 'ERROR') {
                     this.setPlay = this.setPause = function () {
@@ -844,6 +857,13 @@ jQuery(function ($) {
             if (this._currentBufferState != state.toUpperCase()) {
                 this._currentBufferState = state.toUpperCase();
                 this.sendUpdate('buffer', this._currentBufferState);
+            }
+        },
+
+        _setSeekState: function (state, value) {
+            if (this._currentSeekState != state.toUpperCase()) {
+                this._currentSeekState = state.toUpperCase();
+                this.sendUpdate('seek', this._currentSeekState);
             }
         },
 

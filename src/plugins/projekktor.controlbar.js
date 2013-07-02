@@ -324,41 +324,6 @@ jQuery(function ($) {
             }
         },
 
-        itemHandler: function (data) {
-            var volume = parseFloat(this.cookie('volume'));
-            $(this.cb).find('.' + this.pp.getNS() + 'cuepoint').remove();
-            this._storeVol = (volume != null && !isNaN(volume)) ? volume : this.getConfig('volume');
-
-            this.pp.setVolume(this._storeVol)
-            this.updateDisplay();
-            this.hidecb(true);
-            this.drawTitle();
-            this.displayQualityToggle();
-            this.pluginReady = true;
-        },
-
-        startHandler: function () {
-            this.pp.setVolume(this._storeVol);
-            if (this.getConfig('showOnStart') == true) {
-                this.showcb(true);
-            } else {
-                this.hidecb(true);
-            }
-        },
-
-        readyHandler: function (data) {
-            clearTimeout(this._cTimer);
-            if (this.getConfig('showOnIdle')) {
-                this.showcb(true);
-                this.cb.removeClass('inactive').addClass('active').show();
-            }
-            this.pluginReady = true;
-        },
-
-        durationChangeHandler: function (dur) {
-            this.displayCuePoints(dur);
-        },
-
         updateDisplay: function () {
             var ref = this,
                 state = this.pp.getState();
@@ -414,7 +379,7 @@ jQuery(function ($) {
                 this.drawEnterFullscreenButton();
             }
 
-            if (!this.getConfig('enableFullscreen') || this.getConfig('isCrossDomain')) {
+            if (!this.getConfig('enableFullscreen')) {
                 this._active('fsexit', false);
                 this._active('fsenter', false);
             }
@@ -430,84 +395,6 @@ jQuery(function ($) {
 
             // init volume display
             this.displayVolume(this._storeVol);
-        },
-
-        stateHandler: function (state) {
-
-            this.updateDisplay();
-
-            if ('STOPPED|AWAKENING|IDLE|DONE'.indexOf(state) > -1) {
-                this.displayTime(0, 0, 0);
-                this.displayProgress(0);
-                if (this.pp.getIsMobileClient()) {
-                    this.hidecb(true);
-                }
-            }
-
-            if ('STOPPED|DONE|IDLE'.indexOf(state) > -1) {
-                this.hidecb(true);
-                return;
-            }
-
-            if ('ERROR'.indexOf(state) > -1) {
-                this._noHide = false;
-                this.hidecb(true);
-            }
-
-            this.displayProgress();
-        },
-
-        scheduleModifiedHandler: function () {
-            if (this.pp.getState() === 'IDLE') return;
-            this.updateDisplay();
-            this.displayTime();
-            this.displayProgress();
-        },
-
-        volumeHandler: function (value) {
-            if (this.getConfig('fixedVolume') != true && value != 0) {
-                this.cookie('volume', value);
-            }
-            // this._storeVol = value;
-            this.displayVolume(value);
-        },
-
-        progressHandler: function (obj) {
-            this.displayProgress();
-        },
-
-        timeHandler: function (obj) {
-            this.displayTime();
-            this.displayProgress();
-        },
-
-        qualityChangeHandler: function (qual) {
-            this.displayQualityToggle(qual);
-        },
-
-        fullscreenHandler: function (inFullscreen) {
-
-            var ref = this,
-                classPrefix = this.pp.getNS();
-
-            clearTimeout(this._cTimer);
-
-            this._noHide = false;
-            this._cFading = false;
-            this._vSliderAct = false;
-
-            if (!this.getConfig('controls')) return;
-            if (!this.getConfig('enableFullscreen') || this.getConfig('isCrossDomain')) return;
-
-            if (inFullscreen) {
-                this.cb.addClass('fullscreen');
-                this.drawExitFullscreenButton();
-            } else {
-                this.cb.removeClass('fullscreen');
-                this.drawEnterFullscreenButton();
-            }
-
-            if (this.pp.getState() == 'IDLE' && !this.getConfig('showOnIdle')) this.hidecb(true);
         },
 
         /* assign listener methods to controlbar elements */
@@ -575,7 +462,6 @@ jQuery(function ($) {
         },
 
         touchEnd: function () {
-
             var ref = this;
             this._cTimer = setTimeout(function () {
                 ref.hidecb();
@@ -585,7 +471,7 @@ jQuery(function ($) {
 
         /*******************************
         DOM Manipulations
-    *******************************/
+        *******************************/
         drawTitle: function () {
             this.controlElements['title'].html(this.getConfig('title', ''));
         },
@@ -602,10 +488,15 @@ jQuery(function ($) {
                 return;
             }
 
-            if (instant) this._noHide = false;
+            if (this.getConfig('showOnIdle') && this.pp.getState('IDLE'))
+                return;
+
+            if (instant)
+                this._noHide = false;
 
             // don't hide nao
-            if (this._noHide || this.cb.hasClass('inactive')) return;
+            if (this._noHide || this.cb.hasClass('inactive'))
+                return;
 
             this.cb.removeClass('active').addClass('inactive');
             this.sendEvent('hide', this.cb);
@@ -640,6 +531,9 @@ jQuery(function ($) {
             // show up:
             this.cb.removeClass('inactive').addClass('active');
             this.sendEvent('show', this.cb);
+            this._cTimer = setTimeout(function () {
+                ref.hidecb();
+            }, this.getConfig('fadeDelay'));
         },
 
         displayTime: function (pct, dur, pos) {
@@ -664,7 +558,8 @@ jQuery(function ($) {
 
                 // update numeric displays
                 for (var key in this.controlElements) {
-                    if (key == 'cb') break;
+                    if (key == 'cb')
+                        break;
 
                     if (times[key]) {
                         $.each(this.controlElements[key], function () {
@@ -673,6 +568,7 @@ jQuery(function ($) {
                     }
                 }
             }
+
         },
 
         displayProgress: function () {
@@ -727,18 +623,18 @@ jQuery(function ($) {
 
             if (toggleMute) {
                 switch (parseFloat(volume)) {
-                    case 0:
-                        this._active('mute', false);
-                        this._active('unmute', true);
-                        this._active('vmax', true);
-                        break;
+                case 0:
+                    this._active('mute', false);
+                    this._active('unmute', true);
+                    this._active('vmax', true);
+                    break;
 
-                    default:
-                        this._active('mute', true);
-                        this._active('unmute', false);
-                        this._active('vmax', false);
-                        //  vknob.css('left', volume*(vslider.width()-(vknob.width()/2))+"px");
-                        break;
+                default:
+                    this._active('mute', true);
+                    this._active('unmute', false);
+                    this._active('vmax', false);
+                    //  vknob.css('left', volume*(vslider.width()-(vknob.width()/2))+"px");
+                    break;
                 }
             }
 
@@ -755,7 +651,8 @@ jQuery(function ($) {
             var ref = this,
                 prefix = this.pp.getNS();
 
-            if (!this.getConfig('showCuePoints')) return;
+            if (!this.getConfig('showCuePoints'))
+                return;
 
             ref.controlElements['scrubber'].remove('.' + prefix + 'cuepoint');
 
@@ -773,7 +670,8 @@ jQuery(function ($) {
                         .css('width', blipWidth + "%")
                         .data('on', this.on);
 
-                if (this.title != '') blip.attr('title', this.title);
+                if (this.title != '')
+                    blip.attr('title', this.title);
 
                 this.addListener('unlock', function () {
                     $(blip).removeClass('inactive').addClass('active');
@@ -827,8 +725,10 @@ jQuery(function ($) {
                 return a.minHeight - b.minHeight;
             });
             for (var i = qualsCfg.length; i--; i > 0) {
-                if ($.inArray(qualsCfg[i].key, qualsItm) > -1) best.push(qualsCfg[i].key);
-                if (best.length > 1) break;
+                if ($.inArray(qualsCfg[i].key, qualsItm) > -1)
+                    best.push(qualsCfg[i].key);
+                if (best.length > 1)
+                    break;
             }
 
             this.cb.addClass('qualities');
@@ -843,7 +743,123 @@ jQuery(function ($) {
 
         /*******************************
         Player Event Handlers
-    *******************************/
+        *******************************/
+        itemHandler: function (data) {
+            var volume = parseFloat(this.cookie('volume'));
+
+            $(this.cb).find('.' + this.pp.getNS() + 'cuepoint').remove();
+
+            this._storeVol = (volume != null && !isNaN(volume)) ? volume : this.getConfig('volume');
+
+            this.pp.setVolume(this._storeVol)
+            this.updateDisplay();
+            this.hidecb(true);
+            this.drawTitle();
+            this.displayQualityToggle();
+            this.pluginReady = true;
+        },
+
+        startHandler: function () {
+            this.pp.setVolume(this._storeVol);
+            if (this.getConfig('showOnStart') == true) {
+                this.showcb(true);
+            } else {
+                this.hidecb(true);
+            }
+        },
+
+        readyHandler: function (data) {
+            clearTimeout(this._cTimer);
+            if (this.getConfig('showOnIdle')) {
+                this.showcb(true);
+                this.cb.removeClass('inactive').addClass('active').show();
+            }
+            this.pluginReady = true;
+        },
+
+        stateHandler: function (state) {
+
+            this.updateDisplay();
+
+            if ('STOPPED|AWAKENING|IDLE|DONE'.indexOf(state) > -1) {
+                this.displayTime(0, 0, 0);
+                this.displayProgress(0);
+                if (this.pp.getIsMobileClient()) {
+                    this.hidecb(true);
+                }
+            }
+
+            if ('STOPPED|DONE|IDLE'.indexOf(state) > -1) {
+                this.hidecb(true);
+                return;
+            }
+
+            if ('ERROR'.indexOf(state) > -1) {
+                this._noHide = false;
+                this.hidecb(true);
+            }
+
+            this.displayProgress();
+        },
+
+        scheduleModifiedHandler: function () {
+            if (this.pp.getState() === 'IDLE') return;
+            this.updateDisplay();
+            this.displayTime();
+            this.displayProgress();
+        },
+
+        volumeHandler: function (value) {
+            if (this.getConfig('fixedVolume') != true && value != 0) {
+                this.cookie('volume', value);
+            }
+            // this._storeVol = value;
+            this.displayVolume(value);
+        },
+
+        progressHandler: function (obj) {
+            this.displayProgress();
+        },
+
+        timeHandler: function (obj) {
+            this.displayTime();
+            this.displayProgress();
+        },
+
+        qualityChangeHandler: function (qual) {
+            this.displayQualityToggle(qual);
+        },
+
+        fullscreenHandler: function (inFullscreen) {
+
+            var ref = this,
+                classPrefix = this.pp.getNS();
+
+            clearTimeout(this._cTimer);
+
+            this._noHide = false;
+            this._cFading = false;
+            this._vSliderAct = false;
+
+            if (!this.getConfig('controls')) return;
+            if (!this.getConfig('enableFullscreen')) return;
+
+            if (inFullscreen) {
+                this.cb.addClass('fullscreen');
+                this.drawExitFullscreenButton();
+            } else {
+                this.cb.removeClass('fullscreen');
+                this.drawEnterFullscreenButton();
+            }
+
+            if (this.pp.getState() == 'IDLE' && !this.getConfig('showOnIdle'))
+                this.hidecb(true);
+        },
+
+        durationChangeHandler: function (dur) {
+            this.displayCuePoints(dur);
+        },
+
         errorHandler: function (value) {
             this.hidecb(true);
         },
@@ -856,15 +872,26 @@ jQuery(function ($) {
             this.showcb();
         },
 
+        mouseenterHandler: function (evt) {
+            this.showcb();
+        },
+
         mousemoveHandler: function (evt) {
             if (this.pp.getState('STARTING')) return;
             this.showcb();
         },
 
+        mouseleaveHandler: function () {},
+
+        mousedownHandler: function (evt) {
+            this.showcb();
+        },
+
         /*******************************
         ControlUI Event LISTENERS
-    *******************************/
+        *******************************/
         controlsFocus: function (evt) {
+
             this._noHide = true;
         },
 
@@ -1010,10 +1037,11 @@ jQuery(function ($) {
                 pageX = (evt.originalEvent.touches) ? evt.originalEvent.touches[0].pageX : evt.pageX,
                 pageY = (evt.originalEvent.touches) ? evt.originalEvent.touches[0].pageY : evt.pageY,
                 newPos = pageX - slider.offset().left - (tip.outerWidth() / 2),
-                times = this._clockDigits(this.pp.getDuration()/100*((pageX - slider.offset().left)*100/slider.width()), 'tip');
+                times = this._clockDigits(this.pp.getDuration() / 100 * ((pageX - slider.offset().left) * 100 / slider.width()), 'tip');
 
             for (var key in this.controlElements) {
-                if (key == 'cb') break;
+                if (key == 'cb')
+                    break;
 
                 if (times[key]) {
                     $.each(this.controlElements[key], function () {
@@ -1035,10 +1063,90 @@ jQuery(function ($) {
             if (this.getConfig('disallowSkip') == true) return;
             this._sSliderAct = true;
 
+            // @MSHICK: Added
             // if (this.pp.getState('PLAYING')) {
             //     var playing = true;
             //     this.pp.setPause();
             // }
+            // END
+
+            var ref = this,
+                slider = $(this.controlElements['scrubberdrag'][0]),
+                loaded = $(this.controlElements['loaded'][0]),
+                // @MSHICK: Added
+                knob = $(this.controlElements['scrubberknob'][0]),
+                // END
+                second = 0,
+                dx = Math.abs(parseInt(slider.offset().left) - event.clientX),
+
+                // @MSHICK: Added
+                moveKnob = function (event) {
+                    knob.css({
+                        left: event.clientX
+                    });
+                },
+                // END
+
+                applyValue = function (event) {
+
+                    var newPos = Math.abs(slider.offset().left - event.clientX);
+                    newPos = (newPos > slider.width()) ? slider.width() : newPos;
+                    newPos = (newPos > loaded.width()) ? loaded.width() : newPos;
+                    newPos = (newPos < 0) ? 0 : newPos;
+                    newPos = Math.abs(newPos / slider.width()) * ref.pp.getDuration();
+
+                    // avoid strange "mouseMove"-flooding in IE7+8
+                    if (newPos > 0 && newPos != second) {
+                        second = newPos;
+                        ref.pp.setPlayhead(second);
+                    }
+
+                },
+
+                mouseUp = function (evt) {
+                    evt.stopPropagation();
+                    evt.preventDefault();
+
+                    ref.playerDom.unbind('mouseup.slider');
+
+                    slider.unbind('mousemove', mouseMove);
+                    slider.unbind('mouseup', mouseUp);
+                    ref._sSliderAct = false;
+
+                    // @MSHICK: Added
+                    // if (playing) {
+                    //     ref.pp.setPlay();
+                    // }
+                    // END
+
+                    return false;
+                },
+
+                mouseMove = function (evt) {
+                    // @MSHICK: Added
+                    // if (knob) moveKnob(evt);
+                    // END
+
+                    clearTimeout(ref._cTimer);
+                    evt.stopPropagation();
+                    evt.preventDefault();
+                    applyValue(evt);
+                    return false;
+                };
+
+            this.playerDom.bind('mouseup.slider', mouseUp);
+            slider.mouseup(mouseUp);
+            slider.mousemove(mouseMove);
+
+            applyValue(event);
+
+        },
+
+        scrubberdragStartDragListener: function (event) {
+
+            if (this.getConfig('disallowSkip') == true) return;
+            this._sSliderAct = true;
+
 
             var ref = this,
                 slider = $(this.controlElements['scrubberdrag'][0]),
@@ -1103,6 +1211,8 @@ jQuery(function ($) {
 
         },
 
+
+
         vknobStartDragListener: function (event, domObj) {
             this._vSliderAct = true;
 
@@ -1159,14 +1269,14 @@ jQuery(function ($) {
                 dy = Math.abs(parseInt(this.cb.position().top) - evt.clientY);
 
             /*
-	this._initalPosition = {
-	    top: this.cb.css('top'),
-	    bottom: this.cb.css('bottom'),
-	    left: this.cb.css('left'),
-	    right: this.cb.css('right')
+  this._initalPosition = {
+      top: this.cb.css('top'),
+      bottom: this.cb.css('bottom'),
+      left: this.cb.css('left'),
+      right: this.cb.css('right')
 
-	};
-	*/
+  };
+  */
             // this._initalPosition = $.extend({}, this.cb.attr('style'), this.cb.css());
 
             var mouseUp = function (evt) {
@@ -1200,7 +1310,7 @@ jQuery(function ($) {
 
         /*******************************
             GENERAL HELPERS
-    *******************************/
+        *******************************/
         _active: function (elmName, on) {
             var dest = this.controlElements[elmName];
             if (on == true) dest.addClass('active').removeClass('inactive');

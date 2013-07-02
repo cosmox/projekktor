@@ -3,7 +3,7 @@
  * projekktor zwei
  * http://www.projekktor.com
  *
- * Copyright 2010, 2011, 2012 Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
+ * Copyright 2010-2013 Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.filenew.org/projekktor/license/
  */
@@ -17,10 +17,6 @@ jQuery(function ($) {
         pp: {},
         config: {},
         playerDom: null,
-        canvas: {
-            media: null,
-            projekktor: null
-        },
 
         _appliedDOMObj: [],
         _pageDOMContainer: {},
@@ -57,7 +53,8 @@ jQuery(function ($) {
                 result = this.config[idx];
             }
 
-            if (typeof result == 'object' && result.length === null) result = $.extend(true, {}, result, this.config[idx]);
+            if (typeof result == 'object' && result.length === null)
+                result = $.extend(true, {}, result, this.config[idx]);
             else if (typeof result == 'object') {
                 result = $.extend(true, [], this.config[idx] || [], result || []);
             }
@@ -126,7 +123,8 @@ jQuery(function ($) {
 
             // add new DOM container to the player
             if (this._childDOMContainer[func].length == 0) {
-                element.removeClass(tmpClass)
+                element
+                    .removeClass(tmpClass)
                     .addClass(this.pp.getNS() + tmpClass)
                     .removeClass('active')
                     .addClass('inactive')
@@ -141,7 +139,6 @@ jQuery(function ($) {
 
                 return element;
             } else {
-
                 $.each(this._childDOMContainer[func], function () {
                     $(this).attr(ref.getDA('func'), func)
                     ref._appliedDOMObj.push($(this));
@@ -166,17 +163,23 @@ jQuery(function ($) {
         },
 
         setActive: function (elm, on) {
+            var dest = (typeof elm == 'object') ? elm : this.getElement(elm);
+
             if (elm == null) {
                 this._pageDOMContainer['container'].removeClass('inactive').addClass('active');
                 this._childDOMContainer['container'].removeClass('inactive').addClass('active');
                 this.sendEvent('active', $.extend(true, {}, this._pageDOMContainer['container'], this._childDOMContainer['container']));
-                return;
+                return dest;
             }
 
-            var dest = (typeof elm == 'object') ? elm : this.getElement(elm);
-            if (on != false) dest.addClass('active').removeClass('inactive');
-            else dest.addClass('inactive').removeClass('active');
+            if (on != false) {
+                dest.addClass('active').removeClass('inactive');
+            } else {
+                dest.addClass('inactive').removeClass('active');
+            }
+
             dest.css('display', '');
+
             return dest;
         },
 
@@ -211,90 +214,21 @@ jQuery(function ($) {
             if (arguments.length > 1 && value != null) {
                 var t = new Date();
                 t.setDate(t.getDate() + (this.pp.getConfig('cookieExpiry') || 0));
-                return (document.cookie = encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=' + encodeURIComponent(value) + '; expires=' + ((del === true) ? "Thu, 01 Jan 1970 00:00:01 GMT" : t.toUTCString()) + '; path=/'
-                // +options.domain ? '; domain=' + options.domain : '',?
+                return (document.cookie =
+                    encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=' + encodeURIComponent(value) + '; expires=' + ((del === true) ? "Thu, 01 Jan 1970 00:00:01 GMT" : t.toUTCString()) + '; path=/'
+                // +options.domain ? '; domain=' + options.domain : '','
                 // +options.secure ? '; secure' : ''
                 );
             }
 
             // get cookie data:
             var result,
-            returnthis = (result = new RegExp('(?:^|; )' + encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=([^;]*)').exec(document.cookie)) ? decodeURIComponent(result[1]) : null;
+                returnthis = (result = new RegExp('(?:^|; )' + encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=([^;]*)').exec(document.cookie)) ? decodeURIComponent(result[1]) : null;
 
             return (returnthis == 'true' || returnthis == 'false') ? eval(returnthis) : returnthis;
         },
 
         // important
         eventHandler: function () {}
-
-        /*
-     triggered once playback of a new item is being initialized
-    detachHandler: function(itemData) {},
-
-     triggered once display has been initialized (and before plugins are re-ionitialized
-    displayReadyHandler: function(obj) {},
-
-     triggered once all plugins have been (re-) initialized
-    pluginsReadyHandler: function(obj) {},
-
-     triggered on model-state changes
-    stateHandler: function() {},
-
-     triggered on buffer state changes
-    bufferHandler: function() {},
-
-     triggered before ansychronous playlist loading
-    scheduleLoading: function(itemData) {},
-
-     Fired if player configuration has been altered by AJAX results
-    configModified: function(itemData) {},
-
-     triggered once new playlist has been initialized
-    scheduledHandler: function(itemCount) {},
-
-     triggered when ever items are removed from or added to playlist
-    scheduleModifiedHandler: function(itemData) {},
-
-     triggered once playback of a new item is being initialized
-    itemHandler: function(itemData) {},
-
-     triggered every time playback starts
-    startHandler: function(obj) {},
-
-     triggered once playlist reached its end and loop=false
-    doneHandler: function(obj) {},
-
-     triggered once player has been stoped / sent back to sleep
-    stopHandler: function(obj) {},
-
-     triggered once a media file has been played back completely
-    endedHandler: function(obj) {},
-
-    canplayHandler: function(obj) {},
-
-     triggered on volume change
-    volumeHandler: function(obj) {},
-
-     triggered on time updates
-    timeHandler: function(obj) {},
-
-     triggered on progress updates
-    progressHandler: function(obj) {},
-
-     triggered on mousemovement on player
-    mousemoveHandler: function(obj) {},
-
-     triggered if mouse leaves player DOM
-    mouseleaveHandler: function(obj) {},
-
-     triggered oif mouse enters player DOM
-    mouseeterHandler: function(obj) {},
-
-     triggered on fullscreen toggle
-    fullscreenHandler: function(obj) {},
-
-     triggered on keyboard events
-    keyHandler: function(obj) {}
-    */
     }
 });

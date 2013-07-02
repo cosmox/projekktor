@@ -1,4 +1,4 @@
-/*! Projekktor v1.2.30 -jwflash,-plugins/ima,-plugins/logo,-plugins/postertitle,-plugins/share,-plugins/tracking | http://www.projekktor.com | Copyright 2010, 2011, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com | GNU General Public License - http://www.projekktor.com/license/
+/*! Projekktor v1.2.32 -jwflash,-plugins/ima,-plugins/logo,-plugins/postertitle,-plugins/share,-plugins/tracking | http://www.projekktor.com | Copyright 2010, 2011, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com | GNU General Public License - http://www.projekktor.com/license/
 //@ sourceMappingURL=projekktor.min.map
 *//*
  * this file is part of
@@ -28,7 +28,6 @@ jQuery(function ($) {
 
     // apply IE8 html5 fix - thanx to Remy Sharp - http://remysharp.com/2009/01/07/html5-enabling-script/
     if ( !! document.createElement('video').canPlayType) {
-
         (function () {
             if (! /*@cc_on!@*/ 0) return;
             var e = "audio,video,track,source".split(',');
@@ -109,7 +108,8 @@ jQuery(function ($) {
                 } catch (e) {};
 
             }
-            if (instances.length > 0) return (instances.length == 1) ? instances[0] : new Iterator(instances);
+            if (instances.length > 0)
+                return (instances.length == 1) ? instances[0] : new Iterator(instances);
         }
 
         // build instances
@@ -136,7 +136,7 @@ jQuery(function ($) {
 
         function PPlayer(srcNode, cfg, onReady) {
 
-            this.config = new projekktorConfig('1.2.30');
+            this.config = new projekktorConfig('1.2.32');
 
             this.env = {
                 muted: false,
@@ -194,7 +194,8 @@ jQuery(function ($) {
 
                 for (var item in files) {
 
-                    if (typeof files[item] == 'function' || typeof files[item] == null) continue;
+                    if (typeof files[item] == 'function' || typeof files[item] == null)
+                        continue;
 
                     if (files[item]) {
                         var itemIdx = this._addItem(this._prepareMedia({
@@ -212,7 +213,8 @@ jQuery(function ($) {
 
                 }
 
-                if (itemIdx == null) this._addItem(this._prepareMedia({
+                if (itemIdx == null)
+                    this._addItem(this._prepareMedia({
                         file: '',
                         config: {},
                         errorCode: 97
@@ -244,7 +246,8 @@ jQuery(function ($) {
                 }
 
                 // report schedule modifications after initial scheduling only:
-                if (this.env.loading === false) this._promote('scheduleModified', this.getItemCount());
+                if (this.env.loading === false)
+                    this._promote('scheduleModified', this.getItemCount());
 
                 return resultIdx;
             };
@@ -273,7 +276,8 @@ jQuery(function ($) {
                     resultIdx = idx;
                 }
 
-                if (this.env.loading === false) this._promote('scheduleModified', this.getItemCount());
+                if (this.env.loading === false)
+                    this._promote('scheduleModified', this.getItemCount());
 
                 return resultIdx;
             };
@@ -299,7 +303,8 @@ jQuery(function ($) {
                     $.each(platforms, function (_na, platform) {
 
                         // !!!!!
-                        if (!ref._canPlay($p.mmap[i].type, platform, data.config.streamType)) return true;
+                        if (!ref._canPlay($p.mmap[i].type, platform, data.config.streamType))
+                            return true;
 
                         // set priority level
                         $p.mmap[i].level = $.inArray(platform, ref.config._platforms);
@@ -307,11 +312,13 @@ jQuery(function ($) {
 
                         extRegEx.push('.' + $p.mmap[i].ext);
 
-                        if (!extTypes[$p.mmap[i].ext]) extTypes[$p.mmap[i].ext] = new Array();
+                        if (!extTypes[$p.mmap[i].ext])
+                            extTypes[$p.mmap[i].ext] = new Array();
 
                         extTypes[$p.mmap[i].ext].push($p.mmap[i]);
 
-                        if (!typesModels[$p.mmap[i].type]) typesModels[$p.mmap[i].type] = new Array();
+                        if (!typesModels[$p.mmap[i].type])
+                            typesModels[$p.mmap[i].type] = new Array();
 
                         typesModels[$p.mmap[i].type].push($p.mmap[i]);
 
@@ -324,12 +331,12 @@ jQuery(function ($) {
                 if (typeof data.file == 'string') {
                     data.file = [{
                             'src': data.file
-                    }];
+                        }];
                     if (typeof data.type == 'string') {
                         data.file = [{
                                 'src': data.file,
                                 'type': data.type
-                        }];
+                            }];
                     }
                 }
 
@@ -337,12 +344,11 @@ jQuery(function ($) {
                 if ($.isEmptyObject(data) || data.file === false || data.file === null) {
                     data.file = [{
                             'src': null
-                    }];
+                        }];
                 }
 
                 for (var index in data.file) {
 
-                    // mooop
                     if (index == 'config') continue;
 
                     // just a filename _> go object
@@ -359,11 +365,11 @@ jQuery(function ($) {
 
                     // get file extension:
                     /**
-		try {
-		    data.file[index].ext = data.file[index].src.match( new RegExp(extRegEx))[1];
-		    data.file[index].ext = (!data.file[index].ext) ? 'NaN' : data.file[index].ext.replace('.','');
-		} catch(e) { data.file[index].ext='NaN'; }
-		*/
+        try {
+            data.file[index].ext = data.file[index].src.match( new RegExp(extRegEx))[1];
+            data.file[index].ext = (!data.file[index].ext) ? 'NaN' : data.file[index].ext.replace('.','');
+        } catch(e) { data.file[index].ext='NaN'; }
+        */
 
                     // if type is set, get rid of the codec mess
                     if (data.file[index].type != null && data.file[index].type !== '') {
@@ -391,7 +397,8 @@ jQuery(function ($) {
 
                 }
 
-                if (modelSets.length == 0) modelSets = typesModels['none/none'];
+                if (modelSets.length == 0)
+                    modelSets = typesModels['none/none'];
                 else {
                     // find highest priorized playback model
                     modelSets.sort(function (a, b) {
@@ -420,17 +427,20 @@ jQuery(function ($) {
                 for (var index in data.file) {
 
                     // discard files not matching the selected model
-                    if (data.file[index].type == null) continue;
+                    if (data.file[index].type == null)
+                        continue;
 
-                    if (($.inArray(data.file[index].type.replace(/x-/, ''), types) < 0) && modelSet.type != 'none/none') continue;
+                    if (($.inArray(data.file[index].type.replace(/x-/, ''), types) < 0) && modelSet.type != 'none/none')
+                        continue;
 
-                    // make srcURL absolute	for non-RTMP files
+                    // make srcURL absolute for non-RTMP files
                     data.file[index].src = (!$.isEmptyObject(data.config) && (data.config.streamType == 'http' || data.config.streamType == null)) ? $p.utils.toAbsoluteURL(data.file[index].src) : data.file[index].src;
 
                     //
 
                     // set "default" quality
-                    if (data.file[index].quality == null) data.file[index].quality = 'default';
+                    if (data.file[index].quality == null)
+                        data.file[index].quality = 'default';
 
                     // add this files quality key to index
                     qualities.push(data.file[index].quality)
@@ -484,7 +494,8 @@ jQuery(function ($) {
                     case 'AWAKENING':
                         var modelRef = this.playerModel;
                         this._syncPlugins(function () {
-                            if (modelRef.getState('AWAKENING')) modelRef.displayItem(true);
+                            if (modelRef.getState('AWAKENING'))
+                                modelRef.displayItem(true);
                         });
                         break;
 
@@ -526,7 +537,8 @@ jQuery(function ($) {
                     this._syncPlugins(function () {
                         ref._promote('ready');
                         ref._addGUIListeners();
-                        if (!modelRef.getState('IDLE')) modelRef.start();
+                        if (!modelRef.getState('IDLE'))
+                            modelRef.start();
                     });
 
                     break;
@@ -600,6 +612,19 @@ jQuery(function ($) {
                         if (evt != false) this._promote(evt, value);
                         this._maxElapsed = (this.getDuration() * pct / 100);
                     }
+                    this._promote(type, value);
+                    break;
+
+                case 'fullscreen':
+                    if (value === true) {
+                        this.getDC().addClass('fullscreen');
+                        this._enterFullViewport();
+                    } else {
+                        this.getDC().removeClass('fullscreen');
+                        this._exitFullViewport();
+                    }
+                    this._promote(type, value);
+                    break;
 
                 default:
                     this._promote(type, value);
@@ -645,12 +670,14 @@ jQuery(function ($) {
 
                 this._removeGUIListeners();
 
-                if (this.getDC().get(0).addEventListener) this.getDC().get(0).addEventListener("mousedown", this._MD, true);
-                else
-                // IE
+                if (this.getDC().get(0).addEventListener) {
+                    this.getDC().get(0).addEventListener("mousedown", this._MD, true);
+                } else {
+                    // IE *sigh*
                     this.getDC().mousedown(function (event) {
                         ref._playerFocusListener(event);
                     });
+                }
 
                 this.getDC()
                     .mousemove(function (event) {
@@ -667,7 +694,7 @@ jQuery(function ($) {
                 })
                     .blur(function (event) {
                     ref._playerFocusListener(event);
-                })
+                });
                 // .bind('touchstart', function(){ref._MD})
 
                 $(window)
@@ -678,7 +705,6 @@ jQuery(function ($) {
                     ref._windowTouchListener(event);
                 });
 
-                // keyboard interface get rid of this moz.warning
                 if (this.config.enableKeyboard === true) {
                     $(document).unbind('keydown.pp' + this._id);
                     $(document).bind('keydown.pp' + this._id, function (evt) {
@@ -716,6 +742,7 @@ jQuery(function ($) {
                     try {
                         typeof eval(pluginName);
                     } catch (e) {
+                        $p.utils.log("ERROR:", e);
                         continue;
                     }
 
@@ -781,7 +808,8 @@ jQuery(function ($) {
                     event = 'plugin_' + event._plugin + $p.utils.capitalise(event._event.toUpperCase());
                 }
 
-                if (event != 'time' && event != 'progress' && event != 'mousemove') $p.utils.log("Event: [" + event + "]", value, this.listeners);
+                if (event != 'time' && event != 'progress' && event != 'mousemove')
+                    $p.utils.log("Event: [" + event + "]", value, this.listeners);
 
                 // fire on plugins
                 if (this._pluginCache[event + "Handler"] && this._pluginCache[event + "Handler"].length > 0) {
@@ -822,14 +850,17 @@ jQuery(function ($) {
             };
 
             /*******************************
-	      GUI LISTENERS
-	*******************************/
+          GUI LISTENERS
+    *******************************/
             this._windowTouchListener = function (evt) {
                 if (evt.touches) {
                     if (evt.touches.length > 0) {
                         if (($(document.elementFromPoint(evt.touches[0].clientX, evt.touches[0].clientY)).attr('id') || '').indexOf(this.getDC().attr('id')) > -1) {
-                            if (this.env.mouseIsOver == false) this._promote('mouseenter', {});
+                            if (this.env.mouseIsOver == false) {
+                                this._promote('mouseenter', {});
+                            }
                             this.env.mouseIsOver = true;
+
                             this._promote('mousemove', {});
                             evt.stopPropagation();
                         } else if (this.env.mouseIsOver) {
@@ -845,7 +876,8 @@ jQuery(function ($) {
 
                 switch (type) {
                 case 'mousedown':
-                    if (this.env.mouseIsOver == false) break;
+                    if (this.env.mouseIsOver == false)
+                        break;
 
                     // make sure we don't mess with input-overlays here:
                     if ("|TEXTAREA|INPUT".indexOf('|' + evt.target.tagName.toUpperCase()) > -1) {
@@ -867,7 +899,8 @@ jQuery(function ($) {
                         this.env.mouseIsOver = true;
                     }
                     // prevent strange chrome issues with cursor changes:
-                    if (this.env.clientX == evt.clientX && this.env.clientY == evt.clientY) return;
+                    if (this.env.clientX == evt.clientX && this.env.clientY == evt.clientY)
+                        return;
                     this.env.clientX = evt.clientX;
                     this.env.clientY = evt.clientY;
                     break;
@@ -899,7 +932,9 @@ jQuery(function ($) {
                 var ref = this,
                     set = (this.getConfig('keys').length > 0) ? this.getConfig('keys') : [{
                             27: function (player) {
-                                player.setStop();
+                                if (player.getInFullscreen()) {
+                                    player.setFullscreen(false);
+                                } else player.setStop();
                             }, // ESC
                             32: function (player, evt) {
                                 player.setPlayPause();
@@ -950,14 +985,13 @@ jQuery(function ($) {
                 })
             };
 
-            /*****************************************
-	    DOM Manipulations
-	*****************************************/
+            /*******************************
+    DOM manipulations
+    *******************************/
             /* make player fill the whole window viewport */
-            this._enterFullViewport = function (forcePlayer, addClass) {
-
+            this._enterFullViewport = function (forcePlayer) {
                 // get relevant elements
-                var win = this.getIframeWindow() || $(window),
+                var win = this.getIframeParent() || $(window),
                     target = this.getIframe() || this.getDC(),
                     overflow = $(win[0].document.body).css('overflow');
 
@@ -966,28 +1000,19 @@ jQuery(function ($) {
                     target = this.getDC();
                 }
 
-                // remember relevant attributes
+                // prepare target:
                 target.data('fsdata', {
                     scrollTop: win.scrollTop() || 0,
                     scrollLeft: win.scrollLeft() || 0,
                     targetStyle: target.attr('style') || '',
+                    targetWidth: target.width(),
+                    targetHeight: target.height(),
                     bodyOverflow: (overflow == 'visible') ? 'auto' : overflow, // prevent IE7 crash
                     bodyOverflowX: $(win[0].document.body).css('overflow-x'), // prevent IE7 crash
                     bodyOverflowY: $(win[0].document.body).css('overflow-y'), // prevent IE7 crash
                     iframeWidth: target.attr('width') || 0,
                     iframeHeight: target.attr('height') || 0
-                })
-
-                // prepare parent window
-                win.scrollTop(0).scrollLeft(0);
-                $(win[0].document.body).css({
-                    overflow: 'hidden',
-                    overflowX: 'hidden',
-                    overflowY: 'hidden'
-                });
-
-                // prepare player
-                target.css({
+                }).css({
                     position: 'fixed',
                     display: 'block',
                     top: 0,
@@ -999,32 +1024,19 @@ jQuery(function ($) {
                     padding: 0
                 });
 
-                // target.parent().css('overflow', 'hidden');
-                // prepare player
-                /*
-	    target.css({
-		position: 'relative',
-		display: 'block',
-		top: -target.offset().top + "px",
-		left: -target.offset().left + "px",
-		width: win.widht() + "px",
-		height: win.height() + "px",
-		zIndex: 9999,
-		margin: 0,
-		padding: 0
-	    });
-	    */
-
-                if (addClass !== false) this.getDC().addClass('fullscreen');
-
-                return target;
+                // prepare parent window
+                win.scrollTop(0).scrollLeft(0);
+                $(win[0].document.body).css({
+                    overflow: 'hidden',
+                    overflowX: 'hidden',
+                    overflowY: 'hidden'
+                });
             };
 
             /* reset player from "full (parent) window viewport" iframe thing */
             this._exitFullViewport = function (forcePlayer) {
-
                 // get relevant elements
-                var win = this.getIframeWindow() || $(window),
+                var win = this.getIframeParent() || $(window),
                     target = this.getIframe() || this.getDC(),
                     fsData = target.data('fsdata') || null;
 
@@ -1035,26 +1047,31 @@ jQuery(function ($) {
 
                 // reset
                 if (fsData != null) {
+                    // rebuild parent window state
                     win.scrollTop(fsData.scrollTop).scrollLeft(fsData.scrollLeft);
                     $(win[0].document.body).css('overflow', fsData.bodyOverflow);
                     $(win[0].document.body).css('overflow-x', fsData.bodyOverflowX);
                     $(win[0].document.body).css('overflow-y', fsData.bodyOverflowY);
+
+                    // rebuild iframe:
                     if (fsData.iframeWidth > 0 && !forcePlayer) {
-                        target.attr('width', fsData.iframeWidth + "px");
-                        target.attr('height', fsData.iframeHeight + "px");
+                        target
+                            .attr('width', fsData.iframeWidth + "px")
+                            .attr('height', fsData.iframeHeight + "px");
+                    } else {
+                        target
+                            .width(fsData.targetWidth)
+                            .height(fsData.targetHeight);
                     }
-                    target.attr('style', (fsData.targetStyle == null) ? '' : fsData.targetStyle);
-                    target.data('fsdata', null);
+                    target
+                        .attr('style', (fsData.targetStyle == null) ? '' : fsData.targetStyle)
+                        .data('fsdata', null);
                 }
-
-                this.getDC().removeClass('fullscreen');
-
-                return (this.getIframe()) ? parent.window.document : document;
             };
 
             /*******************************
-	plugin API wrapper
-	*******************************/
+    plugin API wrapper
+    *******************************/
             this.pluginAPI = function () {
                 var args = Array.prototype.slice.call(arguments) || null,
                     dest = args.shift(),
@@ -1071,8 +1088,8 @@ jQuery(function ($) {
             };
 
             /*******************************
-	public (API) methods GETTERS
-	*******************************/
+    public (API) methods GETTERS
+    *******************************/
             this.getPlayerVer = function () {
                 return this.config._version;
             };
@@ -1112,7 +1129,8 @@ jQuery(function ($) {
                     } catch (e) {}
                 }
 
-                if (result == null) return null;
+                if (result == null)
+                    return null;
 
                 if (typeof result == 'object' && result.length === null) {
                     result = $.extend(true, {}, result || {});
@@ -1145,14 +1163,13 @@ jQuery(function ($) {
 
             this.getState = function (compare) {
                 var result = 'IDLE';
-
                 try {
                     result = this.playerModel.getState();
-                } catch (e) {
-                    result == null
-                }
+                } catch (e) {}
 
-                if (compare != null) return (result == compare.toUpperCase());
+                if (compare != null) {
+                    return (result == compare.toUpperCase());
+                }
                 return result;
             };
 
@@ -1354,7 +1371,7 @@ jQuery(function ($) {
                 }
             };
 
-            this.getIframeWindow = function () {
+            this.getIframeParent = this.getIframeWindow = function () {
                 try {
                     var result = parent.location.host || false;
                     return (result === false) ? false : $(parent.window);
@@ -1370,6 +1387,16 @@ jQuery(function ($) {
                 } catch (e) {
                     return false;
                 }
+            };
+
+            this.getIframeAllowFullscreen = function () {
+                var result = null;
+                try {
+                    result = window.frameElement.attributes.allowFullscreen || window.frameElement.attributes.mozallowFullscreen || window.frameElement.attributes.webkitallowFullscreen || null;
+                } catch (e) {
+                    result = true;
+                }
+                return (result != null) ? true : false;
             };
 
             this.getPlaybackQuality = function () {
@@ -1415,7 +1442,6 @@ jQuery(function ($) {
             }
 
             this._canPlay = function (type, platform, streamType) {
-
                 var ref = this,
                     checkIn = [],
                     checkFor = [],
@@ -1431,16 +1457,15 @@ jQuery(function ($) {
                 $.each(pltfrm, function (key, plt) {
 
                     $.each($p._compTableCache[st] || [], function (key, val) {
-                        if (plt != null) {
-                            if (key != plt) {
+                        if (plt != null)
+                            if (key != plt)
                                 return true;
-                            }
-                        }
                         checkIn = $.merge(checkIn, this);
                     })
                 })
 
-                if (checkIn.length == 0) return false;
+                if (checkIn.length == 0)
+                    return false;
 
                 switch (typeof type) {
 
@@ -1448,7 +1473,8 @@ jQuery(function ($) {
                     return checkIn.length > 0
 
                 case 'string':
-                    if (type == '*') return checkIn;
+                    if (type == '*')
+                        return checkIn;
 
                     checkFor.push(type);
                     break;
@@ -1461,7 +1487,8 @@ jQuery(function ($) {
 
                 for (var i in checkFor) {
                     if (typeof checkFor[i] !== 'string') break;
-                    if ($.inArray(checkFor[i], checkIn) > -1) return true;
+                    if ($.inArray(checkFor[i], checkIn) > -1)
+                        return true;
                 }
 
                 return false;
@@ -1488,8 +1515,8 @@ jQuery(function ($) {
             };
 
             /*
-	 Thanx to John Dyer: http://johndyer.name/native-fullscreen-javascript-api-plus-jquery-plugin/
-	*/
+     Thanx to John Dyer: http://johndyer.name/native-fullscreen-javascript-api-plus-jquery-plugin/
+    */
             this.getNativeFullscreenSupport = function () {
                 var ref = this,
                     fullScreenApi = {
@@ -1502,11 +1529,9 @@ jQuery(function ($) {
                             }
                         },
                         requestFullScreen: function () {
-                            ref._enterFullViewport();
                             ref.playerModel.applyCommand('fullscreen', true);
                         },
                         cancelFullScreen: function () {
-                            ref._exitFullViewport();
                             ref.playerModel.applyCommand('fullscreen', false);
                         },
                         prefix: '',
@@ -1537,16 +1562,19 @@ jQuery(function ($) {
                             fullScreenApi.supportsFullScreen = 'dom';
 
                             // FF8+FF9 double-check
-                            if (fullScreenApi.prefix == 'moz' && typeof document[fullScreenApi.prefix + 'FullScreenEnabled'] == 'undefined') fullScreenApi.supportsFullScreen = false;
+                            if (fullScreenApi.prefix == 'moz' && typeof document[fullScreenApi.prefix + 'FullScreenEnabled'] == 'undefined')
+                                fullScreenApi.supportsFullScreen = false;
                         }
 
-                        if (fullScreenApi.supportsFullScreen !== false && fullScreenApi.supportsFullScreen !== 'semi') break;
+                        if (fullScreenApi.supportsFullScreen !== false && fullScreenApi.supportsFullScreen !== 'semi')
+                            break;
 
                     }
                 }
 
                 // forget it:
-                if (fullScreenApi.supportsFullScreen == 'semi' || (fullScreenApi.supportsFullScreen == 'dom' && this.getConfig('forceFullViewport'))) return fullScreenApi;
+                if (fullScreenApi.supportsFullScreen == 'semi' || (fullScreenApi.supportsFullScreen == 'dom' && this.getConfig('forceFullViewport')))
+                    return fullScreenApi;
 
                 // is in fullscreen check
                 fullScreenApi.isFullScreen = function (esc) {
@@ -1574,26 +1602,23 @@ jQuery(function ($) {
                     fullScreenApi.requestFullScreen = function () {
                         if (this.isFullScreen()) return;
 
-                        var win = ref.getIframeWindow() || $(window);
+                        var win = ref.getIframeParent() || $(window);
                         win.data('fsdata', {
                             scrollTop: win.scrollTop(),
                             scrollLeft: win.scrollLeft()
                         });
 
-                        var target = ref._enterFullViewport(),
+                        var target = ref.getIframe() || ref.getDC(),
                             apiRef = this,
                             dest = (ref.getIframe()) ? parent.window.document : document,
-                            win = ref.getIframeWindow() || $(window);
+                            win = ref.getIframeParent() || $(window);
 
                         $(dest).unbind(this.prefix + "fullscreenchange.projekktor");
                         $(dest).bind(this.prefix + "fullscreenchange.projekktor", function (evt) {
 
                             if (!apiRef.isFullScreen(true)) {
-
-                                apiRef.ref._exitFullViewport();
                                 apiRef.ref.playerModel.applyCommand('fullscreen', false);
-
-                                var win = apiRef.ref.getIframeWindow() || $(window),
+                                var win = apiRef.ref.getIframeParent() || $(window),
                                     fsData = win.data('fsdata');
                                 if (fsData != null) {
                                     win.scrollTop(fsData.scrollTop);
@@ -1605,8 +1630,10 @@ jQuery(function ($) {
                             }
                         });
 
-                        if (this.prefix === '') target.get(0).requestFullScreen()
-                        else target.get(0)[this.prefix + 'RequestFullScreen']();
+                        if (this.prefix === '')
+                            target.get(0).requestFullScreen()
+                        else
+                            target.get(0)[this.prefix + 'RequestFullScreen']();
 
                         apiRef.ref.playerModel.applyCommand('fullscreen', true);
                     }
@@ -1615,17 +1642,17 @@ jQuery(function ($) {
                     fullScreenApi.cancelFullScreen = function () {
 
                         $((ref.getIframe()) ? parent.window.document : document).unbind(this.prefix + "fullscreenchange.projekktor");
-                        var target = ref._exitFullViewport();
+                        var target = ref.getIframe() ? parent.window.document : document;
 
                         // $(target).unbind(this.prefix + "fullscreenchange.projekktor");
                         // seems to cause errors in FF
-
                         if (target.exitFullScreen)
                             target.exitFullScreen();
                         else if (this.prefix == '')
                             target.cancelFullScreen();
-                        else target[this.prefix + 'CancelFullScreen']();
-                        var win = ref.getIframeWindow() || $(window),
+                        else
+                            target[this.prefix + 'CancelFullScreen']();
+                        var win = ref.getIframeParent() || $(window),
                             fsData = win.data('fsdata');
 
                         if (fsData != null) {
@@ -1687,7 +1714,8 @@ jQuery(function ($) {
 
             this._getAppropriateQuality = function (quals) {
 
-                if (quals.length == 0) return [];
+                if (quals.length == 0)
+                    return [];
 
                 var wid = this.env.playerDom.width(),
                     hei = this.env.playerDom.height(),
@@ -1698,19 +1726,24 @@ jQuery(function ($) {
                 $.each(this.getConfig('playbackQualities') || [], function () {
 
                     // not available
-                    if ($.inArray(this.key, quals) < 0) return true;
+                    if ($.inArray(this.key, quals) < 0)
+                        return true;
 
                     // check player-dim agains minHeight
-                    if ((this.minHeight || 0) > hei && temp.minHeight <= hei) return true;
+                    if ((this.minHeight || 0) > hei && temp.minHeight <= hei)
+                        return true;
 
                     // new set in case of higher resolution
-                    if ((temp.minHeight || 0) > this.minHeight) return true;
+                    if ((temp.minHeight || 0) > this.minHeight)
+                        return true;
 
                     // check against minWidth - simple case:
                     if (typeof this.minWidth == 'number') {
-                        if (this.minWidth === 0 && this.minHeight > hei) return true;
+                        if (this.minWidth === 0 && this.minHeight > hei)
+                            return true;
 
-                        if (this.minWidth > wid) return true;
+                        if (this.minWidth > wid)
+                            return true;
 
                         temp = this;
                     }
@@ -1718,8 +1751,10 @@ jQuery(function ($) {
                     else if (typeof this.minWidth == 'object') {
                         var ref = this;
                         $.each(this.minWidth, function () {
-                            if ((this.ratio || 100) > ratio) return true;
-                            if (this.minWidth > wid) return true;
+                            if ((this.ratio || 100) > ratio)
+                                return true;
+                            if (this.minWidth > wid)
+                                return true;
                             temp = ref;
                             return true;
                         })
@@ -1815,8 +1850,8 @@ jQuery(function ($) {
             };
 
             /*******************************
-	public (API) methods SETTERS
-	*******************************/
+    public (API) methods SETTERS
+    *******************************/
             this.setActiveItem = function (mixedData) {
 
                 var newItem = 0,
@@ -1887,7 +1922,8 @@ jQuery(function ($) {
                     this.media[this._currentItem].errorCode = 8;
                 } else {
                     // apply item specific class(es) to player
-                    if (this.getConfig('className', null) != null) this.getDC().addClass(this.getNS() + this.getConfig('className'))
+                    if (this.getConfig('className', null) != null)
+                        this.getDC().addClass(this.getNS() + this.getConfig('className'))
 
                     this.getDC().addClass(this.getNS() + (this.getConfig('streamType') || 'http'));
                     if (!$p.utils.cssTransitions()) this.getDC().addClass('notransitions')
@@ -1943,14 +1979,16 @@ jQuery(function ($) {
             this.setStop = function (toZero) {
                 var ref = this;
 
-                if (this.getState('IDLE')) return this;
+                if (this.getState('IDLE'))
+                    return this;
 
                 if (toZero) {
                     this._enqueue(function () {
                         ref._currentItem = 0;
                         ref.setActiveItem(0);
                     });
-                } else this._enqueue('stop', false);
+                } else
+                    this._enqueue('stop', false);
 
                 return this;
             };
@@ -2021,7 +2059,8 @@ jQuery(function ($) {
             /* queue ready */
             this.setPlayhead = function (position) {
 
-                if (this.getConfig('disallowSkip') == true) return this;
+                if (this.getConfig('disallowSkip') == true)
+                    return this;
 
                 if (typeof position == 'string') {
                     var dir = position.substr(0, 1);
@@ -2046,9 +2085,11 @@ jQuery(function ($) {
             /* queue ready */
             this.setFrame = function (frame) {
 
-                if (this.getConfig('fps') == null) return this;
+                if (this.getConfig('fps') == null)
+                    return this;
 
-                if (this.getConfig('disallowSkip') == true) return this;
+                if (this.getConfig('disallowSkip') == true)
+                    return this;
 
                 if (typeof frame == 'string') {
                     var dir = frame.substr(0, 1);
@@ -2148,8 +2189,6 @@ jQuery(function ($) {
 
             this.setFullscreen = function (goFull) {
 
-                if (this.getConfig('isCrossDomain')) return this;
-
                 var nativeFullscreen = this.getNativeFullscreenSupport(),
                     ref = this;
 
@@ -2162,29 +2201,28 @@ jQuery(function ($) {
             };
 
             this.setSize = function (data) {
-
-                // @TODO: Why was this added? breaks fullscreen in Chrome.
-                // if (this.getInFullscreen())
-                //     return;
-
-                var w = (data && data.width != null) ? data.width :
-                    (this.getConfig('width') != null) ? this.getConfig('width') : false,
-
+                var target = this.getIframe() || this.getDC(),
+                    fsdata = target.data('fsdata') || null,
+                    w = (data && data.width != null) ? data.width :
+                        (this.getConfig('width') != null) ? this.getConfig('width') : false,
                     h = (data && data.height != null) ? data.height :
                         (this.getConfig('height') == null && this.getConfig('ratio')) ? Math.round((w || this.getDC().width()) / this.getConfig('ratio')) :
                         (this.getConfig('height') != null) ? this.getConfig('height') : false;
 
-                if (this.getConfig('iframe')) {
-                    w = $(window).width();
-                    h = $(window).height()
+                if (this.getInFullscreen() && fsdata != null) {
+                    // remember new dims while in FS
+                    fsdata.targetWidth = w;
+                    fsdata.targetHeight = h;
+                    target.data('fsdata', fsdata);
+                } else {
+                    // apply new dims
+                    if (w) target.css({
+                            width: w + "px"
+                        });
+                    if (h) target.css({
+                            height: h + "px"
+                        });
                 }
-
-                if (w) this.getDC().css({
-                        width: w + "px"
-                    });
-                if (h) this.getDC().css({
-                        height: h + "px"
-                    });
 
                 try {
                     this.playerModel.applyCommand('resize');
@@ -2197,7 +2235,8 @@ jQuery(function ($) {
 
             this.setDebug = function (value) {
                 $p.utils.logging = value || !$p.utils.logging;
-                if ($p.utils.logging) $p.utils.log('DEBUG MODE for player #' + this.getId());
+                if ($p.utils.logging)
+                    $p.utils.log('DEBUG MODE for player #' + this.getId());
             };
 
             this.addListener = function (evt, callback) {
@@ -2207,6 +2246,7 @@ jQuery(function ($) {
                 });
                 return this;
             };
+
             this._addListener = function (event, callback) {
                 var evt = (event.indexOf('.') > -1) ? event.split('.') : [event, 'default'];
                 this.listeners.push({
@@ -2217,9 +2257,8 @@ jQuery(function ($) {
                 return this;
             };
 
-            /* removes an JS object from the bubble-event queue */
+            /* removes an JS object from the event queue */
             this.removeListener = function (event, callback) {
-
                 var len = this.listeners.length,
                     evt = (event.indexOf('.') > -1) ? event.split('.') : [event, '*'];
 
@@ -2272,7 +2311,8 @@ jQuery(function ($) {
                     dataType = arguments[1] || this._getTypeFromFileExtension(fileNameOrObject),
                     result = [];
 
-                if (this.env.loading === true) return this;
+                if (this.env.loading === true)
+                    return this;
 
                 this._clearqueue();
                 this.env.loading = true;
@@ -2421,8 +2461,8 @@ jQuery(function ($) {
             },
 
             /********************************************************************************************
-		Queue Points
-	*********************************************************************************************/
+        Queue Points
+    *********************************************************************************************/
             this.setCuePoint = function (obj, opt) {
                 var item = (obj.item !== undefined) ? obj.item : this.getItemIdx(),
                     options = $.extend(true, {
@@ -2451,7 +2491,8 @@ jQuery(function ($) {
 
                         _stateListener: function (state, player) {
                             if ('STOPPED|COMPLETED|DESTROYING'.indexOf(state) > -1) {
-                                if (this._active) try {
+                                if (this._active)
+                                    try {
                                         this.callback(false, this, player);
                                 } catch (e) {}
                                 this._active = false;
@@ -2461,7 +2502,8 @@ jQuery(function ($) {
                         },
                         _timeListener: function (time, player) {
 
-                            if (player.getItemIdx() !== this.item && this.item != '*') return;
+                            if (player.getItemIdx() !== this.item && this.item != '*')
+                                return;
 
                             var timeIdx = (this.precision == 0) ? Math.round(time) : $p.utils.roundNumber(time, this.precision),
                                 ref = this;
@@ -2487,7 +2529,8 @@ jQuery(function ($) {
                             }
 
                             // something to do?
-                            if (this._lastTime == timeIdx) return;
+                            if (this._lastTime == timeIdx)
+                                return;
 
                             var nat = (timeIdx - this._lastTime <= 1 && timeIdx - this._lastTime > 0);
 
@@ -2529,19 +2572,23 @@ jQuery(function ($) {
                             this._lastTime = timeIdx;
                         },
                         addListener: function (event, func) {
-                            if (this._listeners[event] == null) this._listeners[event] = [];
+                            if (this._listeners[event] == null)
+                                this._listeners[event] = [];
                             this._listeners[event].push(func || function () {});
                         }
                     }
 
-                if (obj.unlockCallback != null) cuePoint.addListener('unlock', obj.unlockCallback);
+                if (obj.unlockCallback != null)
+                    cuePoint.addListener('unlock', obj.unlockCallback);
 
                 // create itemidx key
-                if (this._cuePoints[item] == null) this._cuePoints[item] = [];
+                if (this._cuePoints[item] == null)
+                    this._cuePoints[item] = [];
 
                 this._cuePoints[item].push(cuePoint);
 
-                if (!this.getState('IDLE')) this._promote('cuepointAdded')
+                if (!this.getState('IDLE'))
+                    this._promote('cuepointAdded')
 
                 return this;
 
@@ -2640,8 +2687,8 @@ jQuery(function ($) {
             },
 
             /********************************************************************************************
-		Command Queue
-	*********************************************************************************************/
+        Command Queue
+    *********************************************************************************************/
             this._enqueue = function (command, params, delay) {
                 if (command != null) {
                     this._queue.push({
@@ -2676,21 +2723,22 @@ jQuery(function ($) {
                             var msg = ref._queue.shift();
                             if (msg != null) {
                                 if (typeof msg.command == 'string') {
-                                    if (msg.delay > 0) setTimeout(function () {
+                                    if (msg.delay > 0)
+                                        setTimeout(function () {
                                             ref.playerModel.applyCommand(msg.command, msg.params);
                                         }, msg.delay);
-                                    else ref.playerModel.applyCommand(msg.command, msg.params);
+                                    else
+                                        ref.playerModel.applyCommand(msg.command, msg.params);
                                 } else {
                                     msg.command(ref);
                                 }
                             }
                         } catch (e) {
-                            console.log(e)
+                            $p.utils.log("ERROR:", e);
                         }
 
                         if (ref._queue.length == 0) {
                             if (ref._isReady === false) {
-                                // ref._promote('ready', ref.getItemIdx());
                                 ref._isReady = true;
                             }
                             ref._processing = false;
@@ -2702,13 +2750,12 @@ jQuery(function ($) {
                     }
                     setTimeout(arguments.callee, 100);
                 })();
-            }
+            };
 
             /********************************************************************************************
-		GENERAL Tools
-	*********************************************************************************************/
+        GENERAL Tools
+    *********************************************************************************************/
             this._getTypeFromFileExtension = function (url) {
-
                 var fileExt = '',
                     extRegEx = [],
                     extTypes = {},
@@ -2730,12 +2777,10 @@ jQuery(function ($) {
                 }
 
                 return extTypes[fileExt].type;
-
             };
 
             /* generates an array of mediatype=>playertype relations depending on browser capabilities */
             this._testMediaSupport = function () {
-
                 var result = {},
                     streamType = '',
                     ref = this;
@@ -2746,18 +2791,22 @@ jQuery(function ($) {
 
                     $.each(platforms, function (_na, platform) {
 
-                        if (platform == null) return true;
+                        if (platform == null)
+                            return true;
 
                         streamType = $p.mmap[i]['streamType'] || ['http'];
 
                         $.each(streamType, function (key, st) {
 
-                            if (result[st] == null) result[st] = {};
+                            if (result[st] == null)
+                                result[st] = {};
 
-                            if (result[st][platform] == null) result[st][platform] = [];
+                            if (result[st][platform] == null)
+                                result[st][platform] = [];
 
                             // avoid dupes
-                            if ($.inArray($p.mmap[i]['type'], result[st][platform]) > -1) return true;
+                            if ($.inArray($p.mmap[i]['type'], result[st][platform]) > -1)
+                                return true;
 
                             var version = $p.models[$p.mmap[i]['model'].toUpperCase()].prototype[(platform.toLowerCase()) + 'Version'] || 1;
 
@@ -3003,23 +3052,28 @@ jQuery(function ($) {
                 var ref = this,
                     files = [];
 
-                // load and initialize plugins
+                // load and initialize plugins'
                 this._registerPlugins();
 
                 // set up iframe environment
                 if (this.config._iframe === true) {
-                    if (this.getIframeWindow()) {
-                        this.getIframeWindow().ready(function () {
-                            ref._enterFullViewport(true, false);
+                    if (this.getIframeParent()) {
+                        this.getIframeParent().ready(function () {
+                            ref._enterFullViewport(true);
                         });
                     } else {
-                        ref._enterFullViewport(true, false);
+                        ref._enterFullViewport(true);
                     }
                 }
 
                 // cross domain
-                if (this.getIframeWindow() === false) {
+                if (this.getIframeParent() === false) {
                     this.config._isCrossDomain = true;
+                }
+
+                // allow fullscreen?
+                if (!this.getIframeAllowFullscreen()) {
+                    this.config.enableFullscreen = false;
                 }
 
                 if (typeof onReady === 'function') {
@@ -3166,8 +3220,8 @@ var projekktorConfig = function (ver) {
 projekktorConfig.prototype = {
 
     /**************************************************************
-	    Config options to be customized prior initialization only:
-	***************************************************************/
+        Config options to be customized prior initialization only:
+    ***************************************************************/
 
     _playerName: 'Projekktor',
 
@@ -3180,9 +3234,9 @@ projekktorConfig.prototype = {
     _cookieExpiry: 356,
 
     /* Plugins to load on instance initialization, plugins are automatically extening the projekktorPluginInterface class.
-	The order how the plugins are set here is important because they are added from z-index 0 to n one by one to the player DOM.
-	As such it is usefull to add the "Display" plugin always first.
-	*/
+    The order how the plugins are set here is important because they are added from z-index 0 to n one by one to the player DOM.
+    As such it is usefull to add the "Display" plugin always first.
+    */
     _plugins: ['display', 'controlbar'],
 
     /* Add one plugin or more plugins to the player. Alternative to "plugins" above. Will be merged with it. */
@@ -3255,15 +3309,13 @@ projekktorConfig.prototype = {
     /* debug on / off */
     _debug: false,
 
-    /* the width of the player - 0= use destNodes width */
+    /* the width of the player - >0= overwrite destNodes width, 0= keep destNode's width, false=maintain ratio */
     _width: null,
 
-    _ratio: false,
+    /* guess what.... the hight of the player - >0= overwrite destNodes height, 0 = keep destNode's width, false=maintain ratio */
+    _height: null,
 
-    /* if width is <=0 use this to scale the player to a minimum width
-	if minWidth is actually applied, autorescaling is enabled
-	*/
-    _minWidth: 40,
+    _ratio: false,
 
     /* An array of objects featuring keycode=>function sets for keyboard-controls-customizing */
     _keys: [],
@@ -3275,8 +3327,8 @@ projekktorConfig.prototype = {
     _forceFullViewport: false,
 
     /**************************************************************
-	    Config options available per playlist item:
-	***************************************************************/
+        Config options available per playlist item:
+    ***************************************************************/
 
     /* unique itemID for the item currently played - dynamically generated if not provided via config */
     ID: 0,
@@ -3326,9 +3378,9 @@ projekktorConfig.prototype = {
     playerFlashMP3: 'jarisplayer.swf',
 
     /* defines the streamtype of the current item.
-	    'http':		http  streaming
-	    'rtmp':		RTMP streaming - requires "flashRTMPServer" to be set.
-	*/
+        'http':     http  streaming
+        'rtmp':     RTMP streaming - requires "flashRTMPServer" to be set.
+    */
     streamType: 'http',
 
     /* it streamType is 'rtmp' you have to provide the serverURL here. */
@@ -3337,15 +3389,15 @@ projekktorConfig.prototype = {
     startParameter: 'start',
 
     /* Youtube offers two different player APIs: fLaSh and "iFrame" for HTML5 . Make your choice here:
-	  For mobile devices this is forced to TRUE
-	*/
+      For mobile devices this is forced to TRUE
+    */
     useYTIframeAPI: true,
 
     /* enable/disable automatic flash fallback */
-    /* enableFlashFallback:		true,  OBSOLETE */
+    /* enableFlashFallback:     true,  OBSOLETE */
 
     /* enable/disable native players */
-    /* enableNativePlayback:		true,	OBSOLETE */
+    /* enableNativePlayback:        true,   OBSOLETE */
 
     /* enable/disable fetching of keyboard events - works in "fullscreen" only */
     enableKeyboard: true,
@@ -3354,84 +3406,84 @@ projekktorConfig.prototype = {
     enableFullscreen: true,
 
     /*
-	small: Player height is 240px, and player dimensions are at least 320px by 240px for 4:3 aspect ratio.
-	medium: Player height is 360px, and player dimensions are 640px by 360px (for 16:9 aspect ratio) or 480px by 360px (for 4:3 aspect ratio).
-	large: Player height is 480px, and player dimensions are 853px by 480px (for 16:9 aspect ratio) or 640px by 480px (for 4:3 aspect ratio).
-	hd720: Player height is 720px, and player dimensions are 1280px by 720px (for 16:9 aspect ratio) or 960px by 720px (for 4:3 aspect ratio).
-	hd1080: Player height is 1080px, and player dimensions are 1920px by 1080px (for 16:9 aspect ratio) or 1440px by 1080px (for 4:3 aspect ratio).
-	highres: Player height is greater than 1080px, which means that the player's aspect ratio is greater than 1920px by 1080px.
-	*/
+    small: Player height is 240px, and player dimensions are at least 320px by 240px for 4:3 aspect ratio.
+    medium: Player height is 360px, and player dimensions are 640px by 360px (for 16:9 aspect ratio) or 480px by 360px (for 4:3 aspect ratio).
+    large: Player height is 480px, and player dimensions are 853px by 480px (for 16:9 aspect ratio) or 640px by 480px (for 4:3 aspect ratio).
+    hd720: Player height is 720px, and player dimensions are 1280px by 720px (for 16:9 aspect ratio) or 960px by 720px (for 4:3 aspect ratio).
+    hd1080: Player height is 1080px, and player dimensions are 1920px by 1080px (for 16:9 aspect ratio) or 1440px by 1080px (for 4:3 aspect ratio).
+    highres: Player height is greater than 1080px, which means that the player's aspect ratio is greater than 1920px by 1080px.
+    */
     playbackQuality: 'default',
 
     _playbackQualities: [
         {
-        key: 'small',
-        minHeight: 240,
-        minWidth: 240
-    },
+            key: 'small',
+            minHeight: 240,
+            minWidth: 240
+        },
         {
-        key: 'medium',
-        minHeight: 360,
-        minWidth: [{
-            ratio: 1.77,
-            minWidth: 640
-        }, {
-            ratio: 1.33,
-            minWidth: 480
-        }]
-    },
+            key: 'medium',
+            minHeight: 360,
+            minWidth: [{
+                    ratio: 1.77,
+                    minWidth: 640
+                }, {
+                    ratio: 1.33,
+                    minWidth: 480
+                }]
+        },
         {
-        key: 'large',
-        minHeight: 480,
-        minWidth: [{
-            ratio: 1.77,
-            minWidth: 853
-        }, {
-            ratio: 1.33,
-            minWidth: 640
-        }]
-    },
+            key: 'large',
+            minHeight: 480,
+            minWidth: [{
+                    ratio: 1.77,
+                    minWidth: 853
+                }, {
+                    ratio: 1.33,
+                    minWidth: 640
+                }]
+        },
         {
-        key: 'hd1080',
-        minHeight: 1080,
-        minWidth: [{
-            ratio: 1.77,
-            minWidth: 1920
-        }, {
-            ratio: 1.33,
-            minWidth: 1440
-        }]
-    },
+            key: 'hd1080',
+            minHeight: 1080,
+            minWidth: [{
+                    ratio: 1.77,
+                    minWidth: 1920
+                }, {
+                    ratio: 1.33,
+                    minWidth: 1440
+                }]
+        },
         {
-        key: 'hd720',
-        minHeight: 720,
-        minWidth: [{
-            ratio: 1.77,
-            minWidth: 1280
-        }, {
-            ratio: 1.33,
-            minWidth: 960
-        }]
-    },
+            key: 'hd720',
+            minHeight: 720,
+            minWidth: [{
+                    ratio: 1.77,
+                    minWidth: 1280
+                }, {
+                    ratio: 1.33,
+                    minWidth: 960
+                }]
+        },
         {
-        key: 'highres',
-        minHeight: 1081,
-        minWidth: 0
-    }
+            key: 'highres',
+            minHeight: 1081,
+            minWidth: 0
+        }
     ],
 
     /* if testcard is disabled, the player will force a filedowload in case no native- or flashplayer
-	is available. oterhwise (enableTestcard=true) a testcard with an errormessage is shown in case of issues */
+    is available. oterhwise (enableTestcard=true) a testcard with an errormessage is shown in case of issues */
     enableTestcard: true,
 
     /* if the scheduled playlist holds more than one item an "skipTestcard" is set to TRUE in case of an error
-	the player will proceed to the next item without showing a testcard */
+    the player will proceed to the next item without showing a testcard */
     skipTestcard: false,
 
     /* sets the duration for media items without a duration (images & html pages) */
     duration: 0,
 
-    /* sets the player?s additional CSS class */
+    /* sets the player's additional CSS class */
     className: ''
 };
 jQuery(function ($) {
@@ -3458,16 +3510,18 @@ jQuery(function ($) {
          * @param (Object) Object
          */
         blockSelection: function (dest) {
-            if (dest) dest.css({
-                "-khtml-user-select": "none",
-                "-webkit-user-select": "none",
-                "MozUserSelect": "none",
-                "user-select": "none"
-            })
-                .attr('unselectable', 'on')
-                .bind("selectstart", function () {
-                return false;
-            })
+            if (dest)
+                dest
+                    .css({
+                    "-khtml-user-select": "none",
+                    "-webkit-user-select": "none",
+                    "MozUserSelect": "none",
+                    "user-select": "none"
+                })
+                    .attr('unselectable', 'on')
+                    .bind("selectstart", function () {
+                    return false;
+                })
             return dest;
         },
 
@@ -3562,10 +3616,11 @@ jQuery(function ($) {
             if (typeof t != 'string') return t;
             if (t) {
                 var p = t.split(':');
-                if (p.length > 3) p = p.slice(0, 3);
+                if (p.length > 3)
+                    p = p.slice(0, 3);
 
                 for (i = 0; i < p.length; i++)
-                s = s * 60 + parseFloat(p[i].replace(',', '.'))
+                    s = s * 60 + parseFloat(p[i].replace(',', '.'))
             }
 
             return parseFloat(s);
@@ -3595,7 +3650,7 @@ jQuery(function ($) {
         embeddFlash: function (destObj, domOptions, shield, shrinkShield) {
 
             var flashVars = domOptions.FlashVars || {},
-            result = '',
+                result = '',
                 htmlEmbedObj = '',
                 htmlEmbed = '',
                 tmpStr = '',
@@ -3603,20 +3658,22 @@ jQuery(function ($) {
                 id = '';
 
             // add flashVars
-            if (domOptions.src.indexOf('?') == -1) domOptions.src += "?";
-            else domOptions.src += "&";
+            if (domOptions.src.indexOf('?') == -1)
+                domOptions.src += "?";
+            else
+                domOptions.src += "&";
 
             for (var key in flashVars) {
                 if (typeof flashVars[key] != 'function') {
                     tmpStr = flashVars[key];
 
                     /*
-			    // support "{tags}" to add media properties
-			    for(var i in this.media) {
-				if (typeof tmpStr != 'string') continue;
-				tmpStr = tmpStr.replace('{'+i+'}', this.media[i]);
-			    }
-			    */
+                // support "{tags}" to add media properties
+                for(var i in this.media) {
+                if (typeof tmpStr != 'string') continue;
+                tmpStr = tmpStr.replace('{'+i+'}', this.media[i]);
+                }
+                */
                     domOptions.src += key + '=' + encodeURIComponent(tmpStr) + '&';
                 }
             }
@@ -3640,7 +3697,8 @@ jQuery(function ($) {
                 result = htmlEmbed;
             }
 
-            if (dest === null) return result;
+            if (dest === null)
+                return result;
 
             // jquerx 1.4.2 IE flash <object> issue workaround:
             // this doesn't work in IE: destObj.append(result);
@@ -3648,7 +3706,7 @@ jQuery(function ($) {
 
             if (shield !== false) {
                 dest.append(
-                $('<div/>').attr('id', domOptions.id + '_cc')
+                    $('<div/>').attr('id', domOptions.id + '_cc')
                     .css({
                     width: (shrinkShield) ? '1px' : '100%',
                     height: (shrinkShield) ? '1px' : '100%',
@@ -3669,14 +3727,14 @@ jQuery(function ($) {
                 all = div.getElementsByTagName('i');
 
             while (
-            div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
-            all[0]);
+                div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+                all[0]);
 
             return v > 4 ? v : undefined;
         },
 
         /**
-         * replaces {}-tags with parameter?s equialents
+         * replaces {}-tags with parameter's equialents
          * @public
          * @param (String) Da string to get processed
          * @param (Object) Object holding data to fill in
@@ -3705,9 +3763,11 @@ jQuery(function ($) {
          * @return (Boolean) Returns TRUE if <target> was resized in any way, otherwise FALSE
          */
         stretch: function (stretchStyle, target, wid, hei, twf, thf) {
-            if (target == null) return false;
+            if (target == null)
+                return false;
 
-            if ((target instanceof $) == false) target = $(target)
+            if ((target instanceof $) == false)
+                target = $(target)
 
             if (!target.data('od')) {
                 target.data('od', {
@@ -3725,37 +3785,38 @@ jQuery(function ($) {
 
             // fill area
             switch (stretchStyle) {
-                case 'none':
-                    rw = tw;
-                    rh = th;
-                    break;
+            case 'none':
+                rw = tw;
+                rh = th;
+                break;
 
-                case 'fill':
-                    if (xsc > ysc) {
-                        rw = tw * xsc;
-                        rh = th * xsc;
-                    } else if (xsc < ysc) {
-                        rw = tw * ysc;
-                        rh = th * ysc;
-                    }
-                    break;
+            case 'fill':
+                if (xsc > ysc) {
+                    rw = tw * xsc;
+                    rh = th * xsc;
+                } else if (xsc < ysc) {
+                    rw = tw * ysc;
+                    rh = th * ysc;
+                }
+                break;
 
-                case 'aspectratio':
-                default:
-                    // scale, keep aspect ratio
-                    if (xsc > ysc) {
-                        rw = tw * ysc;
-                        rh = th * ysc;
-                    } else if (xsc < ysc) {
-                        rw = tw * xsc;
-                        rh = th * xsc;
-                    }
-                    break;
+            case 'aspectratio':
+            default:
+                // scale, keep aspect ratio
+                if (xsc > ysc) {
+                    rw = tw * ysc;
+                    rh = th * ysc;
+                } else if (xsc < ysc) {
+                    rw = tw * xsc;
+                    rh = th * xsc;
+                }
+                break;
             }
-            wid = $p.utils.roundNumber((rw / wid) * 100, 0) + 2;
-            hei = $p.utils.roundNumber((rh / hei) * 100, 0) + 2;
+            wid = $p.utils.roundNumber((rw / wid) * 100, 0);
+            hei = $p.utils.roundNumber((rh / hei) * 100, 0);
 
-            if (wid == 0 || hei == 0) return false;
+            if (wid == 0 || hei == 0)
+                return false;
 
             target.css({
                 'margin': 0,
@@ -3790,7 +3851,7 @@ jQuery(function ($) {
                     loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
                 }
             },
-            m = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
+                m = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
                 uri = {},
                 i = 14;
 
@@ -3808,41 +3869,43 @@ jQuery(function ($) {
         // http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/
         log: function () {
 
-            if (this.logging == false) return;
+            if (this.logging == false)
+                return;
 
             this.history = this.history || []; // store logs to an array for reference
             this.history.push(arguments);
-            if (window.console) console.log(Array.prototype.slice.call(arguments));
+            if (window.console)
+                console.log(Array.prototype.slice.call(arguments));
         },
 
         cleanResponse: function (responseText, type) {
             var data = false;
 
             switch (type) {
-                case 'html':
-                case 'xml':
-                    // Create the xml document from the responseText string.
-                    if (window.DOMParser) {
-                        data = new DOMParser()
-                        data = data.parseFromString(responseText, "text/xml");
-                    } else { // Internet Explorer
-                        data = new ActiveXObject("Microsoft.XMLDOM");
-                        data.async = "false";
-                        data.loadXML(responseText);
-                    }
-                    break;
+            case 'html':
+            case 'xml':
+                // Create the xml document from the responseText string.
+                if (window.DOMParser) {
+                    data = new DOMParser()
+                    data = data.parseFromString(responseText, "text/xml");
+                } else { // Internet Explorer
+                    data = new ActiveXObject("Microsoft.XMLDOM");
+                    data.async = "false";
+                    data.loadXML(responseText);
+                }
+                break;
 
-                case 'json':
-                    data = responseText;
-                    if (typeof data == 'string') {
-                        data = $.parseJSON(data);
-                    }
-                    break;
-                case 'jsonp':
-                    break;
-                default:
-                    data = responseText;
-                    break;
+            case 'json':
+                data = responseText;
+                if (typeof data == 'string') {
+                    data = $.parseJSON(data);
+                }
+                break;
+            case 'jsonp':
+                break;
+            default:
+                data = responseText;
+                break;
 
             }
             return data;
@@ -3880,17 +3943,17 @@ jQuery(function ($) {
     $p.platforms = {
 
         /*
-	VLC: function() {
+    VLC: function() {
                         return 3;
             console.log("VLC", navigator.plugins)
-	    try {
-		return navigator.plugins['VLC Multimedia Plug-in'].version.match(/^,?(.+),?$/)[1].match(/\d+/g)[0]
-	    } catch(e) {}
-	    return '0,0,0'.match(/\d+/g)[0];
-	},
+        try {
+        return navigator.plugins['VLC Multimedia Plug-in'].version.match(/^,?(.+),?$/)[1].match(/\d+/g)[0]
+        } catch(e) {}
+        return '0,0,0'.match(/\d+/g)[0];
+    },
         */
 
-        /* returns the version of the flash player installed for user?s browser. returns 0 on none. */
+        /* returns the version of the flash player installed for user's browser. returns 0 on none. */
         FLASH: function (typ) {
             try {
                 try {
@@ -3935,16 +3998,17 @@ jQuery(function ($) {
             try {
                 var testObject = document.createElement((type.indexOf('video') > -1) ? 'video' : 'audio');
                 if (testObject.canPlayType != null) {
-                    if (type == '*') return 1;
+                    if (type == '*')
+                        return 1;
 
                     switch (testObject.canPlayType(type)) {
-                        case "no":
-                        case "":
-                            return 0;
-                            // case "maybe":
-                            // case "probably":
-                        default:
-                            return 1;
+                    case "no":
+                    case "":
+                        return 0;
+                        // case "maybe":
+                        // case "probably":
+                    default:
+                        return 1;
                     }
                 }
             } catch (e) {
@@ -3962,7 +4026,7 @@ jQuery(function ($) {
  * projekktor zwei
  * http://www.projekktor.com
  *
- * Copyright 2010, 2011, 2012 Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
+ * Copyright 2010-2013 Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.filenew.org/projekktor/license/
  */
@@ -3976,10 +4040,6 @@ jQuery(function ($) {
         pp: {},
         config: {},
         playerDom: null,
-        canvas: {
-            media: null,
-            projekktor: null
-        },
 
         _appliedDOMObj: [],
         _pageDOMContainer: {},
@@ -4016,7 +4076,8 @@ jQuery(function ($) {
                 result = this.config[idx];
             }
 
-            if (typeof result == 'object' && result.length === null) result = $.extend(true, {}, result, this.config[idx]);
+            if (typeof result == 'object' && result.length === null)
+                result = $.extend(true, {}, result, this.config[idx]);
             else if (typeof result == 'object') {
                 result = $.extend(true, [], this.config[idx] || [], result || []);
             }
@@ -4085,7 +4146,8 @@ jQuery(function ($) {
 
             // add new DOM container to the player
             if (this._childDOMContainer[func].length == 0) {
-                element.removeClass(tmpClass)
+                element
+                    .removeClass(tmpClass)
                     .addClass(this.pp.getNS() + tmpClass)
                     .removeClass('active')
                     .addClass('inactive')
@@ -4100,7 +4162,6 @@ jQuery(function ($) {
 
                 return element;
             } else {
-
                 $.each(this._childDOMContainer[func], function () {
                     $(this).attr(ref.getDA('func'), func)
                     ref._appliedDOMObj.push($(this));
@@ -4125,17 +4186,23 @@ jQuery(function ($) {
         },
 
         setActive: function (elm, on) {
+            var dest = (typeof elm == 'object') ? elm : this.getElement(elm);
+
             if (elm == null) {
                 this._pageDOMContainer['container'].removeClass('inactive').addClass('active');
                 this._childDOMContainer['container'].removeClass('inactive').addClass('active');
                 this.sendEvent('active', $.extend(true, {}, this._pageDOMContainer['container'], this._childDOMContainer['container']));
-                return;
+                return dest;
             }
 
-            var dest = (typeof elm == 'object') ? elm : this.getElement(elm);
-            if (on != false) dest.addClass('active').removeClass('inactive');
-            else dest.addClass('inactive').removeClass('active');
+            if (on != false) {
+                dest.addClass('active').removeClass('inactive');
+            } else {
+                dest.addClass('inactive').removeClass('active');
+            }
+
             dest.css('display', '');
+
             return dest;
         },
 
@@ -4170,91 +4237,22 @@ jQuery(function ($) {
             if (arguments.length > 1 && value != null) {
                 var t = new Date();
                 t.setDate(t.getDate() + (this.pp.getConfig('cookieExpiry') || 0));
-                return (document.cookie = encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=' + encodeURIComponent(value) + '; expires=' + ((del === true) ? "Thu, 01 Jan 1970 00:00:01 GMT" : t.toUTCString()) + '; path=/'
-                // +options.domain ? '; domain=' + options.domain : '',?
+                return (document.cookie =
+                    encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=' + encodeURIComponent(value) + '; expires=' + ((del === true) ? "Thu, 01 Jan 1970 00:00:01 GMT" : t.toUTCString()) + '; path=/'
+                // +options.domain ? '; domain=' + options.domain : '','
                 // +options.secure ? '; secure' : ''
                 );
             }
 
             // get cookie data:
             var result,
-            returnthis = (result = new RegExp('(?:^|; )' + encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=([^;]*)').exec(document.cookie)) ? decodeURIComponent(result[1]) : null;
+                returnthis = (result = new RegExp('(?:^|; )' + encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=([^;]*)').exec(document.cookie)) ? decodeURIComponent(result[1]) : null;
 
             return (returnthis == 'true' || returnthis == 'false') ? eval(returnthis) : returnthis;
         },
 
         // important
         eventHandler: function () {}
-
-        /*
-     triggered once playback of a new item is being initialized
-    detachHandler: function(itemData) {},
-
-     triggered once display has been initialized (and before plugins are re-ionitialized
-    displayReadyHandler: function(obj) {},
-
-     triggered once all plugins have been (re-) initialized
-    pluginsReadyHandler: function(obj) {},
-
-     triggered on model-state changes
-    stateHandler: function() {},
-
-     triggered on buffer state changes
-    bufferHandler: function() {},
-
-     triggered before ansychronous playlist loading
-    scheduleLoading: function(itemData) {},
-
-     Fired if player configuration has been altered by AJAX results
-    configModified: function(itemData) {},
-
-     triggered once new playlist has been initialized
-    scheduledHandler: function(itemCount) {},
-
-     triggered when ever items are removed from or added to playlist
-    scheduleModifiedHandler: function(itemData) {},
-
-     triggered once playback of a new item is being initialized
-    itemHandler: function(itemData) {},
-
-     triggered every time playback starts
-    startHandler: function(obj) {},
-
-     triggered once playlist reached its end and loop=false
-    doneHandler: function(obj) {},
-
-     triggered once player has been stoped / sent back to sleep
-    stopHandler: function(obj) {},
-
-     triggered once a media file has been played back completely
-    endedHandler: function(obj) {},
-
-    canplayHandler: function(obj) {},
-
-     triggered on volume change
-    volumeHandler: function(obj) {},
-
-     triggered on time updates
-    timeHandler: function(obj) {},
-
-     triggered on progress updates
-    progressHandler: function(obj) {},
-
-     triggered on mousemovement on player
-    mousemoveHandler: function(obj) {},
-
-     triggered if mouse leaves player DOM
-    mouseleaveHandler: function(obj) {},
-
-     triggered oif mouse enters player DOM
-    mouseeterHandler: function(obj) {},
-
-     triggered on fullscreen toggle
-    fullscreenHandler: function(obj) {},
-
-     triggered on keyboard events
-    keyHandler: function(obj) {}
-    */
     }
 });
 /*
@@ -4276,6 +4274,7 @@ jQuery(function ($) {
         // all the player states
         _currentState: null,
         _currentBufferState: null,
+        _currentSeekState: null,
 
         _ap: false, // autday
         _volume: 0, // async
@@ -4393,7 +4392,8 @@ jQuery(function ($) {
 
             this._setState('STARTING');
 
-            if (!this.getState('STOPPED')) this.addListeners();
+            if (!this.getState('STOPPED'))
+                this.addListeners();
 
             if (this.pp.getIsMobileClient('ANDROID') && !this.getState('PLAYING')) {
                 setTimeout(function () {
@@ -4418,7 +4418,8 @@ jQuery(function ($) {
         destroy: function (silent) {
             this.removeListeners();
 
-            if (!this.getState('IDLE')) this._setState('destroying');
+            if (!this.getState('IDLE'))
+                this._setState('destroying');
 
             this.detachMedia();
 
@@ -4459,56 +4460,53 @@ jQuery(function ($) {
 
         applyCommand: function (command, value) {
             switch (command) {
-                case 'quality':
-                    this.setQuality(value);
+            case 'quality':
+                this.setQuality(value);
+                break;
+            case 'play':
+                if (this.getState('ERROR')) break;
+                if (this.getState('IDLE')) {
+                    this._setState('awakening');
                     break;
-                case 'play':
-                    if (this.getState('ERROR')) break;
-                    if (this.getState('IDLE')) {
-                        this._setState('awakening');
-                        break;
-                    }
-                    this.setPlay();
-                    break;
-                case 'pause':
-                    if (this.getState('ERROR')) break;
-                    this.setPause();
-                    break;
-                case 'volume':
-                    if (this.getState('ERROR')) break;
-                    if (!this.setVolume(value)) {
-                        this._volume = value;
-                        this.sendUpdate('volume', value);
-                    }
-                    break;
-                case 'stop':
-                    this.setStop();
-                    break;
-                case 'frame':
-                    this.setFrame(value);
-                    break;
-                case 'seek':
-                    if (this.getState('ERROR')) break;
-                    if (this.getState('SEEKING')) break;
-                    if (this.getState('IDLE')) break;
-                    if (this.media.loadProgress == -1) break;
-
-                    this._setState('seeking');
-                    this.sendUpdate('seek', value);
-                    this.setSeek(value);
-
-                    break;
-                case 'fullscreen':
-                    if (value == this._isFullscreen) break;
-                    this._isFullscreen = value;
-                    this.sendUpdate('fullscreen', this._isFullscreen);
-                    this.setFullscreen(value);
-                    this.reInit();
-                    break;
-                case 'resize':
-                    this.setResize();
-                    this.sendUpdate('resize', value);
-                    break;
+                }
+                this.setPlay();
+                break;
+            case 'pause':
+                if (this.getState('ERROR')) break;
+                this.setPause();
+                break;
+            case 'volume':
+                if (this.getState('ERROR')) break;
+                if (!this.setVolume(value)) {
+                    this._volume = value;
+                    this.sendUpdate('volume', value);
+                }
+                break;
+            case 'stop':
+                this.setStop();
+                break;
+            case 'frame':
+                this.setFrame(value);
+                break;
+            case 'seek':
+                if (this.getState('ERROR')) break;
+                if (this.getState('SEEKING')) break;
+                if (this.getState('IDLE')) break;
+                if (this.media.loadProgress == -1) break;
+                this._setSeekState('seeking', value);
+                this.setSeek(value);
+                break;
+            case 'fullscreen':
+                if (value == this._isFullscreen) break;
+                this._isFullscreen = value;
+                this.sendUpdate('fullscreen', this._isFullscreen);
+                this.reInit();
+                this.setResize();
+                break;
+            case 'resize':
+                this.setResize();
+                this.sendUpdate('resize', value);
+                break;
             }
         },
 
@@ -4546,7 +4544,6 @@ jQuery(function ($) {
                 displayWidth: destContainer.width(),
                 displayHeight: destContainer.height()
             });
-
         },
 
         setPosterLive: function () {},
@@ -4558,10 +4555,11 @@ jQuery(function ($) {
             if (this._quality == quality) return;
             this._quality = quality;
 
-            if (this.getState('PLAYING') || this.getState('PAUSED')) this.applySrc();
+            try {
+                this.applySrc();
+            } catch (e) {}
 
             this.qualityChangeListener();
-
         },
 
         applySrc: function () {},
@@ -4576,7 +4574,8 @@ jQuery(function ($) {
             $.each(this.media.file || [], function () {
 
                 // set proper quality source
-                if (ref._quality != this.quality && ref._quality != null) return true;
+                if (ref._quality != this.quality && ref._quality != null)
+                    return true;
 
                 // nothing todo
                 if (!pseudoQuery || !offset) {
@@ -4602,15 +4601,18 @@ jQuery(function ($) {
                 return true;
             })
 
-            if (resultSrc.length == 0) return this.media.file;
-            else return resultSrc;
+            if (resultSrc.length == 0)
+                return this.media.file;
+            else
+                return resultSrc;
         },
 
         /*******************************
             ELEMENT GETTERS
     *******************************/
         getVolume: function () {
-            if (this.mediaElement == null) return this._volume;
+            if (this.mediaElement == null)
+                return this._volume;
 
             return (this.mediaElement.prop('muted') == true) ? 0 : this.mediaElement.prop('volume');
         },
@@ -4687,7 +4689,8 @@ jQuery(function ($) {
                 qual = 'default',
                 quals = [];
 
-            if (typeof result != 'object') return result;
+            if (typeof result != 'object')
+                return result;
 
             for (var i in result) {
                 if (result[i].quality) {
@@ -4711,7 +4714,7 @@ jQuery(function ($) {
             return this.mediaElement || $('<video/>');
         },
 
-        getMediaDimensions: function() {
+        getMediaDimensions: function () {
             return {
                 width: this.media.videoWidth || 0,
                 height: this.media.videoHeight || 0
@@ -4806,11 +4809,11 @@ jQuery(function ($) {
                 }
 
                 /*else {
-	    try {
-		this.media.loadProgress = (this.allowRandomSeek===true) ? 100 : -1;
-		this.sendUpdate('progress', this.media.loadProgress);
-	    } catch(e){};
-	   return;
+        try {
+        this.media.loadProgress = (this.allowRandomSeek===true) ? 100 : -1;
+        this.sendUpdate('progress', this.media.loadProgress);
+        } catch(e){};
+       return;
             } */
 
             }
@@ -4874,7 +4877,8 @@ jQuery(function ($) {
 
         startListener: function (obj) {
             this.applyCommand('volume', this.pp.getConfig('volume'));
-            if (!this.isPseudoStream) this.setSeek(this.media.position || 0);
+            if (!this.isPseudoStream)
+                this.setSeek(this.media.position || 0);
 
             this._setState('playing');
         },
@@ -4884,7 +4888,7 @@ jQuery(function ($) {
         },
 
         seekedListener: function (obj) {
-            this._setState('SEEKED');
+            this._setSeekState('SEEKED', this.media.position);
         },
 
         volumeListener: function (obj) {
@@ -4906,10 +4910,12 @@ jQuery(function ($) {
         },
 
         setTestcard: function (code, txt) {
-
-            var destContainer = this.pp.getMediaContainer().html('').css({width:'100%',height:'100%'}),
+            var destContainer = this.pp.getMediaContainer().html('').css({
+                width: '100%',
+                height: '100%'
+            }),
                 messages = this.pp.getConfig('messages'),
-                msgTxt = (txt!=undefined && txt!='') ? txt : (messages[code]!=undefined) ? messages[code] : messages[0];
+                msgTxt = (txt != undefined && txt != '') ? txt : (messages[code] != undefined) ? messages[code] : messages[0];
 
             if (this.pp.getConfig('skipTestcard') && this.pp.getItemCount() > 1) {
                 this._setState('completed');
@@ -4920,9 +4926,11 @@ jQuery(function ($) {
                 // "press next to continue"
                 msgTxt += ' ' + messages[99];
             }
+
             if (msgTxt.length < 3) {
                 msgTxt = 'ERROR';
             }
+
             if (code == 100) {
                 msgTxt = txt;
             }
@@ -4981,6 +4989,7 @@ jQuery(function ($) {
             imageObj.attr('src', url);
 
             var onReFull = function (imgObj, destObj) {
+
                 if (destObj.is(':visible') === false) {
                     ref.pp.removeListener('fullscreen', arguments.callee);
                 }
@@ -5046,7 +5055,8 @@ jQuery(function ($) {
                 var dest = ref.mediaElement;
 
                 try {
-                    if ($(dest).attr('id').indexOf('testcard') > -1) return;
+                    if ($(dest).attr('id').indexOf('testcard') > -1)
+                        return;
                 } catch (e) {}
 
                 counter++;
@@ -5087,7 +5097,8 @@ jQuery(function ($) {
                     this._isPlaying = true;
                 }
 
-                if (state == 'PAUSED') this._isPlaying = false;
+                if (state == 'PAUSED')
+                    this._isPlaying = false;
 
                 if (state == 'ERROR') {
                     this.setPlay = this.setPause = function () {
@@ -5103,6 +5114,13 @@ jQuery(function ($) {
             if (this._currentBufferState != state.toUpperCase()) {
                 this._currentBufferState = state.toUpperCase();
                 this.sendUpdate('buffer', this._currentBufferState);
+            }
+        },
+
+        _setSeekState: function (state, value) {
+            if (this._currentSeekState != state.toUpperCase()) {
+                this._currentSeekState = state.toUpperCase();
+                this.sendUpdate('seek', this._currentSeekState);
             }
         },
 
@@ -5731,7 +5749,7 @@ jQuery(function ($) {
  * the Projekktor environment.
  *
  * JARIS Player:
- * copyright 2010 Jefferson Gonzez, Jefferson Gonzez, http://jarisflvplayer.org
+ * copyright 2010 Jefferson Gonzalez, Jefferson Gonzalez, http://jarisflvplayer.org
  * under GNU LESSER GENERAL PUBLIC LICENSE 3
  */
 jQuery(function ($) {
@@ -5740,40 +5758,40 @@ jQuery(function ($) {
         modelId: 'VIDEOFLASH',
         flashVersion: 9,
         iLove: [
-    {
-            ext: 'flv',
-            type: 'video/flv',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp'],
-            fixed: true
-        },
-    {
-            ext: 'mp4',
-            type: 'video/mp4',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp'],
-            fixed: 'maybe'
-        },
-    {
-            ext: 'mov',
-            type: 'video/quicktime',
-            streamType: ['http', 'pseudo', 'rtmp'],
-            platform: 'flash'
-        },
-    {
-            ext: 'm4v',
-            type: 'video/mp4',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp'],
-            fixed: 'maybe'
-        },
-        {
-            ext: 'f4m',
-            type: 'video/abst',
-            platform: 'flash',
-            streamType: ['httpVideoLive']
-        }
-    ],
+            {
+                ext: 'flv',
+                type: 'video/flv',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp'],
+                fixed: true
+            },
+            {
+                ext: 'mp4',
+                type: 'video/mp4',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp'],
+                fixed: 'maybe'
+            },
+            {
+                ext: 'mov',
+                type: 'video/quicktime',
+                streamType: ['http', 'pseudo', 'rtmp'],
+                platform: 'flash'
+            },
+            {
+                ext: 'm4v',
+                type: 'video/mp4',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp'],
+                fixed: 'maybe'
+            },
+            {
+                ext: 'f4m',
+                type: 'video/abst',
+                platform: 'flash',
+                streamType: ['httpVideoLive']
+            }
+        ],
 
         _eventMap: {
             onprogress: "progressListener",
@@ -5818,15 +5836,15 @@ jQuery(function ($) {
             };
 
             switch (this.pp.getConfig('streamType')) {
-                case 'rtmp':
-                    this.allowRandomSeek = true;
-                    this.media.loadProgress = 100;
-                    break;
-                case 'pseudo':
-                    this.isPseudoStream = true;
-                    this.allowRandomSeek = true;
-                    this.media.loadProgress = 100;
-                    break;
+            case 'rtmp':
+                this.allowRandomSeek = true;
+                this.media.loadProgress = 100;
+                break;
+            case 'pseudo':
+                this.isPseudoStream = true;
+                this.allowRandomSeek = true;
+                this.media.loadProgress = 100;
+                break;
             }
 
             this.createFlash(domOptions, destContainer);
@@ -5843,7 +5861,8 @@ jQuery(function ($) {
 
             if (this.getState('PLAYING')) {
                 this.setPlay();
-                if (ref.isPseudoStream !== true) this.setSeek(this.media.position || 0);
+                if (ref.isPseudoStream !== true)
+                    this.setSeek(this.media.position || 0);
             }
         },
 
@@ -5988,25 +6007,25 @@ jQuery(function ($) {
 
         modelId: 'AUDIOFLASH',
         iLove: [
-    {
-            ext: 'mp3',
-            type: 'audio/mp3',
-            platform: 'flash',
-            streamType: ['http']
-        },
-    {
-            ext: 'mp3',
-            type: 'audio/mpeg',
-            platform: 'flash',
-            streamType: ['http']
-        },
-    {
-            ext: 'm4a',
-            type: 'audio/mp4',
-            platform: 'flash',
-            streamType: ['http']
-        }
-    ],
+            {
+                ext: 'mp3',
+                type: 'audio/mp3',
+                platform: 'flash',
+                streamType: ['http']
+            },
+            {
+                ext: 'mp3',
+                type: 'audio/mpeg',
+                platform: 'flash',
+                streamType: ['http']
+            },
+            {
+                ext: 'm4a',
+                type: 'audio/mp4',
+                platform: 'flash',
+                streamType: ['http']
+            }
+        ],
 
         applyMedia: function (destContainer) {
 
@@ -6062,383 +6081,349 @@ jQuery(function ($) {
  * Copyright 2010, 2011, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.filenew.org/projekktor/license/
- */
+*/
 // http://code.google.com/apis/youtube/js_api_reference.html#Embedding
-jQuery(function ($) {
-    $p.newModel({
+jQuery(function($) {
+$p.newModel({
 
-        modelId: 'YTVIDEO',
-        iLove: [
-    {
-            ext: 'youtube.com',
-            type: 'video/youtube',
-            platform: 'flash',
-            fixed: 'maybe'
-        }
+    modelId: 'YTVIDEO',
+    iLove: [
+    {ext:'youtube.com', type:'video/youtube', platform:'flash', fixed:'maybe'}
     ],
 
-        allowRandomSeek: true,
-        useIframeAPI: true,
-        flashVerifyMethod: 'cueVideoById',
+    allowRandomSeek: true,
+    useIframeAPI: true,
+    flashVerifyMethod: 'cueVideoById',
 
-        _ffFix: false,
-        _updateTimer: null,
+    _ffFix: false,
+    _updateTimer: null,
 
-        init: function (params) {
+    init: function(params) {
 
-            var ref = this;
+    var ref = this;
 
-            this.useIframeAPI = this.pp.getConfig('useYTIframeAPI') || this.pp.getIsMobileClient();
-            this.hasGUI = this.pp.getIsMobileClient();
+    this.useIframeAPI = this.pp.getConfig('useYTIframeAPI') || this.pp.getIsMobileClient();
+    this.hasGUI = this.pp.getIsMobileClient();
 
-            if (!this.useIframeAPI) {
-                this.requiresFlash = 8;
-                this.ready();
-                return;
+
+    if (!this.useIframeAPI) {
+        this.requiresFlash = 8;
+        this.ready();
+        return;
+    }
+
+    var id = this.pp.getId();
+
+    // load youtube API stuff if required:
+    if (window.ProjekktorYoutubePlayerAPIReady!==true) {
+        $.getScript('http://www.youtube.com/player_api');
+        // we can't use the getscript onready callback here
+        // coz youtube does some additional ubersecret stuff
+        (function() {
+        try{
+            if(window.ProjekktorYoutubePlayerAPIReady==true){
+            ref.ready();
+            return;
             }
+            setTimeout(arguments.callee,50);
+        } catch(e) {
+            setTimeout(arguments.callee,50);
+        }
 
-            var id = this.pp.getId();
+        })();
+    }
+    else {
+        this.ready();
+    }
 
-            // load youtube API stuff if required:
-            if (window.ProjekktorYoutubePlayerAPIReady !== true) {
-                $.getScript('http://www.youtube.com/player_api');
-                // we can't use the getscript onready callback here
-                // coz youtube does some additional ubersecret stuff
-                (function () {
-                    try {
-                        if (window.ProjekktorYoutubePlayerAPIReady == true) {
-                            ref.ready();
-                            return;
-                        }
-                        setTimeout(arguments.callee, 50);
-                    } catch (e) {
-                        setTimeout(arguments.callee, 50);
-                    }
 
-                })();
-            } else {
-                this.ready();
-            }
+    window.onYouTubePlayerAPIReady = function() {
+        window.ProjekktorYoutubePlayerAPIReady=true;
+    }
+    },
 
-            window.onYouTubePlayerAPIReady = function () {
-                window.ProjekktorYoutubePlayerAPIReady = true;
-            }
-        },
+    applyMedia: function(destContainer) {
 
-        applyMedia: function (destContainer) {
+    this._setBufferState('empty');
 
-            this._setBufferState('empty');
+    var ref = this,
+        width = (this.modelId=='YTAUDIO') ? 1 : '100%',
+        height = (this.modelId=='YTAUDIO') ? 1 : '100%';
 
-            var ref = this,
-                width = (this.modelId == 'YTAUDIO') ? 1 : '100%',
-                height = (this.modelId == 'YTAUDIO') ? 1 : '100%';
+    if (this.modelId=='YTAUDIO')
+        this.imageElement = this.applyImage(this.pp.getPoster(), destContainer);
 
-            if (this.modelId == 'YTAUDIO') this.imageElement = this.applyImage(this.pp.getPoster(), destContainer);
+    if (this.useIframeAPI) {
 
-            if (this.useIframeAPI) {
-
-                destContainer.html('')
-                    .append(
-                $('<div/>').attr('id', this.pp.getId() + '_media_youtube')
-                    .css({
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0
-                }));
-                var shield = $('<div/>').attr('id', this.pp.getId() + '_media_youtube_cc')
-                    .css({
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: ($p.utils.ieVersion()) ? '#000' : 'transparent',
-                    filter: 'alpha(opacity = 0.1)',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0
-                });
-
-                destContainer.append(shield);
-
-                this.mediaElement = new YT.Player(this.pp.getId() + '_media_youtube', {
-                    width: (this.pp.getIsMobileClient()) ? this.pp.config._width : width,
-                    height: (this.pp.getIsMobileClient()) ? this.pp.config._height : height,
-                    playerVars: {
-                        autoplay: 0,
-                        disablekb: 0,
-                        version: 3,
-                        start: 0,
-                        controls: (this.pp.getIsMobileClient()) ? 1 : 0,
-                        showinfo: 0,
-                        enablejsapi: 1,
-                        start: (this.media.position || 0),
-                        origin: window.location.href,
-                        wmode: 'transparent',
-                        modestbranding: 1
-                    },
-                    videoId: this.youtubeGetId(),
-                    events: {
-                        'onReady': function (evt) {
-                            ref.onReady(evt);
-                        }, // 'onReady'+ this.pp.getId(),
-                        'onStateChange': function (evt) {
-                            ref.stateChange(evt);
-                        },
-                        'onError': function (evt) {
-                            ref.errorListener(evt);
-                        }
-                    }
-                });
-
-            } else {
-
-                var domOptions = {
-                    id: this.pp.getId() + "_media_youtube",
-                    name: this.pp.getId() + "_media_youtube",
-                    src: 'http://www.youtube.com/apiplayer',
-                    width: (this.pp.getIsMobileClient()) ? this.pp.config._width : width,
-                    height: (this.pp.getIsMobileClient()) ? this.pp.config._height : height,
-                    bgcolor: '#000000',
-                    allowScriptAccess: "always",
-                    wmode: 'transparent',
-                    FlashVars: {
-                        enablejsapi: 1,
-                        autoplay: 0,
-                        version: 3,
-                        modestbranding: 1,
-                        showinfo: 0
-                    }
-                };
-                this.createFlash(domOptions, destContainer);
-            }
-
-        },
-
-        /* OLD API - flashmovie loaded and initialized - cue youtube ID */
-        flashReadyListener: function () {
-            this._youtubeResizeFix();
-            this.addListeners();
-            this.mediaElement.cueVideoById(this.youtubeGetId(), this.media.position || 0, this._playbackQuality);
-        },
-
-        /* OLD API - workaround for youtube video resize bug: */
-        _youtubeResizeFix: function () {
-            /*
-	$(this.mediaElement).attr({
-	    width: '99.99999%',
-	    height: '99.9999%'
-	});
-	*/
-            this.applyCommand('volume', this.pp.getConfig('volume'));
-        },
-
-        /* OLD API */
-        addListeners: function () {
-            // if (this.useIframeAPI===true) return;
-            this.mediaElement.addEventListener("onStateChange", "projekktor('" + this.pp.getId() + "').playerModel.stateChange");
-            this.mediaElement.addEventListener("onError", "projekktor('" + this.pp.getId() + "').playerModel.errorListener");
-            this.mediaElement.addEventListener("onPlaybackQualityChange", "projekktor('" + this.pp.getId() + "').playerModel.qualityChangeListener");
-        },
-
-        setSeek: function (newpos) {
-            try {
-                this.mediaElement.seekTo(newpos, true);
-                if (!this.getState('PLAYING')) this.timeListener({
-                    position: this.mediaElement.getCurrentTime(),
-                    duration: this.mediaElement.getDuration()
-                });
-            } catch (e) {}
-        },
-
-        setVolume: function (newvol) {
-            try {
-                this.mediaElement.setVolume(newvol * 100);
-            } catch (e) {}
-        },
-
-        setPause: function (event) {
-            try {
-                this.mediaElement.pauseVideo();
-            } catch (e) {}
-        },
-
-        setPlay: function (event) {
-            try {
-                this.mediaElement.playVideo();
-            } catch (e) {}
-        },
-
-        setQuality: function (quality) {
-            try {
-                this.mediaElement.setPlaybackQuality(quality)
-            } catch (e) {}
-        },
-
-        getVolume: function () {
-            try {
-                return this.mediaElement.getVolume();
-            } catch (e) {};
-            return 0;
-        },
-
-        getPoster: function () {
-            return this.media['config']['poster'] || this.pp.config.poster || 'http://img.youtube.com/vi/' + this.youtubeGetId() + '/0.jpg';
-        },
-
-        getPlaybackQuality: function () {
-            try {
-                return this.mediaElement.getPlaybackQuality();
-            } catch (e) {
-                return false;
-            }
-        },
-
-        getSrc: function () {
-            return this.youtubeGetId() || null;
-        },
-
-        errorListener: function (code) {
-            switch ((code.data == undefined) ? code : code.data) {
-                case 100:
-                    this.setTestcard(500);
-                    break;
-                case 101:
-                case 150:
-                    this.setTestcard(501);
-                    break;
-                case 2:
-                    this.setTestcard(502);
-                    break;
-            }
-        },
-
-        stateChange: function (eventCode) {
-            // unstarted (-1), ended (0), playing (1), paused (2), buffering (3), video cued (5).
-            clearTimeout(this._updateTimer);
-            if (this.mediaElement === null || this.getState('COMPLETED')) return;
-            switch ((eventCode.data == undefined) ? eventCode : eventCode.data) {
-                case -1:
-                    this.setPlay();
-                    this.ffFix = true;
-                    break;
-                case 0:
-                    // fixing a YT API bug:
-                    if (this.getState('AWAKENING')) break;
-                    this._setBufferState('full');
-                    this.endedListener({});
-                    break;
-                case 1:
-                    this._setBufferState('full');
-
-                    if ((this.media.position || 0) > 0 && this._isFF() && this.ffFix) {
-                        this.ffFix = false;
-                        this.setSeek(this.media.position);
-                    }
-
-                    this.playingListener({});
-                    this.canplayListener({});
-                    this.updateInfo();
-                    break;
-                case 2:
-                    this.pauseListener({});
-                    break;
-                case 3:
-                    this.waitingListener({});
-                    break;
-                case 5:
-                    if (this.useIframeAPI !== true) this.onReady();
-
-                    break;
-            }
-        },
-
-        onReady: function () {
-
-            this.setVolume(this.pp.getVolume());
-
-            $('#' + this.pp.getId() + '_media')
-                .attr('ALLOWTRANSPARENCY', true)
-                .attr({
-                scrolling: 'no',
-                frameborder: 0
+        destContainer
+        .html('')
+        .append(
+            $('<div/>').attr('id', this.pp.getId()+'_media_youtube' )
+            .css({
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            top: 0,
+            left: 0
             })
-                .css({
-                'overflow': 'hidden',
-                'display': 'block',
-                'border': '0'
-            })
+        );
+        var shield = $('<div/>').attr('id', this.pp.getId()+'_media_youtube_cc' )
+        .css({
+            width: '100%',
+            height: '100%',
+            backgroundColor: ($p.utils.ieVersion()) ? '#000' : 'transparent',
+            filter: 'alpha(opacity = 0.1)',
+            position: 'absolute',
+            top: 0,
+            left: 0
+        });
 
-            if (this.media.title || this.pp.config.title || this.pp.getIsMobileClient()) {
-                this.displayReady();
-                return;
+        destContainer.append(shield);
+
+        this.mediaElement = new YT.Player( this.pp.getId()+'_media_youtube', {
+        width: (this.pp.getIsMobileClient()) ? this.pp.config._width : width,
+        height: (this.pp.getIsMobileClient()) ? this.pp.config._height : height,
+        playerVars: {
+            autoplay: 0,
+            disablekb: 0,
+            version: 3,
+            start: 0,
+            controls: (this.pp.getIsMobileClient()) ? 1 : 0,
+            showinfo: 0,
+            enablejsapi: 1,
+            start: (this.media.position || 0),
+            origin: window.location.href,
+            wmode: 'transparent',
+            modestbranding: 1
+        },
+        videoId: this.youtubeGetId(),
+        events: {
+            'onReady': function(evt) {ref.onReady(evt);}, // 'onReady'+ this.pp.getId(),
+            'onStateChange': function(evt) {ref.stateChange(evt);},
+            'onError':  function(evt) {ref.errorListener(evt);}
+        }
+        });
+
+
+    } else {
+
+        var domOptions = {
+        id: this.pp.getId()+"_media_youtube",
+        name: this.pp.getId()+"_media_youtube",
+        src: 'http://www.youtube.com/apiplayer',
+        width: (this.pp.getIsMobileClient()) ? this.pp.config._width : width,
+        height: (this.pp.getIsMobileClient()) ? this.pp.config._height : height,
+        bgcolor: '#000000',
+        allowScriptAccess:"always",
+        wmode: 'transparent',
+        FlashVars: {
+            enablejsapi: 1,
+            autoplay: 0,
+            version: 3,
+            modestbranding: 1,
+            showinfo: 0
+        }
+        };
+        this.createFlash(domOptions, destContainer);
+    }
+
+    },
+
+    /* OLD API - flashmovie loaded and initialized - cue youtube ID */
+    flashReadyListener: function() {
+    this._youtubeResizeFix();
+    this.addListeners();
+    this.mediaElement.cueVideoById( this.youtubeGetId(), this.media.position || 0, this._playbackQuality );
+    },
+
+
+    /* OLD API - workaround for youtube video resize bug: */
+    _youtubeResizeFix: function() {
+    /*
+    $(this.mediaElement).attr({
+        width: '99.99999%',
+        height: '99.9999%'
+    });
+    */
+    this.applyCommand('volume', this.pp.getConfig('volume'));
+    },
+
+    /* OLD API */
+    addListeners: function() {
+    // if (this.useIframeAPI===true) return;
+    this.mediaElement.addEventListener("onStateChange", "projekktor('"+this.pp.getId()+"').playerModel.stateChange");
+    this.mediaElement.addEventListener("onError", "projekktor('"+this.pp.getId()+"').playerModel.errorListener");
+    this.mediaElement.addEventListener("onPlaybackQualityChange", "projekktor('"+this.pp.getId()+"').playerModel.qualityChangeListener");
+    },
+
+    setSeek: function(newpos) {
+        try {
+        this.mediaElement.seekTo(newpos, true);
+        if (!this.getState('PLAYING'))
+        this.timeListener({position:this.mediaElement.getCurrentTime(),duration:this.mediaElement.getDuration()});
+    } catch(e){}
+    },
+
+    setVolume: function(newvol) {
+    try {this.mediaElement.setVolume(newvol*100);} catch(e){}
+    },
+
+    setPause: function(event) {
+    try {this.mediaElement.pauseVideo();} catch(e){}
+    },
+
+    setPlay: function(event) {
+        try {this.mediaElement.playVideo();}catch(e){}
+    },
+
+    setQuality: function(quality) {
+    try{this.mediaElement.setPlaybackQuality(quality)} catch(e) {}
+    },
+
+    getVolume: function() {
+        try {return this.mediaElement.getVolume();} catch(e){};
+    return 0;
+    },
+
+    getPoster: function() {
+    return this.media['config']['poster'] || this.pp.config.poster || 'http://img.youtube.com/vi/' + this.youtubeGetId() + '/0.jpg';
+    },
+
+    getPlaybackQuality: function() {
+    try {return this.mediaElement.getPlaybackQuality();}catch(e){ return false;}
+    },
+
+    getSrc: function() {
+    return this.youtubeGetId() || null;
+    },
+
+    errorListener: function(code) {
+    switch ( (code.data==undefined) ? code : code.data ) {
+        case 100:
+        this.setTestcard(500);
+        break;
+        case 101:
+        case 150:
+        this.setTestcard(501);
+        break;
+        case 2:
+        this.setTestcard(502);
+        break;
+    }
+    },
+
+    stateChange: function(eventCode) {
+    // unstarted (-1), ended (0), playing (1), paused (2), buffering (3), video cued (5).
+    clearTimeout(this._updateTimer);
+    if (this.mediaElement===null || this.getState('COMPLETED')) return;
+    switch ((eventCode.data==undefined) ? eventCode : eventCode.data) {
+        case -1:
+        this.setPlay();
+        this.ffFix = true;
+        break;
+        case 0:
+                // fixing a YT API bug:
+        if (this.getState('AWAKENING')) break;
+                this._setBufferState('full');
+        this.endedListener({});
+        break;
+        case 1:
+        this._setBufferState('full');
+
+        if ( (this.media.position || 0) > 0 && this._isFF() && this.ffFix) {
+            this.ffFix = false;
+            this.setSeek(this.media.position);
+        }
+
+        this.playingListener({});
+        this.canplayListener({});
+        this.updateInfo();
+        break;
+        case 2:
+        this.pauseListener({});
+        break;
+        case 3:
+        this.waitingListener({});
+        break;
+        case 5:
+        if (this.useIframeAPI!==true)
+            this.onReady();
+
+        break;
+    }
+    },
+
+    onReady: function() {
+
+    this.setVolume(this.pp.getVolume());
+
+    $( '#'+this.pp.getId()+'_media' )
+        .attr('ALLOWTRANSPARENCY', true)
+        .attr({scrolling:'no', frameborder: 0})
+        .css({
+        'overflow': 'hidden',
+        'display': 'block',
+        'border': '0'
+        })
+
+    if (this.media.title ||  this.pp.config.title || this.pp.getIsMobileClient() ) {
+        this.displayReady();
+        return;
+    }
+
+    var ref = this;
+
+    $.ajax({
+        url: 'http://gdata.youtube.com/feeds/api/videos/'+ this.youtubeGetId() +'?v=2&alt=jsonc',
+        async: false,
+        complete: function( xhr, status) {
+
+        try {
+            data = xhr.responseText;
+            if (typeof data == 'string') {
+            data = $.parseJSON(data);
             }
-
-            var ref = this;
-
-            $.ajax({
-                url: 'http://gdata.youtube.com/feeds/api/videos/' + this.youtubeGetId() + '?v=2&alt=jsonc',
-                async: false,
-                complete: function (xhr, status) {
-
-                    try {
-                        data = xhr.responseText;
-                        if (typeof data == 'string') {
-                            data = $.parseJSON(data);
-                        }
-                        if (data.data.title) {
-                            ref.sendUpdate('config', {
-                                title: data.data.title + ' (' + data.data.uploader + ')'
-                            });
-                        }
-                    } catch (e) {};
-                    ref.displayReady();
-                }
-            });
-        },
-
-        youtubeGetId: function () {
-            return encodeURIComponent(this.media.file[0].src.replace(/^[^v]+v.(.{11}).*/, "$1"));
-        },
-
-        updateInfo: function () {
-            var ref = this;
-            clearTimeout(this._updateTimer);
-            (function () {
-                if (ref.mediaElement == null) {
-                    clearTimeout(ref._updateTimer);
-                    return;
-                }
-                try {
-                    if (ref.getState('PLAYING')) {
-                        ref.timeListener({
-                            position: ref.mediaElement.getCurrentTime(),
-                            duration: ref.mediaElement.getDuration()
-                        });
-                        ref.progressListener({
-                            loaded: ref.mediaElement.getVideoBytesLoaded(),
-                            total: ref.mediaElement.getVideoBytesTotal()
-                        });
-                        ref._updateTimer = setTimeout(arguments.callee, 500);
-                    }
-                } catch (e) {}
-
-            })();
+            if (data.data.title) {
+            ref.sendUpdate('config', {title: data.data.title + ' (' + data.data.uploader + ')'});
+            }
+        } catch(e){};
+        ref.displayReady();
         }
     });
+    },
 
-    $p.newModel({
+    youtubeGetId: function() {
+    return encodeURIComponent( this.media.file[0].src.replace(/^[^v]+v.(.{11}).*/,"$1") );
+    },
 
-        modelId: 'YTAUDIO',
-        iLove: [
-    {
-            ext: 'youtube.com',
-            type: 'audio/youtube',
-            platform: 'flash',
-            fixed: 'maybe'
+    updateInfo: function() {
+    var ref=this;
+    clearTimeout(this._updateTimer);
+    (function() {
+        if(ref.mediaElement==null) {
+        clearTimeout(ref._updateTimer);
+        return;
         }
+        try{
+        if (ref.getState('PLAYING')) {
+            ref.timeListener({position:ref.mediaElement.getCurrentTime(),duration:ref.mediaElement.getDuration()});
+            ref.progressListener({loaded:ref.mediaElement.getVideoBytesLoaded(),total:ref.mediaElement.getVideoBytesTotal()});
+                    ref._updateTimer = setTimeout(arguments.callee,500);
+        }
+        } catch(e) {}
+
+    })();
+    }
+});
+
+$p.newModel({
+
+    modelId: 'YTAUDIO',
+    iLove: [
+    {ext:'youtube.com', type:'audio/youtube', platform:'flash', fixed:'maybe'}
     ]
 
-    }, 'YTVIDEO');
+}, 'YTVIDEO');
 });
 /*
  * this file is part of:
@@ -6656,6 +6641,8 @@ jQuery(function ($) {
             // create buffericon
             this.buffIcn = this.applyToPlayer($('<div/>').addClass('buffering'), 'buffericn');
 
+            this.imaContainer = this.applyToPlayer($('<div/>').addClass('ima'), 'ima');
+
             this.setActive();
 
             // add spritelayer to buffericon (if required)
@@ -6701,62 +6688,62 @@ jQuery(function ($) {
 
         syncingHandler: function () {
             this.showBufferIcon();
-            if (this.pp.getState('IDLE')) this.hideStartButton();
+            if (this.pp.getState('IDLE'))
+                this.hideStartButton();
         },
 
         readyHandler: function () {
             this.hideBufferIcon();
-            if (this.pp.getState('IDLE')) this.showStartButton();
+            if (this.pp.getState('IDLE'))
+                this.showStartButton();
         },
 
         bufferHandler: function (state) {
-
-            if (!this.pp.getState('PLAYING') && !this.pp.getState('AWAKENING')) return;
+            if (!this.pp.getState('PLAYING') && !this.pp.getState('AWAKENING'))
+                return;
             if (state == 'EMPTY') this.showBufferIcon();
             else this.hideBufferIcon();
         },
 
         stateHandler: function (state) {
-
             switch (state) {
 
-                case 'IDLE':
-                    clearTimeout(this._cursorTimer);
-                    this.display.css('cursor', 'pointer');
-                    break;
+            case 'IDLE':
+                clearTimeout(this._cursorTimer);
+                this.display.css('cursor', 'pointer');
+                break;
 
-                case 'STARTING':
-                    this.showBufferIcon();
-                    this.hideStartButton();
-                    break;
+            case 'STARTING':
+                this.showBufferIcon();
+                this.hideStartButton();
+                break;
 
-                case 'PLAYING':
-                    this.hideBufferIcon();
-                    this.hideStartButton();
-                    break;
+            case 'PLAYING':
+                this.hideBufferIcon();
+                this.hideStartButton();
+                break;
 
-                case 'IDLE':
-                    this.showStartButton();
-                    break;
+            case 'IDLE':
+                this.showStartButton();
+                break;
 
-                case 'AWAKENING':
-                    // this.hideBufferIcon();;
-                    this.hideStartButton();
-                    break;
+            case 'AWAKENING':
+                // this.hideBufferIcon();;
+                this.hideStartButton();
+                break;
 
-                case 'ERROR':
-                    this.hideBufferIcon();;
-                    this.hideStartButton();
-                    break;
+            case 'ERROR':
+                this.hideBufferIcon();;
+                this.hideStartButton();
+                break;
 
-                case 'COMPLETED':
-                    this.hideBufferIcon();;
-                    break;
+            case 'COMPLETED':
+                this.hideBufferIcon();;
+                break;
 
-                default:
-                    this.hideStartButton();
+            default:
+                this.hideStartButton();
             }
-
         },
 
         startHandler: function () {
@@ -6787,7 +6774,7 @@ jQuery(function ($) {
             }
         },
 
-        qualityChangeHandler: function() {
+        qualityChangeHandler: function () {
             this.hideBufferIcon();
         },
 
@@ -6802,46 +6789,51 @@ jQuery(function ($) {
             }
             dest.css('cursor', 'auto');
             clearTimeout(this._cursorTimer);
-            if ("AWAKENING|ERROR|PAUSED".indexOf(this.pp.getState()) == -1) this._cursorTimer = setTimeout(function () {
-                dest.css('cursor', 'none');
-            }, 3000);
+            if ("AWAKENING|ERROR|PAUSED".indexOf(this.pp.getState()) == -1)
+                this._cursorTimer = setTimeout(function () {
+                    dest.css('cursor', 'none');
+                }, 3000);
         },
 
         mousedownHandler: function (evt) {
 
             var ref = this;
 
-            if (($(evt.target).attr('id') || '').indexOf('_media') == -1) return;
+            if (($(evt.target).attr('id') || '').indexOf('_media') == -1)
+                return;
 
             clearTimeout(this._cursorTimer);
             this.display.css('cursor', 'auto');
 
-            if (evt.which != 1) return;
+            if (evt.which != 1)
+                return;
 
             switch (this.pp.getState()) {
-                case 'ERROR':
-                    this.pp.setConfig({
-                        disallowSkip: false
-                    });
-                    this.pp.setActiveItem('next');
-                    return;
-                case 'IDLE':
-                    this.pp.setPlay();
-                    return;
-
+            case 'ERROR':
+                this.pp.setConfig({
+                    disallowSkip: false
+                });
+                this.pp.setActiveItem('next');
+                return;
+            case 'IDLE':
+                this.pp.setPlay();
+                return;
             }
 
-            if (this.pp.getHasGUI() == true) return;
+            if (this.pp.getHasGUI() == true)
+                return;
 
             this.displayClicks++;
 
-            if (this.displayClicks > 0) {
-                setTimeout(
+            this.pp._promote('displayClick');
 
-                function () {
+            if (this.displayClicks > 0) {
+                setTimeout(function () {
                     if (ref.displayClicks == 1) {
-                        if (ref.pp.getState() == 'PLAYING') ref.clickHandler('displayPlaying');
-                        else ref.clickHandler('display');
+                        if (ref.pp.getState() == 'PLAYING')
+                            ref.clickHandler('displayPlaying');
+                        else
+                            ref.clickHandler('display');
                     } else if (ref.displayClicks == 2) {
                         ref.clickHandler('displayDbl');
                     }
@@ -6876,9 +6868,11 @@ jQuery(function ($) {
 
             clearTimeout(this.bufferDelayTimer);
 
-            if (this.pp.getHasGUI()) return;
+            if (this.pp.getHasGUI())
+                return;
 
-            if ((this.pp.getModel() === 'YTAUDIO' || this.pp.getModel() === 'YTVIDEO') && !this.pp.getState('IDLE')) instant = true;
+            if ((this.pp.getModel() === 'YTAUDIO' || this.pp.getModel() === 'YTVIDEO') && !this.pp.getState('IDLE'))
+                instant = true;
 
             if (instant != true && this.getConfig('bufferIconDelay') > 0) {
                 this.bufferDelayTimer = setTimeout(function () {
@@ -6899,8 +6893,10 @@ jQuery(function ($) {
                 if (!ref.buffIcn.is(':visible')) return;
                 ref.buffIcnSprite.css('backgroundPosition', '0px -' + spriteOffset + "px")
 
-                if (ref.config.spriteCountUp == true) spriteOffset += ref.config.spriteHeight + ref.config.spriteOffset;
-                else spriteOffset -= ref.config.spriteHeight + ref.config.spriteOffset;
+                if (ref.config.spriteCountUp == true)
+                    spriteOffset += ref.config.spriteHeight + ref.config.spriteOffset;
+                else
+                    spriteOffset -= ref.config.spriteHeight + ref.config.spriteOffset;
 
                 if (spriteOffset > (startOffset + ref.config.spriteHeight) * ref.config.spriteTiles || spriteOffset < ref.config.spriteOffset) spriteOffset = startOffset;
 
@@ -7236,41 +7232,6 @@ jQuery(function ($) {
             }
         },
 
-        itemHandler: function (data) {
-            var volume = parseFloat(this.cookie('volume'));
-            $(this.cb).find('.' + this.pp.getNS() + 'cuepoint').remove();
-            this._storeVol = (volume != null && !isNaN(volume)) ? volume : this.getConfig('volume');
-
-            this.pp.setVolume(this._storeVol)
-            this.updateDisplay();
-            this.hidecb(true);
-            this.drawTitle();
-            this.displayQualityToggle();
-            this.pluginReady = true;
-        },
-
-        startHandler: function () {
-            this.pp.setVolume(this._storeVol);
-            if (this.getConfig('showOnStart') == true) {
-                this.showcb(true);
-            } else {
-                this.hidecb(true);
-            }
-        },
-
-        readyHandler: function (data) {
-            clearTimeout(this._cTimer);
-            if (this.getConfig('showOnIdle')) {
-                this.showcb(true);
-                this.cb.removeClass('inactive').addClass('active').show();
-            }
-            this.pluginReady = true;
-        },
-
-        durationChangeHandler: function (dur) {
-            this.displayCuePoints(dur);
-        },
-
         updateDisplay: function () {
             var ref = this,
                 state = this.pp.getState();
@@ -7326,7 +7287,7 @@ jQuery(function ($) {
                 this.drawEnterFullscreenButton();
             }
 
-            if (!this.getConfig('enableFullscreen') || this.getConfig('isCrossDomain')) {
+            if (!this.getConfig('enableFullscreen')) {
                 this._active('fsexit', false);
                 this._active('fsenter', false);
             }
@@ -7342,84 +7303,6 @@ jQuery(function ($) {
 
             // init volume display
             this.displayVolume(this._storeVol);
-        },
-
-        stateHandler: function (state) {
-
-            this.updateDisplay();
-
-            if ('STOPPED|AWAKENING|IDLE|DONE'.indexOf(state) > -1) {
-                this.displayTime(0, 0, 0);
-                this.displayProgress(0);
-                if (this.pp.getIsMobileClient()) {
-                    this.hidecb(true);
-                }
-            }
-
-            if ('STOPPED|DONE|IDLE'.indexOf(state) > -1) {
-                this.hidecb(true);
-                return;
-            }
-
-            if ('ERROR'.indexOf(state) > -1) {
-                this._noHide = false;
-                this.hidecb(true);
-            }
-
-            this.displayProgress();
-        },
-
-        scheduleModifiedHandler: function () {
-            if (this.pp.getState() === 'IDLE') return;
-            this.updateDisplay();
-            this.displayTime();
-            this.displayProgress();
-        },
-
-        volumeHandler: function (value) {
-            if (this.getConfig('fixedVolume') != true && value != 0) {
-                this.cookie('volume', value);
-            }
-            // this._storeVol = value;
-            this.displayVolume(value);
-        },
-
-        progressHandler: function (obj) {
-            this.displayProgress();
-        },
-
-        timeHandler: function (obj) {
-            this.displayTime();
-            this.displayProgress();
-        },
-
-        qualityChangeHandler: function (qual) {
-            this.displayQualityToggle(qual);
-        },
-
-        fullscreenHandler: function (inFullscreen) {
-
-            var ref = this,
-                classPrefix = this.pp.getNS();
-
-            clearTimeout(this._cTimer);
-
-            this._noHide = false;
-            this._cFading = false;
-            this._vSliderAct = false;
-
-            if (!this.getConfig('controls')) return;
-            if (!this.getConfig('enableFullscreen') || this.getConfig('isCrossDomain')) return;
-
-            if (inFullscreen) {
-                this.cb.addClass('fullscreen');
-                this.drawExitFullscreenButton();
-            } else {
-                this.cb.removeClass('fullscreen');
-                this.drawEnterFullscreenButton();
-            }
-
-            if (this.pp.getState() == 'IDLE' && !this.getConfig('showOnIdle')) this.hidecb(true);
         },
 
         /* assign listener methods to controlbar elements */
@@ -7487,7 +7370,6 @@ jQuery(function ($) {
         },
 
         touchEnd: function () {
-
             var ref = this;
             this._cTimer = setTimeout(function () {
                 ref.hidecb();
@@ -7497,7 +7379,7 @@ jQuery(function ($) {
 
         /*******************************
         DOM Manipulations
-    *******************************/
+        *******************************/
         drawTitle: function () {
             this.controlElements['title'].html(this.getConfig('title', ''));
         },
@@ -7514,10 +7396,15 @@ jQuery(function ($) {
                 return;
             }
 
-            if (instant) this._noHide = false;
+            if (this.getConfig('showOnIdle') && this.pp.getState('IDLE'))
+                return;
+
+            if (instant)
+                this._noHide = false;
 
             // don't hide nao
-            if (this._noHide || this.cb.hasClass('inactive')) return;
+            if (this._noHide || this.cb.hasClass('inactive'))
+                return;
 
             this.cb.removeClass('active').addClass('inactive');
             this.sendEvent('hide', this.cb);
@@ -7552,6 +7439,9 @@ jQuery(function ($) {
             // show up:
             this.cb.removeClass('inactive').addClass('active');
             this.sendEvent('show', this.cb);
+            this._cTimer = setTimeout(function () {
+                ref.hidecb();
+            }, this.getConfig('fadeDelay'));
         },
 
         displayTime: function (pct, dur, pos) {
@@ -7576,7 +7466,8 @@ jQuery(function ($) {
 
                 // update numeric displays
                 for (var key in this.controlElements) {
-                    if (key == 'cb') break;
+                    if (key == 'cb')
+                        break;
 
                     if (times[key]) {
                         $.each(this.controlElements[key], function () {
@@ -7585,6 +7476,7 @@ jQuery(function ($) {
                     }
                 }
             }
+
         },
 
         displayProgress: function () {
@@ -7639,18 +7531,18 @@ jQuery(function ($) {
 
             if (toggleMute) {
                 switch (parseFloat(volume)) {
-                    case 0:
-                        this._active('mute', false);
-                        this._active('unmute', true);
-                        this._active('vmax', true);
-                        break;
+                case 0:
+                    this._active('mute', false);
+                    this._active('unmute', true);
+                    this._active('vmax', true);
+                    break;
 
-                    default:
-                        this._active('mute', true);
-                        this._active('unmute', false);
-                        this._active('vmax', false);
-                        //  vknob.css('left', volume*(vslider.width()-(vknob.width()/2))+"px");
-                        break;
+                default:
+                    this._active('mute', true);
+                    this._active('unmute', false);
+                    this._active('vmax', false);
+                    //  vknob.css('left', volume*(vslider.width()-(vknob.width()/2))+"px");
+                    break;
                 }
             }
 
@@ -7667,7 +7559,8 @@ jQuery(function ($) {
             var ref = this,
                 prefix = this.pp.getNS();
 
-            if (!this.getConfig('showCuePoints')) return;
+            if (!this.getConfig('showCuePoints'))
+                return;
 
             ref.controlElements['scrubber'].remove('.' + prefix + 'cuepoint');
 
@@ -7685,7 +7578,8 @@ jQuery(function ($) {
                         .css('width', blipWidth + "%")
                         .data('on', this.on);
 
-                if (this.title != '') blip.attr('title', this.title);
+                if (this.title != '')
+                    blip.attr('title', this.title);
 
                 this.addListener('unlock', function () {
                     $(blip).removeClass('inactive').addClass('active');
@@ -7739,8 +7633,10 @@ jQuery(function ($) {
                 return a.minHeight - b.minHeight;
             });
             for (var i = qualsCfg.length; i--; i > 0) {
-                if ($.inArray(qualsCfg[i].key, qualsItm) > -1) best.push(qualsCfg[i].key);
-                if (best.length > 1) break;
+                if ($.inArray(qualsCfg[i].key, qualsItm) > -1)
+                    best.push(qualsCfg[i].key);
+                if (best.length > 1)
+                    break;
             }
 
             this.cb.addClass('qualities');
@@ -7755,7 +7651,123 @@ jQuery(function ($) {
 
         /*******************************
         Player Event Handlers
-    *******************************/
+        *******************************/
+        itemHandler: function (data) {
+            var volume = parseFloat(this.cookie('volume'));
+
+            $(this.cb).find('.' + this.pp.getNS() + 'cuepoint').remove();
+
+            this._storeVol = (volume != null && !isNaN(volume)) ? volume : this.getConfig('volume');
+
+            this.pp.setVolume(this._storeVol)
+            this.updateDisplay();
+            this.hidecb(true);
+            this.drawTitle();
+            this.displayQualityToggle();
+            this.pluginReady = true;
+        },
+
+        startHandler: function () {
+            this.pp.setVolume(this._storeVol);
+            if (this.getConfig('showOnStart') == true) {
+                this.showcb(true);
+            } else {
+                this.hidecb(true);
+            }
+        },
+
+        readyHandler: function (data) {
+            clearTimeout(this._cTimer);
+            if (this.getConfig('showOnIdle')) {
+                this.showcb(true);
+                this.cb.removeClass('inactive').addClass('active').show();
+            }
+            this.pluginReady = true;
+        },
+
+        stateHandler: function (state) {
+
+            this.updateDisplay();
+
+            if ('STOPPED|AWAKENING|IDLE|DONE'.indexOf(state) > -1) {
+                this.displayTime(0, 0, 0);
+                this.displayProgress(0);
+                if (this.pp.getIsMobileClient()) {
+                    this.hidecb(true);
+                }
+            }
+
+            if ('STOPPED|DONE|IDLE'.indexOf(state) > -1) {
+                this.hidecb(true);
+                return;
+            }
+
+            if ('ERROR'.indexOf(state) > -1) {
+                this._noHide = false;
+                this.hidecb(true);
+            }
+
+            this.displayProgress();
+        },
+
+        scheduleModifiedHandler: function () {
+            if (this.pp.getState() === 'IDLE') return;
+            this.updateDisplay();
+            this.displayTime();
+            this.displayProgress();
+        },
+
+        volumeHandler: function (value) {
+            if (this.getConfig('fixedVolume') != true && value != 0) {
+                this.cookie('volume', value);
+            }
+            // this._storeVol = value;
+            this.displayVolume(value);
+        },
+
+        progressHandler: function (obj) {
+            this.displayProgress();
+        },
+
+        timeHandler: function (obj) {
+            this.displayTime();
+            this.displayProgress();
+        },
+
+        qualityChangeHandler: function (qual) {
+            this.displayQualityToggle(qual);
+        },
+
+        fullscreenHandler: function (inFullscreen) {
+
+            var ref = this,
+                classPrefix = this.pp.getNS();
+
+            clearTimeout(this._cTimer);
+
+            this._noHide = false;
+            this._cFading = false;
+            this._vSliderAct = false;
+
+            if (!this.getConfig('controls')) return;
+            if (!this.getConfig('enableFullscreen')) return;
+
+            if (inFullscreen) {
+                this.cb.addClass('fullscreen');
+                this.drawExitFullscreenButton();
+            } else {
+                this.cb.removeClass('fullscreen');
+                this.drawEnterFullscreenButton();
+            }
+
+            if (this.pp.getState() == 'IDLE' && !this.getConfig('showOnIdle'))
+                this.hidecb(true);
+        },
+
+        durationChangeHandler: function (dur) {
+            this.displayCuePoints(dur);
+        },
+
         errorHandler: function (value) {
             this.hidecb(true);
         },
@@ -7768,15 +7780,26 @@ jQuery(function ($) {
             this.showcb();
         },
 
+        mouseenterHandler: function (evt) {
+            this.showcb();
+        },
+
         mousemoveHandler: function (evt) {
             if (this.pp.getState('STARTING')) return;
             this.showcb();
         },
 
+        mouseleaveHandler: function () {},
+
+        mousedownHandler: function (evt) {
+            this.showcb();
+        },
+
         /*******************************
         ControlUI Event LISTENERS
-    *******************************/
+        *******************************/
         controlsFocus: function (evt) {
+
             this._noHide = true;
         },
 
@@ -7922,10 +7945,11 @@ jQuery(function ($) {
                 pageX = (evt.originalEvent.touches) ? evt.originalEvent.touches[0].pageX : evt.pageX,
                 pageY = (evt.originalEvent.touches) ? evt.originalEvent.touches[0].pageY : evt.pageY,
                 newPos = pageX - slider.offset().left - (tip.outerWidth() / 2),
-                times = this._clockDigits(this.pp.getDuration()/100*((pageX - slider.offset().left)*100/slider.width()), 'tip');
+                times = this._clockDigits(this.pp.getDuration() / 100 * ((pageX - slider.offset().left) * 100 / slider.width()), 'tip');
 
             for (var key in this.controlElements) {
-                if (key == 'cb') break;
+                if (key == 'cb')
+                    break;
 
                 if (times[key]) {
                     $.each(this.controlElements[key], function () {
@@ -7947,10 +7971,90 @@ jQuery(function ($) {
             if (this.getConfig('disallowSkip') == true) return;
             this._sSliderAct = true;
 
+            // @MSHICK: Added
             // if (this.pp.getState('PLAYING')) {
             //     var playing = true;
             //     this.pp.setPause();
             // }
+            // END
+
+            var ref = this,
+                slider = $(this.controlElements['scrubberdrag'][0]),
+                loaded = $(this.controlElements['loaded'][0]),
+                // @MSHICK: Added
+                knob = $(this.controlElements['scrubberknob'][0]),
+                // END
+                second = 0,
+                dx = Math.abs(parseInt(slider.offset().left) - event.clientX),
+
+                // @MSHICK: Added
+                moveKnob = function (event) {
+                    knob.css({
+                        left: event.clientX
+                    });
+                },
+                // END
+
+                applyValue = function (event) {
+
+                    var newPos = Math.abs(slider.offset().left - event.clientX);
+                    newPos = (newPos > slider.width()) ? slider.width() : newPos;
+                    newPos = (newPos > loaded.width()) ? loaded.width() : newPos;
+                    newPos = (newPos < 0) ? 0 : newPos;
+                    newPos = Math.abs(newPos / slider.width()) * ref.pp.getDuration();
+
+                    // avoid strange "mouseMove"-flooding in IE7+8
+                    if (newPos > 0 && newPos != second) {
+                        second = newPos;
+                        ref.pp.setPlayhead(second);
+                    }
+
+                },
+
+                mouseUp = function (evt) {
+                    evt.stopPropagation();
+                    evt.preventDefault();
+
+                    ref.playerDom.unbind('mouseup.slider');
+
+                    slider.unbind('mousemove', mouseMove);
+                    slider.unbind('mouseup', mouseUp);
+                    ref._sSliderAct = false;
+
+                    // @MSHICK: Added
+                    // if (playing) {
+                    //     ref.pp.setPlay();
+                    // }
+                    // END
+
+                    return false;
+                },
+
+                mouseMove = function (evt) {
+                    // @MSHICK: Added
+                    // if (knob) moveKnob(evt);
+                    // END
+
+                    clearTimeout(ref._cTimer);
+                    evt.stopPropagation();
+                    evt.preventDefault();
+                    applyValue(evt);
+                    return false;
+                };
+
+            this.playerDom.bind('mouseup.slider', mouseUp);
+            slider.mouseup(mouseUp);
+            slider.mousemove(mouseMove);
+
+            applyValue(event);
+
+        },
+
+        scrubberdragStartDragListener: function (event) {
+
+            if (this.getConfig('disallowSkip') == true) return;
+            this._sSliderAct = true;
+
 
             var ref = this,
                 slider = $(this.controlElements['scrubberdrag'][0]),
@@ -8015,6 +8119,8 @@ jQuery(function ($) {
 
         },
 
+
+
         vknobStartDragListener: function (event, domObj) {
             this._vSliderAct = true;
 
@@ -8071,14 +8177,14 @@ jQuery(function ($) {
                 dy = Math.abs(parseInt(this.cb.position().top) - evt.clientY);
 
             /*
-	this._initalPosition = {
-	    top: this.cb.css('top'),
-	    bottom: this.cb.css('bottom'),
-	    left: this.cb.css('left'),
-	    right: this.cb.css('right')
+  this._initalPosition = {
+      top: this.cb.css('top'),
+      bottom: this.cb.css('bottom'),
+      left: this.cb.css('left'),
+      right: this.cb.css('right')
 
-	};
-	*/
+  };
+  */
             // this._initalPosition = $.extend({}, this.cb.attr('style'), this.cb.css());
 
             var mouseUp = function (evt) {
@@ -8112,7 +8218,7 @@ jQuery(function ($) {
 
         /*******************************
             GENERAL HELPERS
-    *******************************/
+        *******************************/
         _active: function (elmName, on) {
             var dest = this.controlElements[elmName];
             if (on == true) dest.addClass('active').removeClass('inactive');

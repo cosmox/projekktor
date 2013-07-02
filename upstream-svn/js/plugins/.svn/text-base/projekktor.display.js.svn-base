@@ -31,7 +31,7 @@ projekktorDisplay.prototype = {
 	displayPlayingClick:	{callback: 'setPlayPause', value: null},
 	displayDblClick:	{callback: null, value: null},
         
-        staticControls:         false,
+    staticControls:         false,
 	
 	/* time to delay buffering-icon-overlay once "waiting" event has been triggered */
 	bufferIconDelay: 	1000,
@@ -59,6 +59,10 @@ projekktorDisplay.prototype = {
 
 	// create buffericon
 	this.buffIcn = this.applyToPlayer( $('<div/>').addClass('buffering'), 'buffericn');
+    
+	this.imaContainer = this.applyToPlayer( $('<div/>').addClass('ima'), 'ima');    
+
+
 
         this.setActive();
 
@@ -95,39 +99,36 @@ projekktorDisplay.prototype = {
         EVENT HANDLERS
     *****************************************/
     displayReadyHandler: function() {
-	var ref = this;
-
-	// the startbutton
-    	this.startButton.unbind().click(function(){
-	    ref.pp.setPlay();
-	});
+        var ref = this;
+    
+        // the startbutton
+            this.startButton.unbind().click(function(){
+            ref.pp.setPlay();
+        });
         
         this.hideStartButton();
     },
 
     syncingHandler: function() {
-	this.showBufferIcon();
-	if (this.pp.getState('IDLE'))
-            this.hideStartButton();	    
+        this.showBufferIcon();
+        if (this.pp.getState('IDLE'))
+                this.hideStartButton();	    
     },
     
     readyHandler: function() {
-	this.hideBufferIcon();
-	if (this.pp.getState('IDLE'))
-            this.showStartButton();	    
+        this.hideBufferIcon();
+        if (this.pp.getState('IDLE'))
+                this.showStartButton();	    
     },    
     
     bufferHandler: function(state) {
-
-	if (!this.pp.getState('PLAYING') && !this.pp.getState('AWAKENING'))
-	    return;
-	if (state=='EMPTY') this.showBufferIcon();
-	else this.hideBufferIcon();
+        if (!this.pp.getState('PLAYING') && !this.pp.getState('AWAKENING'))
+            return;
+        if (state=='EMPTY') this.showBufferIcon();
+        else this.hideBufferIcon();
     },    
     
     stateHandler: function(state) {
-        
-        
         switch(state) {
 	    
 	    case 'IDLE':
@@ -166,9 +167,6 @@ projekktorDisplay.prototype = {
             default:
                 this.hideStartButton();
         }
-        
-
-	
     },
     
     startHandler: function() {
@@ -176,20 +174,20 @@ projekktorDisplay.prototype = {
     },
   
     stoppedHandler: function() {
-	this.hideBufferIcon();
+        this.hideBufferIcon();
     },
   
     scheduleLoadingHandler: function() {
-	 this.hideStartButton();
-	 this.showBufferIcon(); 
+        this.hideStartButton();
+        this.showBufferIcon(); 
     },
     
     scheduledHandler: function() {
-	if (!this.getConfig('autoplay')) {
-	    this.showStartButton();
-	}
+        if (!this.getConfig('autoplay')) {
+            this.showStartButton();
+        }
 	
-	this.hideBufferIcon();
+        this.hideBufferIcon();
     },
  
     plugineventHandler: function(data) {
@@ -220,49 +218,50 @@ projekktorDisplay.prototype = {
     
     mousedownHandler: function(evt) {
 
-	var ref = this;     
-        	
-	if( ($(evt.target).attr('id') || '').indexOf('_media')==-1)
-	    return;
-
+        var ref = this;     
+                
+        if( ($(evt.target).attr('id') || '').indexOf('_media')==-1)
+            return;
+    
         clearTimeout(this._cursorTimer);
         this.display.css('cursor', 'auto');                    
-            
-	if(evt.which!=1)
-	    return;            
+                
+        if(evt.which!=1)
+            return;            
 
-	switch(this.pp.getState()) {
-	    case 'ERROR':
+        switch(this.pp.getState()) {
+            case 'ERROR':
                 this.pp.setConfig({disallowSkip: false});
-		this.pp.setActiveItem('next');
-		return;
-	    case 'IDLE':
-		this.pp.setPlay();
-		return;
-	    
-	}
+                this.pp.setActiveItem('next');
+                return;
+            case 'IDLE':
+                this.pp.setPlay();
+                return;
+        }
 	
-	if (this.pp.getHasGUI()==true) 	    
-	    return;
+        if (this.pp.getHasGUI()==true) 	    
+            return;
 
-	this.displayClicks++;
+        this.displayClicks++;
+        
+        this.pp._promote('displayClick');
 	
-	if (this.displayClicks > 0) {
-	    setTimeout(
-		function(){		    
-		    if(ref.displayClicks == 1) {
-			if (ref.pp.getState()=='PLAYING')
-			    ref.clickHandler('displayPlaying');			
-			else 
-			    ref.clickHandler('display');
-		    } else if(ref.displayClicks == 2) {
-			ref.clickHandler('displayDbl');
-		    }
-		    ref.displayClicks = 0;
-		}, 250
-	    );	
-	}
-	return;
+        if (this.displayClicks > 0) {
+            setTimeout(
+            function(){		    
+                if(ref.displayClicks == 1) {
+                if (ref.pp.getState()=='PLAYING')
+                    ref.clickHandler('displayPlaying');			
+                else 
+                    ref.clickHandler('display');
+                } else if(ref.displayClicks == 2) {
+                ref.clickHandler('displayDbl');
+                }
+                ref.displayClicks = 0;
+            }, 250
+            );	
+        }
+        return;
     },
     
     
@@ -283,28 +282,28 @@ projekktorDisplay.prototype = {
     *****************************************/       
     hideBufferIcon: function() {
         var ref=this;
-	clearTimeout(this.bufferDelayTimer);
+        clearTimeout(this.bufferDelayTimer);
         this.buffIcn.addClass('inactive').removeClass('active');
     },
         
     showBufferIcon: function(instant) {                        
-	var ref=this;
+        var ref=this;
 
         clearTimeout(this.bufferDelayTimer);
 
-	if (this.pp.getHasGUI())
-	    return;
+        if (this.pp.getHasGUI())
+            return;
 	
-	if ( (this.pp.getModel()==='YTAUDIO' || this.pp.getModel()==='YTVIDEO') && !this.pp.getState('IDLE'))
-	    instant=true;
+        if ( (this.pp.getModel()==='YTAUDIO' || this.pp.getModel()==='YTVIDEO') && !this.pp.getState('IDLE'))
+            instant=true;
 
         if (instant!=true && this.getConfig('bufferIconDelay')>0) {
             this.bufferDelayTimer=setTimeout(function(){ref.showBufferIcon(true);},this.getConfig('bufferIconDelay'));	    
-	    return;
+            return;
         }
 
-	if (this.buffIcn.hasClass('active') ) return;
-	this.buffIcn.addClass('active').removeClass('inactive');
+        if (this.buffIcn.hasClass('active') ) return;
+        this.buffIcn.addClass('active').removeClass('inactive');
 
         if (ref.buffIcnSprite==null) return;
         var startOffset=(ref.config.spriteCountUp==true) ? 0 : (ref.config.spriteHeight + ref.config.spriteOffset)*(ref.config.spriteTiles-1),

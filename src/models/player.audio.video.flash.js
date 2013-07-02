@@ -11,7 +11,7 @@
  * the Projekktor environment.
  *
  * JARIS Player:
- * copyright 2010 Jefferson Gonzez, Jefferson Gonzez, http://jarisflvplayer.org
+ * copyright 2010 Jefferson Gonzalez, Jefferson Gonzalez, http://jarisflvplayer.org
  * under GNU LESSER GENERAL PUBLIC LICENSE 3
  */
 jQuery(function ($) {
@@ -20,40 +20,40 @@ jQuery(function ($) {
         modelId: 'VIDEOFLASH',
         flashVersion: 9,
         iLove: [
-    {
-            ext: 'flv',
-            type: 'video/flv',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp'],
-            fixed: true
-        },
-    {
-            ext: 'mp4',
-            type: 'video/mp4',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp'],
-            fixed: 'maybe'
-        },
-    {
-            ext: 'mov',
-            type: 'video/quicktime',
-            streamType: ['http', 'pseudo', 'rtmp'],
-            platform: 'flash'
-        },
-    {
-            ext: 'm4v',
-            type: 'video/mp4',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp'],
-            fixed: 'maybe'
-        },
-        {
-            ext: 'f4m',
-            type: 'video/abst',
-            platform: 'flash',
-            streamType: ['httpVideoLive']
-        }
-    ],
+            {
+                ext: 'flv',
+                type: 'video/flv',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp'],
+                fixed: true
+            },
+            {
+                ext: 'mp4',
+                type: 'video/mp4',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp'],
+                fixed: 'maybe'
+            },
+            {
+                ext: 'mov',
+                type: 'video/quicktime',
+                streamType: ['http', 'pseudo', 'rtmp'],
+                platform: 'flash'
+            },
+            {
+                ext: 'm4v',
+                type: 'video/mp4',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp'],
+                fixed: 'maybe'
+            },
+            {
+                ext: 'f4m',
+                type: 'video/abst',
+                platform: 'flash',
+                streamType: ['httpVideoLive']
+            }
+        ],
 
         _eventMap: {
             onprogress: "progressListener",
@@ -98,15 +98,15 @@ jQuery(function ($) {
             };
 
             switch (this.pp.getConfig('streamType')) {
-                case 'rtmp':
-                    this.allowRandomSeek = true;
-                    this.media.loadProgress = 100;
-                    break;
-                case 'pseudo':
-                    this.isPseudoStream = true;
-                    this.allowRandomSeek = true;
-                    this.media.loadProgress = 100;
-                    break;
+            case 'rtmp':
+                this.allowRandomSeek = true;
+                this.media.loadProgress = 100;
+                break;
+            case 'pseudo':
+                this.isPseudoStream = true;
+                this.allowRandomSeek = true;
+                this.media.loadProgress = 100;
+                break;
             }
 
             this.createFlash(domOptions, destContainer);
@@ -123,7 +123,8 @@ jQuery(function ($) {
 
             if (this.getState('PLAYING')) {
                 this.setPlay();
-                if (ref.isPseudoStream !== true) this.setSeek(this.media.position || 0);
+                if (ref.isPseudoStream !== true)
+                    this.setSeek(this.media.position || 0);
             }
         },
 
@@ -268,25 +269,25 @@ jQuery(function ($) {
 
         modelId: 'AUDIOFLASH',
         iLove: [
-    {
-            ext: 'mp3',
-            type: 'audio/mp3',
-            platform: 'flash',
-            streamType: ['http']
-        },
-    {
-            ext: 'mp3',
-            type: 'audio/mpeg',
-            platform: 'flash',
-            streamType: ['http']
-        },
-    {
-            ext: 'm4a',
-            type: 'audio/mp4',
-            platform: 'flash',
-            streamType: ['http']
-        }
-    ],
+            {
+                ext: 'mp3',
+                type: 'audio/mp3',
+                platform: 'flash',
+                streamType: ['http']
+            },
+            {
+                ext: 'mp3',
+                type: 'audio/mpeg',
+                platform: 'flash',
+                streamType: ['http']
+            },
+            {
+                ext: 'm4a',
+                type: 'audio/mp4',
+                platform: 'flash',
+                streamType: ['http']
+            }
+        ],
 
         applyMedia: function (destContainer) {
 

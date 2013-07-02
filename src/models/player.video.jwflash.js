@@ -14,32 +14,32 @@ jQuery(function ($) {
 
         modelId: 'JWVIDEO',
         iLove: [
-    {
-            ext: 'flv',
-            type: 'video/flv',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp'],
-            fixed: true
-        },
-    {
-            ext: 'mp4',
-            type: 'video/mp4',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp']
-        },
-    {
-            ext: 'mov',
-            type: 'video/quicktime',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp']
-        },
-    {
-            ext: 'm4v',
-            type: 'video/mp4',
-            platform: 'flash',
-            streamType: ['http', 'pseudo', 'rtmp']
-        }
-    ],
+            {
+                ext: 'flv',
+                type: 'video/flv',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp'],
+                fixed: true
+            },
+            {
+                ext: 'mp4',
+                type: 'video/mp4',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp']
+            },
+            {
+                ext: 'mov',
+                type: 'video/quicktime',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp']
+            },
+            {
+                ext: 'm4v',
+                type: 'video/mp4',
+                platform: 'flash',
+                streamType: ['http', 'pseudo', 'rtmp']
+            }
+        ],
 
         requiresFlash: 9,
         flashVerifyMethod: 'getConfig',
@@ -117,23 +117,23 @@ jQuery(function ($) {
 
         _stateListener: function (value) {
             switch (value.newstate) {
-                case "COMPLETED":
-                    this.endedListener();
+            case "COMPLETED":
+                this.endedListener();
+                break;
+            case "PLAYING":
+                if (this._isStarted === false) {
+                    this._isStarted = true;
+                    this.startListener();
                     break;
-                case "PLAYING":
-                    if (this._isStarted === false) {
-                        this._isStarted = true;
-                        this.startListener();
-                        break;
-                    }
-                    this.playingListener();
-                    break;
-                case "PAUSED":
-                    this.pauseListener();
-                    break;
-                case "BUFFERING":
-                    this.waitingListener();
-                    break;
+                }
+                this.playingListener();
+                break;
+            case "PAUSED":
+                this.pauseListener();
+                break;
+            case "BUFFERING":
+                this.waitingListener();
+                break;
 
             }
 
@@ -160,8 +160,10 @@ jQuery(function ($) {
         },
 
         setVolume: function (newvol) {
-            if (this.mediaElement == null) this.volumeListener(newvol)
-            else this.mediaElement.sendEvent("VOLUME", newvol * 100);
+            if (this.mediaElement == null)
+                this.volumeListener(newvol)
+            else
+                this.mediaElement.sendEvent("VOLUME", newvol * 100);
         },
 
         setPause: function (event) {
@@ -173,9 +175,11 @@ jQuery(function ($) {
         },
 
         getVolume: function () {
-            if (this._isMuted === true) return 0;
+            if (this._isMuted === true)
+                return 0;
 
-            if (this.mediaElement == null) return this.media.volume;
+            if (this.mediaElement == null)
+                return this.media.volume;
 
             return this.mediaElement.getConfig().volume / 100;
         },
@@ -190,17 +194,17 @@ jQuery(function ($) {
         modelId: 'JWAUDIO',
         hasGUI: false,
         iLove: [
-    {
-            ext: 'mp3',
-            type: 'audio/mp3',
-            platform: 'flash'
-        },
-    {
-            ext: 'm4a',
-            type: 'audio/mp4',
-            platform: 'flash'
-        }
-    ],
+            {
+                ext: 'mp3',
+                type: 'audio/mp3',
+                platform: 'flash'
+            },
+            {
+                ext: 'm4a',
+                type: 'audio/mp4',
+                platform: 'flash'
+            }
+        ],
 
         applyMedia: function (destContainer) {
 

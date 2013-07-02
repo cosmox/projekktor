@@ -1,6 +1,28 @@
 PROJEKKTOR - simply mighty <video>
 http://www.projekktor.com
 
+V1.2.32
+=======
+
+  fixes:
+  * [core] IE8 issue due to a left console.log statement
+
+
+V1.2.31
+=======
+
+  additions:
+  * [core] new event "seek"
+  
+
+  fixes:
+  * [core] even more interesting fullscreen issues fixed
+  * [core] fixed cross-domain iframe issues - detection is now more accurate and will check for "allowFullscreen" attribute(s)
+
+  changes:
+  * [core] "seeking" and "seeked" are no longer player "state"s. Both are now properties of the new "seek"-event.
+  
+  
 
 V1.2.30
 =======
