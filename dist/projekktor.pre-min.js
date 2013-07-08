@@ -4233,10 +4233,14 @@ jQuery(function ($) {
             if (document.cookie === undefined || document.cookie === false) return null;
             if (key == null) return null;
 
+            var cookieExpiry = this.pp.getConfig('cookieExpiry') || 0;
+            // falsy cookieExpiry values effectively disable cookies
+            if (!cookieExpiry) return null;
+
             // set cookie:
             if (arguments.length > 1 && value != null) {
                 var t = new Date();
-                t.setDate(t.getDate() + (this.pp.getConfig('cookieExpiry') || 0));
+                t.setDate(t.getDate() + cookieExpiry);
                 return (document.cookie =
                     encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=' + encodeURIComponent(value) + '; expires=' + ((del === true) ? "Thu, 01 Jan 1970 00:00:01 GMT" : t.toUTCString()) + '; path=/'
                 // +options.domain ? '; domain=' + options.domain : '','
