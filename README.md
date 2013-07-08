@@ -12,6 +12,7 @@ Here are some modifications I've made relative to the current state of SVN trunk
 
 - All code is reformatted for more readability, and has had problematic non-ASCII characters removed
 - Small change to controlbar plugin that attaches same bindings to scrubberknob as exist on the progress bar.
+- Added option to disable cookies if a falsy (0, false, null) cookieExpiry value is set.
 
 How to build your own Projekktor
 --------------------------------
