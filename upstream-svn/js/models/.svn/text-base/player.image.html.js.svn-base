@@ -10,11 +10,12 @@
 jQuery(function($) {
 $p.newModel({
     
+    browserVersion: "1",
     modelId: 'IMAGE',
     iLove: [
-	{ext:'jpg', type:'image/jpeg', platform:'browser', streamType: ['http']},
-	{ext:'gif', type:'image/gif', platform:'browser', streamType: ['http']},
-	{ext:'png', type:'image/png', platform:'browser', streamType: ['http']}
+        {ext:'jpg', type:'image/jpeg', platform:'browser', streamType: ['http']},
+        {ext:'gif', type:'image/gif', platform:'browser', streamType: ['http']},
+        {ext:'png', type:'image/png', platform:'browser', streamType: ['http']}
     ],
     
     allowRandomSeek: true,
@@ -23,42 +24,42 @@ $p.newModel({
     _duration: 0,
     
     applyMedia: function(destContainer) {
-	this.mediaElement = this.applyImage(this.media.file[0].src, destContainer.html(''));
-	this._duration = this.pp.getConfig('duration');
-	this._position = -1;
-	this.displayReady();
-	this._position = -0.5;	
+        this.mediaElement = this.applyImage(this.media.file[0].src, destContainer.html(''));
+        this._duration = this.pp.getConfig('duration');
+        this._position = -1;
+        this.displayReady();
+        this._position = -0.5;    
     },    
     
     /* start timer */
     setPlay: function() {
 
-	var ref = this;
-	
+        var ref = this;
+    
         this._setBufferState('full');
-	this.progressListener(100);
-	this.playingListener();	
+        this.progressListener(100);
+        this.playingListener();    
         
-	if (this._duration==0) {
-	    ref._setState('completed');
-	    return;
-	}
-	
-	(function() {
-
-	    if (ref._position>=ref._duration) {
-		ref._setState('completed');
-		return;
-	    }
-	    
-	    if (!ref.getState('PLAYING'))
-		return;
-	    
-	    ref.timeListener({duration: ref._duration, position:ref._position});
-	    setTimeout(arguments.callee,500);
-	    ref._position += 0.5;	    
-	})();	
-	
+        if (this._duration==0) {
+            ref._setState('completed');
+            return;
+        }
+    
+        (function() {
+            if (ref._position>=ref._duration) {
+                ref._setState('completed');
+                return;
+            }
+            
+            if (!ref.getState('PLAYING')) {
+                return;
+            }
+            
+            ref.timeListener({duration: ref._duration, position:ref._position});
+            setTimeout(arguments.callee,200);
+            ref._position += 0.2;        
+        })();    
+    
     },
     
     detachMedia: function() {
@@ -66,13 +67,14 @@ $p.newModel({
     },
     
     setPause: function() {
-	this.pauseListener();
+        this.pauseListener();
     },   
             
     setSeek: function(newpos) {
         if (newpos<this._duration) {
-	    this._position = newpos;
-	}
+            this._position = newpos;
+            this.seekedListener()
+        }
     }
     
 });
@@ -81,7 +83,7 @@ $p.newModel({
     
     modelId: 'HTML',
     iLove: [
-	{ext:'html', type:'text/html', platform:'browser', streamType: ['http']}
+        {ext:'html', type:'text/html', platform:'browser', streamType: ['http']}
     ],
     
    applyMedia: function(destContainer) {
@@ -104,8 +106,8 @@ $p.newModel({
         
         this.mediaElement.load(function(event){ref.success();});
         this.mediaElement.error(function(event){ref.remove();});
-	
-	this._duration = this.pp.getConfig('duration');
+    
+        this._duration = this.pp.getConfig('duration');
         
     },
     

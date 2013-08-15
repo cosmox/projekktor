@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 24
-/core/!svn/ver/283/trunk
+/core/!svn/ver/323/trunk
 END
 license.txt
 K 25
@@ -19,7 +19,7 @@ changelog.txt
 K 25
 svn:wc:ra_dav:version-url
 V 38
-/core/!svn/ver/279/trunk/changelog.txt
+/core/!svn/ver/321/trunk/changelog.txt
 END
 copyright.txt
 K 25
@@ -30,6 +30,6 @@ END
 design.html
 K 25
 svn:wc:ra_dav:version-url
-V 34
-/core/!svn/ver/2/trunk/design.html
+V 36
+/core/!svn/ver/291/trunk/design.html
 END

@@ -13,31 +13,31 @@ jQuery(function ($) {
 
         _cTimer: null,
         _noHide: false,
-        _wasSeeking: false,
-        _cFading: false,
         _vSliderAct: false,
-        _storeVol: null,
-        _timeTags: {},
+
         cb: null,
-        _pos: {
-            left: 0,
-            right: 0
-        },
 
         controlElements: {},
-
         controlElementsConfig: {
             'sec_dur': null,
             'min_dur': null,
+            'sec_abs_dur': null,
+            'min_abs_dur': null,
             'hr_dur': null,
             'sec_elp': null,
             'min_elp': null,
+            'sec_abs_elp': null,
+            'min_abs_elp': null,
             'hr_elp': null,
             'sec_rem': null,
             'min_rem': null,
+            'sec_abs_rem': null,
+            'min_abs_rem': null,
             'hr_rem': null,
             'sec_tip': null,
             'min_tip': null,
+            'sec_abs_tip': null,
+            'min_abs_tip': null,
             'hr_tip': null,
 
             'cb': null,
@@ -49,6 +49,7 @@ jQuery(function ($) {
             'loaded': null, // { on:['touchstart', 'click'], call:'scrubberClk'},
             'scrubber': null, // { on:['touchstart', 'click'], call:'scrubberClk'},
             'scrubbertip': null,
+            // @MSHICK: Added
             'scrubberknob': [{
                 on: ['mouseenter'],
                 call: 'scrubberShowTooltip'
@@ -62,6 +63,7 @@ jQuery(function ($) {
                 on: ['mousedown'],
                 call: 'scrubberdragStartDragListener'
             }],
+            // @MSHICK: end
             'scrubberdrag': [{
                 on: ['mouseenter'],
                 call: 'scrubberShowTooltip'
@@ -263,7 +265,7 @@ jQuery(function ($) {
             showOnIdle: false,
 
             /* Default layout */
-            controlsTemplate: '<ul class="left"><li><div %{play}></div><div %{pause}></div></li></ul><ul class="right"><li><div %{fsexit}></div><div %{fsenter}></div></li><li><div %{loquality}></div><div %{hiquality}></div></li><li><div %{vmax}></div></li><li><div %{vslider}><div %{vmarker}></div><div %{vknob}></div></div></li><li><div %{mute}></div></li><li><div %{timeleft}>%{hr_elp}:%{min_elp}:%{sec_elp} | %{hr_dur}:%{min_dur}:%{sec_dur}</div></li><li><div %{next}></div></li><li><div %{prev}></div></li></ul><ul class="bottom"><li><div %{scrubber}><div %{loaded}></div><div %{playhead}></div><div %{scrubberdrag}></div></div></li></ul>'
+            controlsTemplate: '<ul class="left"><li><div %{play}></div><div %{pause}></div></li></ul><ul class="right"><li><div %{fsexit}></div><div %{fsenter}></div></li><li><div %{loquality}></div><div %{hiquality}></div></li><li><div %{tracksbtn}></div></li><li><div %{vmax}></div></li><li><div %{vslider}><div %{vmarker}></div><div %{vknob}></div></div></li><li><div %{mute}></div></li><li><div %{timeleft}>%{hr_elp}:%{min_elp}:%{sec_elp} | %{hr_dur}:%{min_dur}:%{sec_dur}</div></li><li><div %{next}></div></li><li><div %{prev}></div></li></ul><ul class="bottom"><li><div %{scrubber}><div %{loaded}></div><div %{playhead}></div><div %{scrubberdrag}></div></div></li></ul><div %{scrubbertip}>%{hr_tip}:%{min_tip}:%{sec_tip}</div>'
         },
 
         initialize: function () {
@@ -368,9 +370,12 @@ jQuery(function ($) {
             // stop button
             this._active('stop', state !== 'IDLE');
 
+
+
             // rewind & forward
             this._active('forward', state !== 'IDLE');
             this._active('rewind', state !== 'IDLE');
+
 
             // fullscreen button
             if (this.pp.getInFullscreen() === true) {
@@ -384,6 +389,7 @@ jQuery(function ($) {
                 this._active('fsenter', false);
             }
 
+
             // loop button
             this._active('loop', this.pp.getConfig('loop'));
 
@@ -394,7 +400,7 @@ jQuery(function ($) {
             this.displayTime()
 
             // init volume display
-            this.displayVolume(this._storeVol);
+            this.displayVolume(this._getVolume());
         },
 
         /* assign listener methods to controlbar elements */
@@ -455,11 +461,12 @@ jQuery(function ($) {
 
             evt.stopPropagation();
             evt.preventDefault();
-            $p.utils.log('Controlbar: Click', element, callback, evt)
+            // $p.utils.log('Controlbar: Click', element, callback, evt)
             this[callback](evt, element);
 
             return false;
         },
+
 
         touchEnd: function () {
             var ref = this;
@@ -468,6 +475,7 @@ jQuery(function ($) {
             }, this.getConfig('fadeDelay'));
             this._noHide = false;
         },
+
 
         /*******************************
         DOM Manipulations
@@ -488,8 +496,8 @@ jQuery(function ($) {
                 return;
             }
 
-            if (this.getConfig('showOnIdle') && this.pp.getState('IDLE'))
-                return;
+                        if (this.getConfig('showOnIdle') && this.pp.getState('IDLE'))
+                            return;
 
             if (instant)
                 this._noHide = false;
@@ -531,9 +539,11 @@ jQuery(function ($) {
             // show up:
             this.cb.removeClass('inactive').addClass('active');
             this.sendEvent('show', this.cb);
-            this._cTimer = setTimeout(function () {
-                ref.hidecb();
-            }, this.getConfig('fadeDelay'));
+            this._cTimer=setTimeout(
+                function() {
+                    ref.hidecb();
+                }, this.getConfig('fadeDelay')
+            );
         },
 
         displayTime: function (pct, dur, pos) {
@@ -621,6 +631,7 @@ jQuery(function ($) {
                 else $(lis[i]).removeClass('active');
             }
 
+
             if (toggleMute) {
                 switch (parseFloat(volume)) {
                 case 0:
@@ -696,6 +707,7 @@ jQuery(function ($) {
             this._active('play', true);
         },
 
+
         drawEnterFullscreenButton: function (event) {
             this._active('fsexit', false);
             this._active('fsenter', true);
@@ -741,17 +753,13 @@ jQuery(function ($) {
             }
         },
 
+
         /*******************************
         Player Event Handlers
         *******************************/
         itemHandler: function (data) {
-            var volume = parseFloat(this.cookie('volume'));
-
             $(this.cb).find('.' + this.pp.getNS() + 'cuepoint').remove();
-
-            this._storeVol = (volume != null && !isNaN(volume)) ? volume : this.getConfig('volume');
-
-            this.pp.setVolume(this._storeVol)
+            this.pp.setVolume(this._getVolume())
             this.updateDisplay();
             this.hidecb(true);
             this.drawTitle();
@@ -760,7 +768,7 @@ jQuery(function ($) {
         },
 
         startHandler: function () {
-            this.pp.setVolume(this._storeVol);
+            this.pp.setVolume(this._getVolume());
             if (this.getConfig('showOnStart') == true) {
                 this.showcb(true);
             } else {
@@ -810,11 +818,13 @@ jQuery(function ($) {
         },
 
         volumeHandler: function (value) {
-            if (this.getConfig('fixedVolume') != true && value != 0) {
+            if (value>0)
+                this.cookie('muted', false);
+
+            if (!this.cookie('muted'))
                 this.cookie('volume', value);
-            }
-            // this._storeVol = value;
-            this.displayVolume(value);
+
+            this.displayVolume(this._getVolume());
         },
 
         progressHandler: function (obj) {
@@ -838,7 +848,6 @@ jQuery(function ($) {
             clearTimeout(this._cTimer);
 
             this._noHide = false;
-            this._cFading = false;
             this._vSliderAct = false;
 
             if (!this.getConfig('controls')) return;
@@ -881,7 +890,7 @@ jQuery(function ($) {
             this.showcb();
         },
 
-        mouseleaveHandler: function () {},
+        mouseleaveHandler: function() {},
 
         mousedownHandler: function (evt) {
             this.showcb();
@@ -892,7 +901,7 @@ jQuery(function ($) {
         *******************************/
         controlsFocus: function (evt) {
 
-            this._noHide = true;
+                this._noHide = true;
         },
 
         controlsBlur: function (evt) {
@@ -938,16 +947,17 @@ jQuery(function ($) {
         },
 
         muteClk: function (evt) {
-            this._storeVol = this.pp.getVolume();
+            this.cookie('muted', true);
             this.pp.setVolume(0);
         },
 
         unmuteClk: function (evt) {
-            if (this._storeVol <= 0) this._storeVol = 1;
-            this.pp.setVolume(this._storeVol);
+            this.cookie('muted', false);
+            this.pp.setVolume(this._getVolume());
         },
 
         vmaxClk: function (evt) {
+            this.cookie('muted', false);
             this.pp.setVolume(1);
         },
 
@@ -997,6 +1007,7 @@ jQuery(function ($) {
         vsliderClk: function (evt) {
             if (this._vSliderAct == true) return;
 
+
             var slider = $(this.controlElements['vslider']),
                 orientation = slider.width() > slider.height() ? 'hor' : 'vert',
                 totalDim = (orientation == 'hor') ? slider.width() : slider.height(),
@@ -1012,7 +1023,6 @@ jQuery(function ($) {
             }
 
             this.pp.setVolume(result);
-            this._storeVol = result;
         },
 
         scrubberShowTooltip: function (event) {
@@ -1142,77 +1152,6 @@ jQuery(function ($) {
 
         },
 
-        scrubberdragStartDragListener: function (event) {
-
-            if (this.getConfig('disallowSkip') == true) return;
-            this._sSliderAct = true;
-
-
-            var ref = this,
-                slider = $(this.controlElements['scrubberdrag'][0]),
-                loaded = $(this.controlElements['loaded'][0]),
-                knob = $(this.controlElements['scrubberknob'][0]),
-
-                second = 0,
-                dx = Math.abs(parseInt(slider.offset().left) - event.clientX),
-
-                moveKnob = function (event) {
-                    knob.css({
-                        left: event.clientX
-                    });
-                },
-
-                applyValue = function (event) {
-                    var newPos = Math.abs(slider.offset().left - event.clientX);
-                    newPos = (newPos > slider.width()) ? slider.width() : newPos;
-                    newPos = (newPos > loaded.width()) ? loaded.width() : newPos;
-                    newPos = (newPos < 0) ? 0 : newPos;
-                    newPos = Math.abs(newPos / slider.width()) * ref.pp.getDuration();
-
-                    // avoid strange "mouseMove"-flooding in IE7+8
-                    if (newPos > 0 && newPos != second) {
-                        second = newPos;
-                        ref.pp.setPlayhead(second);
-                    }
-                },
-
-                mouseUp = function (evt) {
-                    evt.stopPropagation();
-                    evt.preventDefault();
-
-                    ref.playerDom.unbind('mouseup.slider');
-
-                    slider.unbind('mousemove', mouseMove);
-                    slider.unbind('mouseup', mouseUp);
-                    ref._sSliderAct = false;
-
-                    // if (playing) {
-                    //     ref.pp.setPlay();
-                    // }
-
-                    return false;
-                },
-
-                mouseMove = function (evt) {
-                    // if (knob) moveKnob(evt);
-
-                    clearTimeout(ref._cTimer);
-                    evt.stopPropagation();
-                    evt.preventDefault();
-                    applyValue(evt);
-                    return false;
-                };
-
-            this.playerDom.bind('mouseup.slider', mouseUp);
-            slider.mouseup(mouseUp);
-            slider.mousemove(mouseMove);
-
-            applyValue(event);
-
-        },
-
-
-
         vknobStartDragListener: function (event, domObj) {
             this._vSliderAct = true;
 
@@ -1246,7 +1185,6 @@ jQuery(function ($) {
                     knob.css('left', newXPos + 'px');
                     volume = Math.abs(newXPos / (slider.width() - (knob.width() / 2)));
                     ref.pp.setVolume(volume);
-                    ref._storeVol = volume;
                     $(ref.controlElements['vmarker'][sliderIdx]).css('width', volume * 100 + "%");
                     return false;
                 };
@@ -1269,15 +1207,16 @@ jQuery(function ($) {
                 dy = Math.abs(parseInt(this.cb.position().top) - evt.clientY);
 
             /*
-  this._initalPosition = {
-      top: this.cb.css('top'),
-      bottom: this.cb.css('bottom'),
-      left: this.cb.css('left'),
-      right: this.cb.css('right')
+    this._initalPosition = {
+        top: this.cb.css('top'),
+        bottom: this.cb.css('bottom'),
+        left: this.cb.css('left'),
+        right: this.cb.css('right')
 
-  };
-  */
+    };
+    */
             // this._initalPosition = $.extend({}, this.cb.attr('style'), this.cb.css());
+
 
             var mouseUp = function (evt) {
                 evt.stopPropagation();
@@ -1311,6 +1250,19 @@ jQuery(function ($) {
         /*******************************
             GENERAL HELPERS
         *******************************/
+        _getVolume: function() {
+
+            var volume = parseFloat(this.cookie('volume') || this.getConfig('volume') || 0.5),
+                muted = this.cookie('muted') || false;
+
+            if (this.getConfig('fixedVolume') || volume==null)
+                return this.getConfig('volume');
+
+            if (muted) return 0;
+
+            return volume;
+        },
+
         _active: function (elmName, on) {
             var dest = this.controlElements[elmName];
             if (on == true) dest.addClass('active').removeClass('inactive');
@@ -1325,17 +1277,19 @@ jQuery(function ($) {
                 secs = 0;
             }
 
-            var hr = Math.floor(secs / (60 * 60));
+            var hr = Math.floor(secs / (60 * 60)),
+                divisor_for_minutes = secs % (60 * 60),
+                min = Math.floor(divisor_for_minutes / 60),
+                min_abs = hr * 60 + min,
+                divisor_for_seconds = divisor_for_minutes % 60,
+                sec = Math.floor(divisor_for_seconds),
+                sec_abs = secs,
+                result = {};
 
-            var divisor_for_minutes = secs % (60 * 60);
-            var min = Math.floor(divisor_for_minutes / 60);
-
-            var divisor_for_seconds = divisor_for_minutes % 60;
-            var sec = Math.floor(divisor_for_seconds);
-
-            var result = {}
             result['min_' + postfix] = (min < 10) ? "0" + min : min;
+            result['min_abs_' + postfix] = (min_abs < 10) ? "0" + min_abs : min_abs;
             result['sec_' + postfix] = (sec < 10) ? "0" + sec : sec;
+            result['sec_abs_' + postfix] = (sec_abs < 10) ? "0" + sec_abs : sec_abs;
             result['hr_' + postfix] = (hr < 10) ? "0" + hr : hr;
 
             return result;

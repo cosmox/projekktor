@@ -1,14 +1,14 @@
 10
 
 dir
-284
+324
 https://projekktorxl.svn.beanstalkapp.com/core/trunk/js/jquery
 https://projekktorxl.svn.beanstalkapp.com/core
 
 
 
-2013-01-29T15:59:20.899119Z
-172
+2013-08-06T14:31:33.968471Z
+297
 frankyghost
 
 
@@ -93,6 +93,40 @@ frankyghost
 
 
 93436
+
+jquery-1.9.1.min.js
+file
+
+
+
+
+2013-08-15T18:38:55.000000Z
+397754ba49e9e0cf4e7c190da78dda05
+2013-08-06T14:31:33.968471Z
+297
+frankyghost
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+92629
 
 jquery-1.6.1rc1.js
 file

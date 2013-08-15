@@ -69,7 +69,6 @@ jQuery(function ($) {
             this._volume = this.pp.getVolume();
             this._playbackQuality = this.pp.getPlaybackQuality();
             this.init();
-
         },
 
         init: function (params) {
@@ -116,6 +115,12 @@ jQuery(function ($) {
         applyMedia: function () {},
 
         sendUpdate: function (type, value) {
+            if(this._currentState == 'ERROR') {
+                return;
+            }
+            if (type=='error') {
+                this._setState('error');
+            }
             this.pp._modelUpdateListener(type, value);
         },
 
@@ -126,11 +131,9 @@ jQuery(function ($) {
         },
 
         start: function () {
-
             var ref = this;
 
             if (this.mediaElement == null && this.modelId != 'PLAYLIST') return;
-
             if (this.getState('STARTING')) return;
 
             this._setState('STARTING');
@@ -140,12 +143,10 @@ jQuery(function ($) {
 
             if (this.pp.getIsMobileClient('ANDROID') && !this.getState('PLAYING')) {
                 setTimeout(function () {
-                    ref.setPlay()
+                   ref.setPlay();
                 }, 500);
             }
-
             this.setPlay();
-
         },
 
         addListeners: function () {},
@@ -153,7 +154,7 @@ jQuery(function ($) {
         removeListeners: function () {
             try {
                 this.mediaElement.unbind('.projekktor' + this.pp.getId());
-            } catch (e) {};
+            } catch (e) {}
         },
 
         detachMedia: function () {},
@@ -189,9 +190,8 @@ jQuery(function ($) {
 
         /* firefox reinit-issue-workaround-helper-thingy */
         reInit: function () {
-
             // no FF:
-            if (this.flashVersion != false || !this._isFF() || this.getState('ERROR') || this.pp.getConfig('bypassFlashFFFix') === true) {
+            if (this.flashVersion !== false || !this._isFF() || this.getState('ERROR') || this.pp.getConfig('bypassFlashFFFix') === true) {
                 return;
             }
 
@@ -203,53 +203,57 @@ jQuery(function ($) {
 
         applyCommand: function (command, value) {
             switch (command) {
-            case 'quality':
-                this.setQuality(value);
-                break;
-            case 'play':
-                if (this.getState('ERROR')) break;
-                if (this.getState('IDLE')) {
-                    this._setState('awakening');
+                case 'quality':
+                    this.setQuality(value);
                     break;
-                }
-                this.setPlay();
-                break;
-            case 'pause':
-                if (this.getState('ERROR')) break;
-                this.setPause();
-                break;
-            case 'volume':
-                if (this.getState('ERROR')) break;
-                if (!this.setVolume(value)) {
-                    this._volume = value;
-                    this.sendUpdate('volume', value);
-                }
-                break;
-            case 'stop':
-                this.setStop();
-                break;
-            case 'frame':
-                this.setFrame(value);
-                break;
-            case 'seek':
-                if (this.getState('ERROR')) break;
-                if (this.getState('SEEKING')) break;
-                if (this.getState('IDLE')) break;
-                if (this.media.loadProgress == -1) break;
-                this._setSeekState('seeking', value);
-                this.setSeek(value);
-                break;
-            case 'fullscreen':
-                if (value == this._isFullscreen) break;
-                this._isFullscreen = value;
-                this.sendUpdate('fullscreen', this._isFullscreen);
-                this.reInit();
-                this.setResize();
-                break;
-            case 'resize':
-                this.setResize();
-                this.sendUpdate('resize', value);
-                break;
+                case 'error':
+                    this._setState('error');
+                    this.setTestcard(value);
+                    break;
+                case 'play':
+                    if (this.getState('ERROR')) break;
+                    if (this.getState('IDLE')) {
+                        this._setState('awakening');
+                        break;
+                    }
+                    this.setPlay();
+                    break;
+                case 'pause':
+                    if (this.getState('ERROR')) break;
+                    this.setPause();
+                    break;
+                case 'volume':
+                    if (this.getState('ERROR')) break;
+                    if (!this.setVolume(value)) {
+                        this._volume = value;
+                        this.sendUpdate('volume', value);
+                    }
+                    break;
+                case 'stop':
+                    this.setStop();
+                    break;
+                case 'frame':
+                    this.setFrame(value);
+                    break;
+                case 'seek':
+                    if (this.getState('ERROR')) break;
+                    if (this.getSeekState('SEEKING')) break;
+                    if (this.getState('IDLE')) break;
+                    if (this.media.loadProgress == -1) break;
+                    this._setSeekState('seeking', value);
+                    this.setSeek(value);
+                    break;
+                case 'fullscreen':
+                    if (value == this._isFullscreen) break;
+                    this._isFullscreen = value;
+                    this.sendUpdate('fullscreen', this._isFullscreen);
+                    this.reInit();
+                    this.setFullscreen();
+                    break;
+                case 'resize':
+                    this.setResize();
+                    this.sendUpdate('resize', value);
+                    break;
             }
         },
 
@@ -298,66 +302,20 @@ jQuery(function ($) {
             if (this._quality == quality) return;
             this._quality = quality;
 
-            try {
-                this.applySrc();
-            } catch (e) {}
+            try {this.applySrc();} catch(e){}
 
             this.qualityChangeListener();
         },
 
-        applySrc: function () {},
-
-        getSource: function () {
-
-            var resultSrc = [],
-                offset = this.media.offset || false,
-                ref = this,
-                pseudoQuery = (this.pp.getConfig('streamType') == 'pseudo') ? this.pp.getConfig('startParameter') : false;
-
-            $.each(this.media.file || [], function () {
-
-                // set proper quality source
-                if (ref._quality != this.quality && ref._quality != null)
-                    return true;
-
-                // nothing todo
-                if (!pseudoQuery || !offset) {
-                    resultSrc.push(this);
-                    return true;
-                }
-
-                // add offset_GET-parameter
-                var u = $p.utils.parseUri(this.src),
-                    src = u.protocol + '://' + u.host + u.path,
-                    query = [];
-
-                $.each(u.queryKey, function (key, value) {
-                    if (key != pseudoQuery) {
-                        query.push(key + "=" + value);
-                    }
-                })
-
-                src += (query.length > 0) ? '?' + query.join('&') + "&" + pseudoQuery + "=" + offset : "?" + pseudoQuery + "=" + offset;
-                this.src = src;
-
-                resultSrc.push(this);
-                return true;
-            })
-
-            if (resultSrc.length == 0)
-                return this.media.file;
-            else
-                return resultSrc;
-        },
-
         /*******************************
             ELEMENT GETTERS
-    *******************************/
+        *******************************/
         getVolume: function () {
-            if (this.mediaElement == null)
+            if (this.mediaElement==null) {
                 return this._volume;
+            }
 
-            return (this.mediaElement.prop('muted') == true) ? 0 : this.mediaElement.prop('volume');
+            return (this.mediaElement.prop('muted')===true) ? 0 : this.mediaElement.prop('volume');
         },
 
         getLoadProgress: function () {
@@ -402,9 +360,21 @@ jQuery(function ($) {
             return result;
         },
 
+        getBufferState: function (isThis) {
+            var result = (this._currentBufferState == null) ? 'NONE' : this._currentBufferState;
+            if (isThis != null) return (result == isThis.toUpperCase());
+            return result;
+        },
+
+        getSeekState: function (isThis) {
+            var result = (this._currentSeekState == null) ? 'NONE' : this._currentSeekState;
+            if (isThis != null) return (result == isThis.toUpperCase());
+            return result;
+        },
+
         getSrc: function () {
             try {
-                return this.mediaElement[0].currentSrc;
+                return this.mediaElement.get(0).currentSrc;
             } catch (e) {}
             try {
                 return this.media.file[0].src;
@@ -443,9 +413,9 @@ jQuery(function ($) {
 
             qual = this.pp._getAppropriateQuality(quals);
 
-            for (var i in this.pp.getConfig('poster')) {
-                if (this.pp.getConfig('poster')[i].quality == qual) {
-                    result = this.pp.getConfig('poster')[i].src || null;
+            for (var j in this.pp.getConfig('poster')) {
+                if (this.pp.getConfig('poster')[j].quality == qual) {
+                    result = this.pp.getConfig('poster')[j].src || null;
                     break;
                 }
             }
@@ -461,7 +431,50 @@ jQuery(function ($) {
             return {
                 width: this.media.videoWidth || 0,
                 height: this.media.videoHeight || 0
-            }
+            };
+        },
+
+        getSource: function () {
+
+            var resultSrc = [],
+                offset = this.media.offset || this.media.position || false,
+                ref = this,
+                pseudoQuery = (this.pp.getConfig('streamType') == 'pseudo') ? this.pp.getConfig('startParameter') : false;
+
+            $.each(this.media.file || [], function () {
+
+                // set proper quality source
+                if (ref._quality != this.quality && ref._quality != null)
+                    return true;
+
+                // nothing todo
+                if (!pseudoQuery || !offset) {
+                    resultSrc.push(this);
+                    return true;
+                }
+
+                // add offset_GET-parameter
+                var u = $p.utils.parseUri(this.src),
+                    src = u.protocol + '://' + u.host + u.path,
+                    query = [];
+
+                $.each(u.queryKey, function (key, value) {
+                    if (key != pseudoQuery) {
+                        query.push(key + "=" + value);
+                    }
+                });
+
+                src += (query.length > 0) ? '?' + query.join('&') + "&" + pseudoQuery + "=" + offset : "?" + pseudoQuery + "=" + offset;
+                this.src = src;
+
+                resultSrc.push(this);
+                return true;
+            });
+
+            if (resultSrc.length === 0)
+                return this.media.file;
+            else
+                return resultSrc;
         },
 
         /*******************************
@@ -470,7 +483,6 @@ jQuery(function ($) {
         timeListener: function (obj) {
 
             if (obj == null) return;
-            if (this.getState('SEEKING') && this.isPseudoStream) return;
 
             var position = parseFloat((obj.position || obj.currentTime || this.media.position || 0).toFixed(2)),
                 duration = parseFloat((obj.duration || 0).toFixed(2));
@@ -480,15 +492,23 @@ jQuery(function ($) {
 
             // duration has changed:
             if (duration != 0 && (duration != this.media.duration && !this.isPseudoStream) || (this.isPseudoStream && this.media.duration == 0)) {
+
                 this.media.duration = duration;
                 this.sendUpdate('durationChange', duration);
             }
 
-            // remember values & concider pseudo stream position offset
-            this.media.position = this.media.offset + position;
+            // remember values & concider pseudo stream position offset, bypass some strange position hopping effects during pseudostream:
+            if (position==this.media.position) return;
+
+            if (this.isPseudoStream && Math.round(position * 100) / 100==Math.round(this.media.offset * 100) / 100) {
+                this.media.position = this.media.offset;
+            } else {
+                this.media.position = this.media.offset + position;
+            }
             this.media.maxpos = Math.max(this.media.maxpos || 0, this.media.position || 0);
             this.media.playProgress = parseFloat((this.media.position > 0 && this.media.duration > 0) ? this.media.position * 100 / this.media.duration : 0);
             this.media.frame = this.media.position * this.pp.getConfig('fps');
+
             this.sendUpdate('time', this.media.position);
 
             this.loadProgressUpdate();
@@ -500,7 +520,7 @@ jQuery(function ($) {
                 progress = 0;
 
             if (typeof me.buffered !== 'object') return;
-            if (me.buffered.length == 0) return;
+            if (me.buffered.length === 0) return;
             if (this.media.loadProgress == 100) return;
 
             if (me.seekable && me.seekable.length > 0) {
@@ -512,7 +532,7 @@ jQuery(function ($) {
             if (this.media.loadProgress > progress) return;
 
             this.media.loadProgress = (this.allowRandomSeek === true) ? 100 : -1;
-            this.media.loadProgress = (this.media.loadProgress < 100 || this.media.loadProgress == undefined) ? progress : 100;
+            this.media.loadProgress = (this.media.loadProgress < 100 || this.media.loadProgress === undefined) ? progress : 100;
 
             this.sendUpdate('progress', this.media.loadProgress);
 
@@ -523,8 +543,8 @@ jQuery(function ($) {
             // we prefer timeranges but keep catching "progress" events by default
             // for historical and compatibility reasons:
             if (this.mediaElement instanceof jQuery) { // fix this - make sure all instances are jquery objects
-                if (typeof this.mediaElement[0].buffered == 'object') {
-                    if (this.mediaElement[0].buffered.length > 0) {
+                if (typeof this.mediaElement.get(0).buffered == 'object') {
+                    if (this.mediaElement.get(0).buffered.length > 0) {
                         this.mediaElement.unbind('progress');
                         return;
                     }
@@ -537,6 +557,7 @@ jQuery(function ($) {
 
             var current = 0,
                 total = 0;
+
             try {
                 if (!isNaN(evt.loaded / evt.total)) {
                     current = evt.loaded;
@@ -550,15 +571,6 @@ jQuery(function ($) {
                     current = obj.loaded;
                     total = obj.total;
                 }
-
-                /*else {
-        try {
-        this.media.loadProgress = (this.allowRandomSeek===true) ? 100 : -1;
-        this.sendUpdate('progress', this.media.loadProgress);
-        } catch(e){};
-       return;
-            } */
-
             }
 
             var loadedPercent = (current > 0 && total > 0) ? current * 100 / total : 0;
@@ -568,17 +580,16 @@ jQuery(function ($) {
             }
 
             loadedPercent = (this.media.loadProgress !== 100) ? loadedPercent : 100;
-            loadedPercent = (this.allowRandomSeek === true) ? 100 : 5 * Math.round(loadedPercent / 5);;
+            loadedPercent = (this.allowRandomSeek === true) ? 100 : 5 * Math.round(loadedPercent / 5);
 
             if (this.media.loadProgress != loadedPercent) {
-                this.media.loadProgress = loadedPercent
+                this.media.loadProgress = loadedPercent;
                 this.sendUpdate('progress', loadedPercent);
             }
 
             // Mac flash fix:
-            if (this.media.loadProgress >= 100 && this.allowRandomSeek == false) {
+            if (this.media.loadProgress >= 100 && this.allowRandomSeek === false) {
                 this._setBufferState('full');
-
             }
         },
 
@@ -610,18 +621,14 @@ jQuery(function ($) {
         },
 
         playingListener: function (obj) {
-            // check for missing source
-            // if (this.getSrc()==null) {
-            // this.setTestcard(10);
-            // return;
-            // }
             this._setState('playing');
         },
 
         startListener: function (obj) {
             this.applyCommand('volume', this.pp.getConfig('volume'));
-            if (!this.isPseudoStream)
+            if (!this.isPseudoStream) {
                 this.setSeek(this.media.position || 0);
+            }
 
             this._setState('playing');
         },
@@ -648,22 +655,20 @@ jQuery(function ($) {
             try {
                 this.media.videoWidth = obj.videoWidth;
                 this.media.videoHeight = obj.videoHeight;
-            } catch (e) {};
+            } catch (e) {}
             this._scaleVideo();
         },
 
         setTestcard: function (code, txt) {
             var destContainer = this.pp.getMediaContainer().html('').css({
-                width: '100%',
-                height: '100%'
-            }),
+                    width: '100%',
+                    height: '100%'
+                }),
                 messages = this.pp.getConfig('messages'),
-                msgTxt = (txt != undefined && txt != '') ? txt : (messages[code] != undefined) ? messages[code] : messages[0];
+                msgTxt = (txt !== undefined && txt !== '') ? txt : (messages[code] !== undefined) ? messages[code] : messages[0];
 
-            if (this.pp.getConfig('skipTestcard') && this.pp.getItemCount() > 1) {
-                this._setState('completed');
-                return;
-            }
+            this.removeListeners();
+            this.detachMedia();
 
             if (this.pp.getItemCount() > 1) {
                 // "press next to continue"
@@ -682,14 +687,14 @@ jQuery(function ($) {
                 title: this.pp.getConfig('title')
             }));
 
-            this.mediaElement = $('<div\>')
+            this.mediaElement = $('<div/>')
                 .addClass(this.pp.getNS() + 'testcard')
                 .attr('id', this.pp.getId() + '_testcard_media')
                 .html('<p>' + msgTxt + '</p>')
                 .appendTo(destContainer);
-
-            this._setState('error');
         },
+
+        applySrc: function () {},
 
         applyImage: function (url, destObj) {
 
@@ -699,7 +704,7 @@ jQuery(function ($) {
             $p.utils.blockSelection(imageObj);
 
             // empty URL... apply placeholder
-            if (url == '' || url == undefined) {
+            if (url === '' || url === undefined) {
                 return $('<span/>').attr({
                     "id": this.pp.getMediaId() + "_image"
                 }).appendTo(destObj);
@@ -722,7 +727,7 @@ jQuery(function ($) {
                     imageObj.data('od', {
                         width: dest.naturalWidth,
                         height: dest.naturalHeight
-                    })
+                    });
                 }
                 imageObj.show();
                 $p.utils.stretch(ref.pp.getConfig('imageScaling'), imageObj, destObj.width(), destObj.height());
@@ -756,7 +761,7 @@ jQuery(function ($) {
                 if (imgObj.attr('src') != ref.getPoster()) {
                     imgObj.attr('src', ref.getPoster());
                 }
-            }
+            };
 
             this.pp.addListener('fullscreen.poster', function () {
                 onReFull(imageObj, destObj);
@@ -768,6 +773,8 @@ jQuery(function ($) {
             return imageObj;
         },
 
+
+
         /* X-Browser flash embedd mess */
         createFlash: function (domOptions, destObj, shield) {
             this.mediaElement = $p.utils.embeddFlash(destObj.html(''), domOptions, shield, true);
@@ -776,13 +783,14 @@ jQuery(function ($) {
 
         /* we have to wait for the flash components to load and initialize */
         _waitforPlayer: function () {
-
-            if (this._displayReady == true) return;
-
-            this._setBufferState('empty');
-
             var ref = this,
                 counter = 0;
+
+            if (this._displayReady === true) {
+                return;
+            }
+
+            this._setBufferState('empty');
 
             (function () {
 
@@ -792,22 +800,23 @@ jQuery(function ($) {
                     var dest = $(ref.mediaElement).parent(),
                         clone = $(ref.mediaElement).clone();
                     dest.html('').append(clone);
-                    ref.mediaElement = clone.get(0);
+                    ref.mediaElement = clone;
                 }
 
-                var dest = ref.mediaElement;
+                dest = ref.mediaElement;
 
                 try {
-                    if ($(dest).attr('id').indexOf('testcard') > -1)
+                    if ($(dest).attr('id').indexOf('testcard') > -1) {
                         return;
-                } catch (e) {}
+                    }
+                } catch (e) {console.log(e);}
 
                 counter++;
                 try {
 
-                    if (dest == undefined) {
+                    if (dest === undefined) {
                         setTimeout(arguments.callee, 200);
-                    } else if (dest[ref.flashVerifyMethod] == undefined) {
+                    } else if (dest.get(0)[ref.flashVerifyMethod] === undefined) {
                         setTimeout(arguments.callee, 200);
                     } else {
                         ref._setBufferState('full');
@@ -815,7 +824,7 @@ jQuery(function ($) {
                         $('#' + $(ref.mediaElement).attr('id') + "_cc").css({
                             width: '100%',
                             height: '100%'
-                        })
+                        });
                     }
 
                 } catch (e) {
@@ -828,8 +837,8 @@ jQuery(function ($) {
         _setState: function (state) {
             var ref = this;
             state = state.toUpperCase();
-            if (this._currentState != state) {
 
+            if (this._currentState != state && this._currentState != 'ERROR') {
                 if (this._currentState == 'PAUSED' && state == 'PLAYING') {
                     this.sendUpdate('resume', this.media);
                     this._isPlaying = true;
@@ -846,7 +855,7 @@ jQuery(function ($) {
                 if (state == 'ERROR') {
                     this.setPlay = this.setPause = function () {
                         ref.sendUpdate('start');
-                    }
+                    };
                 }
                 this._currentState = state.toUpperCase();
                 this.sendUpdate('state', this._currentState);
@@ -884,13 +893,11 @@ jQuery(function ($) {
                         displayHeight: hei
                     });
                 }
-            } catch (e) {};
-
+            } catch (e) {}
         },
 
         _isFF: function () {
             return navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
         }
-
     };
 });

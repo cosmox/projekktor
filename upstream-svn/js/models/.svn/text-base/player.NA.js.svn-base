@@ -16,11 +16,10 @@ $p.newModel({
     hasGUI: true,
     
     applyMedia: function(destContainer) {
+        var ref = this;
 
         destContainer.html('');
-        
-        var ref = this;
-        
+
         this.mouseClick = function(evt){
             ref.pp.removeListener('mousedown', arguments.callee);
             ref._setState('completed');
@@ -36,10 +35,11 @@ $p.newModel({
             this.applyCommand ('stop');
             window.location.href = this.media.file[0].src;            
         }
+
     },
     
     detachMedia: function() {
-	this.pp.removeListener('leftclick', this.mouseClick)        
+        this.pp.removeListener('leftclick', this.mouseClick)        
     }
     
 

@@ -1,6 +1,73 @@
 PROJEKKTOR - simply mighty <video>
 http://www.projekktor.com
 
+
+V1.2.36
+=======
+
+  additions:
+  * [core] "leaveFullscreen" config option. On "true" player tries to leave fullscreen once "complete"ed.
+  * [plugin:controlbar] new template tags "min_abs" and "secs_abs" making it possible to get visually rid of the next higher divisor (e.g. "185 minutes" instead of "2 hours and 25 minutes")
+
+  fixes:
+  * [core] several AUDIO related issues fixed - especially HLS and .m3u related ones
+  * [core] minor Android issues fixed
+  * [core] an item session doesn´t fire any events or updates after "error" anymore
+  
+  
+
+V1.2.35
+=======
+
+  additions:
+  * [plugin:controlbar] added scrubber tooltip showing time-index depending on cursor position - pls update your theme
+
+  fixes:
+  * [core] volume toggling issues on audio playback via flash
+  * [core] fixed compatibility issues with jQuery < 1.6.1
+  * [core] on quality-toggle while watching pseudo-streams time offset parameter is now properly appended
+  
+  changes:
+  * [core] enabled VLC Web Plugin support by default
+  * [core] maed silly ".setPlayhead()" also available as ".setSeek()"
+  
+  
+
+V1.2.34
+=======
+
+  additions:
+  * [theme] added subtitle-button set
+  * [core] new config option "cookieDomain"
+  * [core] new config option "cookiePath"
+  
+  fixes:
+  * [core] fixed false positive native-support detections
+  * [core] fixed image model seeking issue
+
+  changes:
+  * [theme] changed directory-/name- scheme from /theme/style.css to /theme/<themename>/projekktor.style.css
+  
+
+V1.2.33
+=======
+  
+  additions:
+  * [core] added VLC Web Plugin Support - experimental - to unlock set config.platforms = ['browser', 'android', 'ios', 'vlc', 'native', 'flash']
+  
+  fixes:
+  * [plugin:controlbar] improved volume- and mute/unmute handling
+  * [core] prevent hopping time-index on seek in pseudo-streams
+  * [core] fixed pseudo-stream-on-fash-fallback issues
+  * [core] improved cookie handling
+  * [core] fixed item id config
+  * [core] .getItem() was totally messed up
+
+  changes:
+  * [core] argument values for .setPlayhead() are now internaly rounded to 2 decimal places
+  * [core] improved platform detection incl. full version check 
+  
+  
 V1.2.32
 =======
 
@@ -23,7 +90,6 @@ V1.2.31
   * [core] "seeking" and "seeked" are no longer player "state"s. Both are now properties of the new "seek"-event.
   
   
-
 V1.2.30
 =======
 

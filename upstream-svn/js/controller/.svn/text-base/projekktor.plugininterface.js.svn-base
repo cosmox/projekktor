@@ -25,13 +25,10 @@ projekktorPluginInterface.prototype = {
     _init: function(pluginConfig) {        
         this.config = $.extend(true, this.config, pluginConfig);
         if (this.reqVer!=null) {
-                var plv = this.pp.getPlayerVer().split('.'),
-                    pv = this.reqVer.split('.');
-                    
-            if ( plv[0] * 10000 + plv[1]*1000 + plv[2]*10 < pv[0] * 10000 + pv[1]*1000 + pv[2]*10 ) {
-            alert("Plugin '" + this.name + "' requires Projekktor v" + this.reqVer + " or later! Please visit http://www.projekktor.com and get the most recent version.");
-            this.pluginReary = true;
-            return;
+            if (!$p.utils.versionCompare(this.pp.getPlayerVer(), this.reqVer)) {
+                alert("Plugin '" + this.name + "' requires Projekktor v" + this.reqVer + " or later! Please visit http://www.projekktor.com and get the most recent version.");
+                this.pluginReady = true;
+                return;
             }
         }
         this.initialize();
@@ -199,30 +196,60 @@ projekktorPluginInterface.prototype = {
         return false;    
     },
     
-    cookie: function (key, value, del) {
-        // iphone will fail if you try to set a cookie this way:
+    cookie: function (key, value, ttl) {
         if (document.cookie===undefined || document.cookie===false) return null;
-        if (key==null) return null;
+        if (key==null && value!=null) return null;
+        if (this.pp.getConfig('cookieExpiry')==0) return null;
+
+        var t = new Date(),
+            result = null,
+            cookieString = '',
+            tmp = storedData = jQuery.parseJSON(eval(result = new RegExp('(?:^|; )' + encodeURIComponent(this.getConfig('cookieName')+"_"+this.name) + '=([^;]*)').exec(document.cookie)) ? decodeURIComponent(result[1]) : null);
+    
+        if (typeof storedData!='object' || storedData==null) {
+            storedData = {};
+            if (key!=null)
+                storedData[key] = tmp;
+        }
         
+        // read cookie
+        if (key==null) {
+            return storedData;
+        }
+        
+        if (arguments.length==1) {
+            return storedData[key];
+        }
+        
+        if (value!=null) {
+            storedData[key] = value;
+        }
+        else {
+            delete storedData[key];
+        }
+      
+        if ($.isEmptyObject(storedData)) {
+            ttl=0;
+            storedData = '';
+        }
+        else {
+            storedData = $p.utils.stringify(storedData)      
+        }
+       
         // set cookie:
-        if (arguments.length > 1 && value!=null) {
-            var t = new Date();
-            t.setDate(t.getDate() + (this.pp.getConfig('cookieExpiry') || 0));
-            return (document.cookie =
-            encodeURIComponent(this.pp.getConfig('cookieName')+this.name+"_"+key)+'='
-            +encodeURIComponent(value)
-            +'; expires=' + ((del===true) ? "Thu, 01 Jan 1970 00:00:01 GMT" : t.toUTCString())
-            +'; path=/'
-            // +options.domain ? '; domain=' + options.domain : '',´
-            // +options.secure ? '; secure' : ''
-            );
+        t.setDate(t.getDate() + (ttl || this.getConfig('cookieExpiry', 0)));
+        
+        cookieString = encodeURIComponent(this.getConfig('cookieName', 'projekktor')+"_"+this.name)+'='
+            +encodeURIComponent(storedData)
+            +'; expires=' + ((ttl==false) ? "Thu, 01 Jan 1970 00:00:01 GMT" : t.toUTCString())
+            +'; path=' + this.getConfig('cookiePath', '/');
+            
+        if (this.getConfig('cookieDomain', false)) {
+            cookieString += '; domain=' + options.domain;
         }
 
-        // get cookie data:
-        var result,
-            returnthis = (result = new RegExp('(?:^|; )' + encodeURIComponent(this.pp.getConfig('cookieName')+this.name+"_"+key) + '=([^;]*)').exec(document.cookie)) ? decodeURIComponent(result[1]) : null;
-    
-        return (returnthis=='true' || returnthis=='false') ? eval(returnthis) : returnthis;
+        document.cookie = cookieString;
+        return value;
     },
     
     // important

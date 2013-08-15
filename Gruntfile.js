@@ -46,8 +46,10 @@ module.exports = function (grunt) {
           { flag: "jwflash", src: "src/models/player.video.jwflash.js", alt: "src/models/player.audio.video.flash.js" },
           { flag: "youtube", src: "src/models/player.youtube.js" },
           { flag: "html", src: "src/models/player.image.html.js" },
+          { flag: "vlc", src: "src/models/player.audio.video.vlc.js" },
           "src/plugins/projekktor.display.js",
           "src/plugins/projekktor.controlbar.js",
+          "src/plugins/projekktor.contextmenu.js",
           { user:true, flag: "plugins/ima", src: "plugins/projekktor.ima.js" },
           { user:true, flag: "plugins/logo", src: "plugins/projekktor.logo.js" },
           { user:true, flag: "plugins/postertitle", src: "plugins/projekktor.postertitle.js" },
@@ -430,7 +432,7 @@ module.exports = function (grunt) {
   // Default build that mirrors the Projekktor distribution
   grunt.registerTask("default", [
     "update_submodules",
-    "build:*:*:+playlist:+youtube:+html:-jwflash:-plugins/logo:-plugins/ima:-plugins/postertitle:-plugins/share:-plugins/tracking",
+    "build:*:*:+playlist:+youtube:+html:+vlc:-jwflash:-plugins/logo:-plugins/ima:-plugins/postertitle:-plugins/share:-plugins/tracking",
     "pre-uglify",
     "uglify",
     "dist:*",
@@ -446,7 +448,7 @@ module.exports = function (grunt) {
   // Minimal build
   grunt.registerTask("build-user", [
     "update_submodules",
-    "build:*:*:+plugins/logo:+playlist:+plugins/ima:-plugins/postertitle:-plugins/share:-html:-youtube:-jwflash:-plugins/tracking",
+    "build:*:*:+plugins/logo:+playlist:+plugins/ima:-plugins/postertitle:-plugins/share:-html:-vlc;-youtube:-jwflash:-plugins/tracking",
     "pre-uglify",
     "uglify",
     "dist:*",

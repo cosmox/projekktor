@@ -1,17 +1,23 @@
 K 25
 svn:wc:ra_dav:version-url
 V 35
-/core/!svn/ver/281/trunk/js/plugins
+/core/!svn/ver/321/trunk/js/plugins
 END
 projekktor.controlbar.js
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/core/!svn/ver/281/trunk/js/plugins/projekktor.controlbar.js
+/core/!svn/ver/321/trunk/js/plugins/projekktor.controlbar.js
 END
 projekktor.display.js
 K 25
 svn:wc:ra_dav:version-url
 V 57
-/core/!svn/ver/273/trunk/js/plugins/projekktor.display.js
+/core/!svn/ver/321/trunk/js/plugins/projekktor.display.js
+END
+projekktor.contextmenu.js
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/core/!svn/ver/297/trunk/js/plugins/projekktor.contextmenu.js
 END

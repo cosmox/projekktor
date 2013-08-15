@@ -3207,92 +3207,93 @@ var projekktorConfig = function (ver) {
     this._version = ver;
 };
 /*
- * this file is part of:
- * projekktor zwei
- * http://www.projekktor.com
- *
- * Copyright 2010-2012, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
- * under GNU General Public License
- * http://www.filenew.org/projekktor/license/
- */
+* this file is part of:
+* projekktor zwei
+* http://www.projekktor.com
+*
+* Copyright 2010-2012, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
+* under GNU General Public License
+* http://www.filenew.org/projekktor/license/
+*/
 projekktorConfig.prototype = {
-
     /**************************************************************
         Config options to be customized prior initialization only:
     ***************************************************************/
 
-    _playerName: 'Projekktor',
+    _playerName:                    'Projekktor',
 
-    _playerHome: 'http://www.projekktor.com',
+    _playerHome:                    'http://www.projekktor.com',
 
     /* sets name of the cookie to store playerinformation in */
-    _cookieName: 'projekktorplayer',
+    _cookieName:                    'projekktor',
 
     /* days to keep cookie alive */
-    _cookieExpiry: 356,
+    _cookieExpiry:                  356,
 
     /* Plugins to load on instance initialization, plugins are automatically extening the projekktorPluginInterface class.
     The order how the plugins are set here is important because they are added from z-index 0 to n one by one to the player DOM.
     As such it is usefull to add the "Display" plugin always first.
     */
-    _plugins: ['display', 'controlbar'],
+    _plugins:                       ['display', 'controlbar', 'contextmenu'],
 
     /* Add one plugin or more plugins to the player. Alternative to "plugins" above. Will be merged with it. */
-    _addplugins: [],
+    _addplugins:                    [],
 
     /* custom reel parser (data:JSObject), default function(data){return data;} */
-    _reelParser: null,
+    _reelParser:                    null,
 
     /* Prefix prepended to all css-Classnames and data-attributes used by the player in order to avoid conflicts with existing layouts and scripts */
-    _ns: 'pp',
+    _ns:                            'pp',
 
     /* a priorised array of available platforms */
-    _platforms: ['browser', 'android', 'ios', 'native', 'flash'],
+    _platforms:                     ['browser', 'android', 'ios', 'native', 'vlc', 'flash'],
 
     /* if set to true, projekktor assumes to live within an iframe and will act accordingly (used for embedding) */
-    _iframe: false,
+    _iframe:                        false,
 
     /* if set to true projekktor will discard native media tag attributes (loop,controls,autoplay,preload etc.pp) */
-    _ignoreAttributes: false,
+    _ignoreAttributes:              false,
 
     /* looping scheduled media elements -  will be overwritten by loop-attribute of a replaced <video> tag. */
-    _loop: false,
+    _loop:                          false,
 
     /* automatically start playback once page has loaded -  will be overwritten by autoplay-attribute of a replaced <video> tag. */
-    _autoplay: false,
+    _autoplay:                      false,
 
     /* if more than one item is scheduled, true will automatically start playback of the next item in line once current one completed */
-    _continuous: true,
+    _continuous:                    true,
 
     /* "true" will stop all other player instances but the one the user clicked play on. */
-    _thereCanBeOnlyOne: true,
+    _thereCanBeOnlyOne:             true,
+
+    /* on "true" try to leave fullscreen on player "complete" - doesnt seem to work properly in Firefox... yeah! */
+    _leaveFullscreen:               false,
 
     /* An array of items to be played. Check http://www.projekktor.com/docs/playlists to learn more */
-    _playlist: [],
+    _playlist:                      [],
 
-    _theme: false,
+    _theme:                         false,
 
     /*'http://www.projekktorxl.com/themegen/api/themes/live/format/jsonp/id/%{id}/version/%{ver}',*/
-    _themeRepo: false,
+    _themeRepo:                     false,
 
     /* all error messages waiting for your translation */
-    _messages: {
-
+    _messages:  {
         /* flash & native: */
-        0: 'An error occurred.',
-        1: 'You aborted the media playback. ',
-        2: 'A network error caused the media download to fail part-way. ',
-        3: 'The media playback was aborted due to a corruption problem. ',
-        4: 'The media (%{title}) could not be loaded because the server or network failed.',
-        5: 'Sorry, your browser does not support the media format of the requested file.',
-        6: 'Your client is in lack of the Flash Plugin V%{flashver} or higher.',
-        7: 'No media scheduled.',
-        8: '! Invalid media model configured !',
-        9: 'File (%{file}) not found.',
+        0: '#0 An (unknown) error occurred.',
+        1: '#1 You aborted the media playback. ',
+        2: '#2 A network error caused the media download to fail part-way. ',
+        3: '#3 The media playback was aborted due to a corruption problem. ',
+        4: '#4 The media (%{title}) could not be loaded because the server or network failed.',
+        5: '#5 Sorry, your browser does not support the media format of the requested file.',
+        6: '#6 Your client is in lack of the Flash Plugin V%{flashver} or higher.',
+        7: '#7 No media scheduled.',
+        8: '#8 ! Invalid media model configured !',
+        9: '#9 File (%{file}) not found.',
         10: 'Invalid or missing quality settings for %{title}.',
         11: 'Invalid streamType and/or streamServer settings for %{title}.',
         12: 'Invalid or inconsistent quality setup for %{title}.',
-        80: 'The requested file does not exist or is delivered with an invalid content-type.',
+        80: '#80 The requested file does not exist or is delivered with an invalid content-type.',
         97: 'No media scheduled.',
         98: 'Invalid or malformed playlist data!',
         99: 'Click display to proceed. ',
@@ -3305,103 +3306,97 @@ projekktorConfig.prototype = {
     },
 
     /* debug on / off */
-    _debug: false,
+    _debug:                         false,
 
-    /* the width of the player - >0= overwrite destNodes width, 0= keep destNode's width, false=maintain ratio */
-    _width: null,
+    /* the width of the player - >0= overwrite destNodes width, 0= keep destNodes width, false=maintain ratio */
+    _width:                         null,
 
-    /* guess what.... the hight of the player - >0= overwrite destNodes height, 0 = keep destNode's width, false=maintain ratio */
-    _height: null,
+    /* guess what.... the hight of the player - >0= overwrite destNodes height, 0 = keep destNodes width, false=maintain ratio */
+    _height:                        null,
 
-    _ratio: false,
+    _ratio:                         false,
 
     /* An array of objects featuring keycode=>function sets for keyboard-controls-customizing */
     _keys: [],
 
     /* cross domain */
-    _isCrossDomain: false,
+    _isCrossDomain:                 false,
 
     /* foce full viewport if browser supports native media-element-fullscreen (e.g. iPad) */
-    _forceFullViewport: false,
+    _forceFullViewport:             false,
 
     /**************************************************************
         Config options available per playlist item:
     ***************************************************************/
 
     /* unique itemID for the item currently played - dynamically generated if not provided via config */
-    ID: 0,
+    id:                             0,
 
     /* a title is a title is a title */
-    title: null,
+    title:                          null,
 
-    cat: 'clip',
+    cat:                            'clip',
 
     /* URL to poster image -  will be overwritten by poster-attribute of the replaced media tag. */
-    poster: false,
+    poster:                         false,
 
     /* enable/disable controls -  will be overwritten by controls-attribute of the replaced <video> tag. */
-    controls: true,
+    controls:                       true,
 
     /* start offset in seconds for randomly seekable media. (EXPERIMENTAL) */
-    start: false,
+    start:                          false,
 
     /* stop endpoint in seconds for randomly seekable media. (EXPERIMENTAL) */
-    stop: false,
+    stop:                           false,
 
     /* initial volume on player-startup, 0=muted, 1=max */
-    volume: 0.5,
+    volume:                         0.5,
 
     /* a cover which will fill the display on audio-only playback */
-    cover: '',
+    cover:                          '',
 
     /* enable/disable the possibility to PAUSE the video once playback started. */
-    disablePause: false,
+    disablePause:                   false,
 
     /* enable/disable the possibility to skip the video by hitting NEXT or using the SCRUBBER */
-    disallowSkip: false,
+    disallowSkip:                   false,
 
     /* if set to TRUE users can not change the volume of the player - neither via API nor through controls */
-    fixedVolume: false,
+    fixedVolume:                    false,
 
     /* scaling used for images (playlist items and posters) "fill", "aspectratio" or "none" */
-    imageScaling: 'aspectratio',
+    imageScaling:                   'aspectratio',
 
     /* scaling used for videos (flash and native, not youtube) "fill", "aspectratio" or "none" */
-    videoScaling: 'aspectratio',
+    videoScaling:                   'aspectratio',
 
     /* path to the MP4 Flash-player fallback component */
-    playerFlashMP4: 'jarisplayer.swf',
+    playerFlashMP4:                 'jarisplayer.swf',
 
     /* path to the MP3 Flash-player fallback component */
-    playerFlashMP3: 'jarisplayer.swf',
+    playerFlashMP3:                 'jarisplayer.swf',
 
     /* defines the streamtype of the current item.
-        'http':     http  streaming
-        'rtmp':     RTMP streaming - requires "flashRTMPServer" to be set.
+        'http':  http  streaming
+        'rtmp':  RTMP streaming - requires "flashRTMPServer" to be set.
     */
-    streamType: 'http',
+    streamType:                     'http',
 
     /* it streamType is 'rtmp' you have to provide the serverURL here. */
-    streamServer: '',
+    streamServer:   '',
 
-    startParameter: 'start',
+    startParameter:                 'start',
 
     /* Youtube offers two different player APIs: fLaSh and "iFrame" for HTML5 . Make your choice here:
       For mobile devices this is forced to TRUE
     */
-    useYTIframeAPI: true,
-
-    /* enable/disable automatic flash fallback */
-    /* enableFlashFallback:     true,  OBSOLETE */
-
-    /* enable/disable native players */
-    /* enableNativePlayback:        true,   OBSOLETE */
+    useYTIframeAPI:                 true,
 
     /* enable/disable fetching of keyboard events - works in "fullscreen" only */
-    enableKeyboard: true,
+    enableKeyboard:                 true,
 
     /* enable/disable the possibility to toggle to FULLSCREEN mode */
-    enableFullscreen: true,
+    enableFullscreen:               true,
 
     /*
     small: Player height is 240px, and player dimensions are at least 320px by 240px for 4:3 aspect ratio.
@@ -3411,78 +3406,31 @@ projekktorConfig.prototype = {
     hd1080: Player height is 1080px, and player dimensions are 1920px by 1080px (for 16:9 aspect ratio) or 1440px by 1080px (for 4:3 aspect ratio).
     highres: Player height is greater than 1080px, which means that the player's aspect ratio is greater than 1920px by 1080px.
     */
-    playbackQuality: 'default',
+    playbackQuality:                'default',
 
-    _playbackQualities: [
-        {
-            key: 'small',
-            minHeight: 240,
-            minWidth: 240
-        },
-        {
-            key: 'medium',
-            minHeight: 360,
-            minWidth: [{
-                    ratio: 1.77,
-                    minWidth: 640
-                }, {
-                    ratio: 1.33,
-                    minWidth: 480
-                }]
-        },
-        {
-            key: 'large',
-            minHeight: 480,
-            minWidth: [{
-                    ratio: 1.77,
-                    minWidth: 853
-                }, {
-                    ratio: 1.33,
-                    minWidth: 640
-                }]
-        },
-        {
-            key: 'hd1080',
-            minHeight: 1080,
-            minWidth: [{
-                    ratio: 1.77,
-                    minWidth: 1920
-                }, {
-                    ratio: 1.33,
-                    minWidth: 1440
-                }]
-        },
-        {
-            key: 'hd720',
-            minHeight: 720,
-            minWidth: [{
-                    ratio: 1.77,
-                    minWidth: 1280
-                }, {
-                    ratio: 1.33,
-                    minWidth: 960
-                }]
-        },
-        {
-            key: 'highres',
-            minHeight: 1081,
-            minWidth: 0
-        }
+    _playbackQualities:
+    [
+        {key: 'small',  minHeight: 240,  minWidth: 240},
+        {key: 'medium',  minHeight: 360,  minWidth: [{ratio: 1.77, minWidth: 640}, {ratio: 1.33, minWidth: 480}]},
+        {key: 'large',  minHeight: 480,  minWidth: [{ratio: 1.77, minWidth: 853}, {ratio: 1.33, minWidth: 640}]},
+        {key: 'hd1080',  minHeight: 1080, minWidth: [{ratio: 1.77, minWidth: 1920}, {ratio: 1.33, minWidth: 1440}]},
+        {key: 'hd720',  minHeight: 720,  minWidth: [{ratio: 1.77, minWidth: 1280}, {ratio: 1.33, minWidth: 960}]},
+        {key: 'highres',  minHeight: 1081, minWidth: 0}
     ],
 
     /* if testcard is disabled, the player will force a filedowload in case no native- or flashplayer
     is available. oterhwise (enableTestcard=true) a testcard with an errormessage is shown in case of issues */
-    enableTestcard: true,
+    enableTestcard:                 true,
 
     /* if the scheduled playlist holds more than one item an "skipTestcard" is set to TRUE in case of an error
     the player will proceed to the next item without showing a testcard */
-    skipTestcard: false,
+    skipTestcard:                   false,
 
     /* sets the duration for media items without a duration (images & html pages) */
-    duration: 0,
+    duration:                       0,
 
-    /* sets the player's additional CSS class */
-    className: ''
+    /* sets the players additional CSS class */
+    className:                      ''
 };
 jQuery(function ($) {
 
@@ -3511,15 +3459,15 @@ jQuery(function ($) {
             if (dest)
                 dest
                     .css({
-                    "-khtml-user-select": "none",
-                    "-webkit-user-select": "none",
-                    "MozUserSelect": "none",
-                    "user-select": "none"
-                })
+                        "-khtml-user-select": "none",
+                        "-webkit-user-select": "none",
+                        "MozUserSelect": "none",
+                        "user-select": "none"
+                    })
                     .attr('unselectable', 'on')
                     .bind("selectstart", function () {
-                    return false;
-                })
+                        return false;
+                    })
             return dest;
         },
 
@@ -3661,6 +3609,8 @@ jQuery(function ($) {
             else
                 domOptions.src += "&";
 
+
+
             for (var key in flashVars) {
                 if (typeof flashVars[key] != 'function') {
                     tmpStr = flashVars[key];
@@ -3680,6 +3630,7 @@ jQuery(function ($) {
             // <object> bullshit with redundant "ID" IE extrawurst
             htmlEmbedObj = '<object id="' + domOptions.id + '" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0"  name="' + domOptions.name + '" width="' + domOptions.width + '" height="' + domOptions.height + '" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">' + '<param name="movie" value="' + domOptions.src + '"></param>' + '<param name="allowScriptAccess" value="' + domOptions.allowScriptAccess + '"></param>' + '<param name="allowFullScreen" value="' + domOptions.allowFullScreen + '"></param>' + '<param name="wmode" value="' + domOptions.wmode + '"></param>';
 
+
             // <embed> tag
             htmlEmbed = '<embed ';
             for (var key in domOptions) {
@@ -3687,6 +3638,7 @@ jQuery(function ($) {
                 if (typeof domOptions[key] != 'function') htmlEmbed += key + '="' + domOptions[key] + '" ';
             }
             htmlEmbed += ' pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash"></embed>';
+
 
             result = htmlEmbedObj + htmlEmbed;
             result += '</object>';
@@ -3699,24 +3651,25 @@ jQuery(function ($) {
                 return result;
 
             // jquerx 1.4.2 IE flash <object> issue workaround:
-            // this doesn't work in IE: destObj.append(result);
+            // this doesnt work in IE: destObj.append(result);
             dest.get(0).innerHTML = result;
 
             if (shield !== false) {
                 dest.append(
                     $('<div/>').attr('id', domOptions.id + '_cc')
                     .css({
-                    width: (shrinkShield) ? '1px' : '100%',
-                    height: (shrinkShield) ? '1px' : '100%',
-                    backgroundColor: ($p.utils.ieVersion() < 9) ? '#000' : 'transparent',
-                    filter: 'alpha(opacity = 0.1)',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0
-                }))
+                        width: (shrinkShield) ? '1px' : '100%',
+                        height: (shrinkShield) ? '1px' : '100%',
+                        backgroundColor: ($p.utils.ieVersion() < 9) ? '#000' : 'transparent',
+                        filter: 'alpha(opacity = 0.1)',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0
+                    })
+                )
             }
 
-            return $('#' + domOptions.id)[0];
+            return $('#' + domOptions.id);
         },
 
         ieVersion: function () {
@@ -3726,13 +3679,14 @@ jQuery(function ($) {
 
             while (
                 div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
-                all[0]);
+                all[0]
+            );
 
             return v > 4 ? v : undefined;
         },
 
         /**
-         * replaces {}-tags with parameter's equialents
+         * replaces {}-tags with parameters equialents
          * @public
          * @param (String) Da string to get processed
          * @param (Object) Object holding data to fill in
@@ -3748,6 +3702,7 @@ jQuery(function ($) {
             template = template.replace(/%{(.*?)}/gi, '');
             return template;
         },
+
 
         /**
          * stretches target to fit into specified dimensions keeping apsect ratio
@@ -3931,27 +3886,101 @@ jQuery(function ($) {
             return test_props_all('animationName');
         },
 
-        logging: false
+        versionCompare: function (installed, required) {
+            var a = installed.split('.'),
+                b = required.split('.');
 
+            for (var i = 0; i < a.length; ++i) {
+                a[i] = Number(a[i]);
+            }
+            for (var i = 0; i < b.length; ++i) {
+                b[i] = Number(b[i]);
+            }
+            if (a.length == 2) {
+                a[2] = 0;
+            }
+
+            if (a[0] > b[0]) return true;
+            if (a[0] < b[0]) return false;
+
+            if (a[1] > b[1]) return true;
+            if (a[1] < b[1]) return false;
+
+            if (a[2] > b[2]) return true;
+            if (a[2] < b[2]) return false;
+
+            return true;
+        },
+
+        /**
+         * serializes a simple object to a JSON formatted string.
+         * Note: stringify() is different from jQuery.serialize() which URLEncodes form elements
+         * CREDITS: http://blogs.sitepointstatic.com/examples/tech/json-serialization/json-serialization.js
+         */
+        stringify: function(obj) {
+            if ("JSON" in window) {
+                return JSON.stringify(obj);
+            }
+
+            var t = typeof (obj);
+            if (t != "object" || obj === null) {
+                // simple data type
+                if (t == "string") obj = '"' + obj + '"';
+
+                return String(obj);
+            } else {
+                // recurse array or object
+                var n, v, json = [], arr = (obj && obj.constructor == Array);
+
+                for (n in obj) {
+                    v = obj[n];
+                    t = typeof(v);
+                    if (obj.hasOwnProperty(n)) {
+                        if (t == "string") {
+                            v = '"' + v + '"';
+                        } else if (t == "object" && v !== null){
+                            v = $p.utils.stringify(v);
+                        }
+
+                        json.push((arr ? "" : '"' + n + '":') + String(v));
+                    }
+                }
+
+                return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+            }
+        },
+
+        logging: false
     }
 });
+
 
 jQuery(function ($) {
 
     $p.platforms = {
 
-        /*
-    VLC: function() {
-                        return 3;
-            console.log("VLC", navigator.plugins)
-        try {
-        return navigator.plugins['VLC Multimedia Plug-in'].version.match(/^,?(.+),?$/)[1].match(/\d+/g)[0]
-        } catch(e) {}
-        return '0,0,0'.match(/\d+/g)[0];
-    },
-        */
+        VLC: function() {
+            if (navigator.plugins && (navigator.plugins.length > 0)) {
+                for(var i=0;i<navigator.plugins.length;++i) {
+                    if (navigator.plugins[i].name.indexOf("VLC") != -1) {
+                        if (navigator.plugins[i].version!=null)
+                            return navigator.plugins[i].version || "0";
+                        if (navigator.plugins[i].description!=null)
+                            if (navigator.plugins[i].description.match(/\d{1,}\.\d{1,}\.\d{1,}/i)[0])
+                                return navigator.plugins[i].description.match(/\d{1,}\.\d{1,}\.\d{1,}/i)[0];
+                    }
+                }
+            }
+            else {
+                try {
+                    new ActiveXObject("VideoLAN.VLCPlugin.2");
+                    return "0"; // no, please, no
+                } catch (err) {}
+            }
+            return "0";
+        },
 
-        /* returns the version of the flash player installed for user's browser. returns 0 on none. */
+        /* returns the version of the flash player installed for users browser. returns 0 on none. */
         FLASH: function (typ) {
             try {
                 try {
@@ -3961,61 +3990,59 @@ jQuery(function ($) {
                     try {
                         axo.AllowScriptAccess = 'always';
                     } catch (e) {
-                        return '6,0,0';
+                        return '6.0.0';
                     }
                 } catch (e) {}
-                return new ActiveXObject('ShockwaveFlash.ShockwaveFlash').GetVariable('$version').replace(/\D+/g, ',').match(/^,?(.+),?$/)[1].match(/\d+/g)[0];
+                return (new ActiveXObject('ShockwaveFlash.ShockwaveFlash').GetVariable('$version').replace(/\D+/g, ',').match(/^,?(.+),?$/)[1].match(/\d+/g)[0]).toString();
             } catch (e) {
                 try {
                     if (navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin) {
-                        return (navigator.plugins["Shockwave Flash 2.0"] || navigator.plugins["Shockwave Flash"]).description.replace(/\D+/g, ",").match(/^,?(.+),?$/)[1].match(/\d+/g)[0];
+                        return ((navigator.plugins["Shockwave Flash 2.0"] || navigator.plugins["Shockwave Flash"]).description.replace(/\D+/g, ",").match(/^,?(.+),?$/)[1].match(/\d+/g)[0] ).toString()
                     }
                 } catch (e) {}
             }
-            return 0;
+            return "0";
         },
 
         ANDROID: function (type) {
             try {
-                return parseInt(navigator.userAgent.toLowerCase().match(/android\s+(([\d\.]+))?/)[1]);
-            } catch (e) {
-                return 0;
-            }
+                return (navigator.userAgent.toLowerCase().match(/android\s+(([\d\.]+))?/)[1]).toString();
+            } catch (e) {}
+            return "0";
         },
 
         IOS: function (type) {
             var agent = navigator.userAgent.toLowerCase(),
                 start = agent.indexOf('os ');
             if ((agent.indexOf('iphone') > -1 || agent.indexOf('ipad') > -1) && start > -1) {
-                return parseInt(agent.substr(start + 3, 3).replace('_', '.'));
+                return (agent.substr(start + 3, 3).replace('_', '.')).toString()
             }
-            return 0;
+            return "0";
         },
 
         NATIVE: function (type) {
             try {
-                var testObject = document.createElement((type.indexOf('video') > -1) ? 'video' : 'audio');
-                if (testObject.canPlayType != null) {
-                    if (type == '*')
-                        return 1;
-
+                var testObject = $((type.indexOf('video')>-1) ? '<video/>' : '<audio/>').get(0);
+                if (testObject.canPlayType!=null) {
+                    if (type==='*') {
+                        return "1";
+                    }
                     switch (testObject.canPlayType(type)) {
-                    case "no":
-                    case "":
-                        return 0;
+                        case "no":
+                        case "":
+                            return "0";
                         // case "maybe":
                         // case "probably":
-                    default:
-                        return 1;
+                        default:
+                            return "1";
                     }
                 }
-            } catch (e) {
-                return 0;
-            }
+            } catch (e) {}
+            return "0";
         },
 
         BROWSER: function (type) {
-            return 1;
+            return "1";
         }
     }
 });
@@ -4027,235 +4054,255 @@ jQuery(function ($) {
  * Copyright 2010-2013 Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.filenew.org/projekktor/license/
- */
-var projekktorPluginInterface = function () {};
-jQuery(function ($) {
-    projekktorPluginInterface.prototype = {
+*/
+var projekktorPluginInterface = function(){};
+jQuery(function($) {
+projekktorPluginInterface.prototype = {
 
-        pluginReady: false,
-        reqVer: null,
-        name: '',
-        pp: {},
-        config: {},
-        playerDom: null,
+    pluginReady: false,
+    reqVer: null,
+    name: '',
+    pp: {},
+    config: {},
+    playerDom: null,
 
-        _appliedDOMObj: [],
-        _pageDOMContainer: {},
-        _childDOMContainer: {},
+    _appliedDOMObj: [],
+    _pageDOMContainer: {},
+    _childDOMContainer: {},
 
-        _init: function (pluginConfig) {
-            this.config = $.extend(true, this.config, pluginConfig);
-            if (this.reqVer != null) {
-                var plv = this.pp.getPlayerVer().split('.'),
-                    pv = this.reqVer.split('.');
-
-                if (plv[0] * 10000 + plv[1] * 1000 + plv[2] * 10 < pv[0] * 10000 + pv[1] * 1000 + pv[2] * 10) {
-                    alert("Plugin '" + this.name + "' requires Projekktor v" + this.reqVer + " or later! Please visit http://www.projekktor.com and get the most recent version.");
-                    this.pluginReary = true;
-                    return;
-                }
+    _init: function(pluginConfig) {
+        this.config = $.extend(true, this.config, pluginConfig);
+        if (this.reqVer!=null) {
+            if (!$p.utils.versionCompare(this.pp.getPlayerVer(), this.reqVer)) {
+                alert("Plugin '" + this.name + "' requires Projekktor v" + this.reqVer + " or later! Please visit http://www.projekktor.com and get the most recent version.");
+                this.pluginReady = true;
+                return;
             }
-            this.initialize();
-        },
+        }
+        this.initialize();
+    },
 
-        getConfig: function (idx, defaultValue) {
-            var result = null,
+    getConfig: function(idx, defaultValue) {
+        var result = null,
                 def = defaultValue || null;
 
-            if (this.pp.getConfig('plugin_' + this.name) != null) {
-                result = this.pp.getConfig('plugin_' + this.name)[idx];
-            }
+        if (this.pp.getConfig('plugin_'+this.name)!=null) {
+            result = this.pp.getConfig('plugin_'+this.name)[idx];
+        }
 
-            if (result == null) {
-                result = this.pp.getConfig(idx);
-            }
+        if (result==null) {
+            result = this.pp.getConfig(idx);
+        }
 
-            if (result == null) {
-                result = this.config[idx];
-            }
+        if (result==null) {
+            result = this.config[idx];
+        }
 
-            if (typeof result == 'object' && result.length === null)
-                result = $.extend(true, {}, result, this.config[idx]);
+        if (typeof result == 'object' && result.length === null)
+            result = $.extend(true, {}, result, this.config[idx]);
             else if (typeof result == 'object') {
-                result = $.extend(true, [], this.config[idx] || [], result || []);
+            result = $.extend(true, [], this.config[idx] || [], result || [] );
             }
 
-            return (result == null) ? def : result;
-        },
+        return (result==null) ? def : result;
+    },
 
-        getDA: function (name) {
-            return 'data-' + this.pp.getNS() + '-' + this.name + '-' + name;
-        },
+    getDA: function(name) {
+        return 'data-' + this.pp.getNS() + '-' + this.name + '-' + name;
+    },
 
-        getCN: function (name) {
-            return this.pp.getNS() + name;
-        },
+    getCN: function(name) {
+        return this.pp.getNS() + name;
+    },
 
-        sendEvent: function (eventName, data) {
-            this.pp._promote({
-                _plugin: this.name,
-                _event: eventName
-            }, data);
-        },
+    sendEvent: function(eventName, data) {
+        this.pp._promote({_plugin:this.name, _event:eventName}, data);
+    },
 
-        deconstruct: function () {
-            this.pluginReady = false;
-            $.each(this._appliedDOMObj, function () {
-                $(this).unbind();
+    deconstruct: function() {
+        this.pluginReady = false;
+        $.each(this._appliedDOMObj, function() {
+            $(this).unbind();
+        });
+    },
+
+    /**
+    * applies a new dom element to the player in case its not yet present
+    * also transparently applies the cssclass prefix as configured
+    *
+    * @private
+    * @element (Object) the element
+    * @fu (String) function, default 'container'
+    * @visible (Boolean) display on init, default is 'false'
+    * @return (Object) the element
+    */
+    applyToPlayer: function(element, fu, visible) {
+        if (!element) return null;
+
+        var func = fu || 'container',
+            tmpClass = '',
+            ref = this;
+
+        try {tmpClass = element.attr("class") ||  this.name} catch(e){tmpClass = this.name;}
+
+        this._pageDOMContainer[func] = $( "["+this.getDA('host')+"='" + this.pp.getId() + "']["+this.getDA('func')+"='"+func+"']" );
+        this._childDOMContainer[func] = this.playerDom.find("[" + this.getDA('func') + "='" + func + "'],." + this.getCN(tmpClass) + ":not([" +this.getDA('func') +"=''])");
+
+        // check if this element aleady exists somewhere on page
+        if ( this._pageDOMContainer[func].length > 0 ) {
+            this._pageDOMContainer[func].removeClass('active').addClass('inactive');
+
+            $.each(this._pageDOMContainer[func], function() {
+                ref._appliedDOMObj.push($(this));
             });
-        },
 
-        /**
-         * applies a new dom element to the player in case it's not yet present
-         * also transparently applies the cssclass prefix as configured
-         *
-         * @private
-         * @element (Object) the element
-         * @fu (String) function, default 'container'
-         * @visible (Boolean) display on init, default is 'false'
-         * @return (Object) the element
-         */
-        applyToPlayer: function (element, fu, visible) {
-            if (!element) return null;
+            return this._pageDOMContainer[func];
+        }
 
-            var func = fu || 'container',
-                tmpClass = '',
-                ref = this;
+        // add new DOM container to the player
+        if (this._childDOMContainer[func].length==0) {
+            element
+                .removeClass(tmpClass)
+                .addClass(this.pp.getNS()+tmpClass)
+                .removeClass('active')
+                .addClass('inactive')
+                .attr(this.getDA('func'), func)
+                .appendTo(this.playerDom);
 
-            try {
-                tmpClass = element.attr("class") || this.name
-            } catch (e) {
-                tmpClass = this.name;
+            this._childDOMContainer[func] = element;
+            this._appliedDOMObj.push(element);
+            if (visible===true) {
+                element.addClass('active').removeClass('inactive');
             }
 
-            this._pageDOMContainer[func] = $("[" + this.getDA('host') + "='" + this.pp.getId() + "'][" + this.getDA('func') + "='" + func + "']");
-            this._childDOMContainer[func] = this.playerDom.find("[" + this.getDA('func') + "='" + func + "'],." + this.getCN(tmpClass) + ":not([" + this.getDA('func') + "=''])");
+            return element;
+        } else {
+            $.each(this._childDOMContainer[func], function() {
+                $(this).attr(ref.getDA('func'), func)
+                ref._appliedDOMObj.push($(this));
+            });
+        }
 
-            // check if this element aleady exists somewhere on page
-            if (this._pageDOMContainer[func].length > 0) {
-                this._pageDOMContainer[func].removeClass('active').addClass('inactive');
+        if (visible===true) {
+            this._childDOMContainer[func].addClass('active').removeClass('inactive');
+        }
 
-                $.each(this._pageDOMContainer[func], function () {
-                    ref._appliedDOMObj.push($(this));
-                });
+        return $(this._childDOMContainer[func][0]);
+    },
 
-                return this._pageDOMContainer[func];
-            }
+    getElement: function(name) {
+        return this.pp.env.playerDom.find('.' + this.pp.getNS() + name)
+    },
 
-            // add new DOM container to the player
-            if (this._childDOMContainer[func].length == 0) {
-                element
-                    .removeClass(tmpClass)
-                    .addClass(this.pp.getNS() + tmpClass)
-                    .removeClass('active')
-                    .addClass('inactive')
-                    .attr(this.getDA('func'), func)
-                    .appendTo(this.playerDom);
+    setInactive: function() {
+        $(this._pageDOMContainer['container']).removeClass('active').addClass('inactive');
+        $(this._childDOMContainer['container']).removeClass('active').addClass('inactive');
+        this.sendEvent('inactive', $.extend(true, {}, this._pageDOMContainer['container'], this._childDOMContainer['container']));
+    },
 
-                this._childDOMContainer[func] = element;
-                this._appliedDOMObj.push(element);
-                if (visible === true) {
-                    element.addClass('active').removeClass('inactive');
-                }
+    setActive: function(elm, on) {
+        var dest = (typeof elm =='object') ? elm : this.getElement(elm);
 
-                return element;
-            } else {
-                $.each(this._childDOMContainer[func], function () {
-                    $(this).attr(ref.getDA('func'), func)
-                    ref._appliedDOMObj.push($(this));
-                });
-            }
-
-            if (visible === true) {
-                this._childDOMContainer[func].addClass('active').removeClass('inactive');
-            }
-
-            return $(this._childDOMContainer[func][0]);
-        },
-
-        getElement: function (name) {
-            return this.pp.env.playerDom.find('.' + this.pp.getNS() + name)
-        },
-
-        setInactive: function () {
-            $(this._pageDOMContainer['container']).removeClass('active').addClass('inactive');
-            $(this._childDOMContainer['container']).removeClass('active').addClass('inactive');
-            this.sendEvent('inactive', $.extend(true, {}, this._pageDOMContainer['container'], this._childDOMContainer['container']));
-        },
-
-        setActive: function (elm, on) {
-            var dest = (typeof elm == 'object') ? elm : this.getElement(elm);
-
-            if (elm == null) {
-                this._pageDOMContainer['container'].removeClass('inactive').addClass('active');
-                this._childDOMContainer['container'].removeClass('inactive').addClass('active');
-                this.sendEvent('active', $.extend(true, {}, this._pageDOMContainer['container'], this._childDOMContainer['container']));
-                return dest;
-            }
-
-            if (on != false) {
-                dest.addClass('active').removeClass('inactive');
-            } else {
-                dest.addClass('inactive').removeClass('active');
-            }
-
-            dest.css('display', '');
-
+        if (elm==null) {
+            this._pageDOMContainer['container'].removeClass('inactive').addClass('active');
+            this._childDOMContainer['container'].removeClass('inactive').addClass('active');
+            this.sendEvent('active', $.extend(true, {}, this._pageDOMContainer['container'], this._childDOMContainer['container']));
             return dest;
-        },
+        }
 
-        getActive: function (elm) {
-            return $(elm).hasClass('active');
-        },
+        if (on!=false) {
+            dest.addClass('active').removeClass('inactive');
+        }
+        else {
+            dest.addClass('inactive').removeClass('active');
+        }
 
-        // triggered on plugin-instanciation
-        initialize: function () {},
+        dest.css('display', '');
 
-        isReady: function () {
-            return this.pluginReady;
-        },
+        return dest;
+    },
 
-        clickHandler: function (what) {
+    getActive: function(elm) {
+        return $(elm).hasClass('active');
+    },
+
+    // triggered on plugin-instanciation
+    initialize: function() {},
+
+    isReady: function() {
+        return this.pluginReady;
+    },
+
+    clickHandler: function(what) {
+        try {
+            this.pp[this.getConfig(what+'Click').callback](this.getConfig(what+'Click').value);
+        } catch(e){
             try {
-                this.pp[this.getConfig(what + 'Click').callback](this.getConfig(what + 'Click').value);
-            } catch (e) {
-                try {
-                    this.getConfig(what + 'Click')(this.getConfig(what + 'Click').value);
-                } catch (e) {}
-            }
-            return false;
-        },
+                    this.getConfig(what+'Click')(this.getConfig(what+'Click').value);
+                } catch(e){}
+        }
+        return false;
+    },
 
-        cookie: function (key, value, del) {
-            // iphone will fail if you try to set a cookie this way:
-            if (document.cookie === undefined || document.cookie === false) return null;
-            if (key == null) return null;
+    cookie: function (key, value, ttl) {
+        if (document.cookie===undefined || document.cookie===false) return null;
+        if (key==null && value!=null) return null;
+        if (this.pp.getConfig('cookieExpiry')==0) return null;
 
-            var cookieExpiry = this.pp.getConfig('cookieExpiry') || 0;
-            // falsy cookieExpiry values effectively disable cookies
-            if (!cookieExpiry) return null;
+        var t = new Date(),
+            result = null,
+            cookieString = '',
+            tmp = storedData = jQuery.parseJSON(eval(result = new RegExp('(?:^|; )' + encodeURIComponent(this.getConfig('cookieName')+"_"+this.name) + '=([^;]*)').exec(document.cookie)) ? decodeURIComponent(result[1]) : null);
 
-            // set cookie:
-            if (arguments.length > 1 && value != null) {
-                var t = new Date();
-                t.setDate(t.getDate() + cookieExpiry);
-                return (document.cookie =
-                    encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=' + encodeURIComponent(value) + '; expires=' + ((del === true) ? "Thu, 01 Jan 1970 00:00:01 GMT" : t.toUTCString()) + '; path=/'
-                // +options.domain ? '; domain=' + options.domain : '','
-                // +options.secure ? '; secure' : ''
-                );
-            }
+        if (typeof storedData!='object' || storedData==null) {
+            storedData = {};
+            if (key!=null)
+                storedData[key] = tmp;
+        }
 
-            // get cookie data:
-            var result,
-                returnthis = (result = new RegExp('(?:^|; )' + encodeURIComponent(this.pp.getConfig('cookieName') + this.name + "_" + key) + '=([^;]*)').exec(document.cookie)) ? decodeURIComponent(result[1]) : null;
+        // read cookie
+        if (key==null) {
+            return storedData;
+        }
 
-            return (returnthis == 'true' || returnthis == 'false') ? eval(returnthis) : returnthis;
-        },
+        if (arguments.length==1) {
+            return storedData[key];
+        }
 
-        // important
-        eventHandler: function () {}
-    }
+        if (value!=null) {
+            storedData[key] = value;
+        }
+        else {
+            delete storedData[key];
+        }
+
+        if ($.isEmptyObject(storedData)) {
+            ttl=0;
+            storedData = '';
+        }
+        else {
+            storedData = $p.utils.stringify(storedData)
+        }
+
+        // set cookie:
+        t.setDate(t.getDate() + (ttl || this.getConfig('cookieExpiry', 0)));
+
+        cookieString = encodeURIComponent(this.getConfig('cookieName', 'projekktor')+"_"+this.name)+'='
+            +encodeURIComponent(storedData)
+            +'; expires=' + ((ttl==false) ? "Thu, 01 Jan 1970 00:00:01 GMT" : t.toUTCString())
+            +'; path=' + this.getConfig('cookiePath', '/');
+
+        if (this.getConfig('cookieDomain', false)) {
+            cookieString += '; domain=' + options.domain;
+        }
+
+        document.cookie = cookieString;
+        return value;
+    },
+
+    // important
+    eventHandler: function() {}
+}
 });
 /*
  * this file is part of:
@@ -4328,7 +4375,6 @@ jQuery(function ($) {
             this._volume = this.pp.getVolume();
             this._playbackQuality = this.pp.getPlaybackQuality();
             this.init();
-
         },
 
         init: function (params) {
@@ -4375,6 +4421,12 @@ jQuery(function ($) {
         applyMedia: function () {},
 
         sendUpdate: function (type, value) {
+            if(this._currentState == 'ERROR') {
+                return;
+            }
+            if (type=='error') {
+                this._setState('error');
+            }
             this.pp._modelUpdateListener(type, value);
         },
 
@@ -4385,11 +4437,9 @@ jQuery(function ($) {
         },
 
         start: function () {
-
             var ref = this;
 
             if (this.mediaElement == null && this.modelId != 'PLAYLIST') return;
-
             if (this.getState('STARTING')) return;
 
             this._setState('STARTING');
@@ -4399,12 +4449,10 @@ jQuery(function ($) {
 
             if (this.pp.getIsMobileClient('ANDROID') && !this.getState('PLAYING')) {
                 setTimeout(function () {
-                    ref.setPlay()
+                   ref.setPlay();
                 }, 500);
             }
-
             this.setPlay();
-
         },
 
         addListeners: function () {},
@@ -4412,7 +4460,7 @@ jQuery(function ($) {
         removeListeners: function () {
             try {
                 this.mediaElement.unbind('.projekktor' + this.pp.getId());
-            } catch (e) {};
+            } catch (e) {}
         },
 
         detachMedia: function () {},
@@ -4448,9 +4496,8 @@ jQuery(function ($) {
 
         /* firefox reinit-issue-workaround-helper-thingy */
         reInit: function () {
-
             // no FF:
-            if (this.flashVersion != false || !this._isFF() || this.getState('ERROR') || this.pp.getConfig('bypassFlashFFFix') === true) {
+            if (this.flashVersion !== false || !this._isFF() || this.getState('ERROR') || this.pp.getConfig('bypassFlashFFFix') === true) {
                 return;
             }
 
@@ -4462,53 +4509,57 @@ jQuery(function ($) {
 
         applyCommand: function (command, value) {
             switch (command) {
-            case 'quality':
-                this.setQuality(value);
-                break;
-            case 'play':
-                if (this.getState('ERROR')) break;
-                if (this.getState('IDLE')) {
-                    this._setState('awakening');
+                case 'quality':
+                    this.setQuality(value);
                     break;
-                }
-                this.setPlay();
-                break;
-            case 'pause':
-                if (this.getState('ERROR')) break;
-                this.setPause();
-                break;
-            case 'volume':
-                if (this.getState('ERROR')) break;
-                if (!this.setVolume(value)) {
-                    this._volume = value;
-                    this.sendUpdate('volume', value);
-                }
-                break;
-            case 'stop':
-                this.setStop();
-                break;
-            case 'frame':
-                this.setFrame(value);
-                break;
-            case 'seek':
-                if (this.getState('ERROR')) break;
-                if (this.getState('SEEKING')) break;
-                if (this.getState('IDLE')) break;
-                if (this.media.loadProgress == -1) break;
-                this._setSeekState('seeking', value);
-                this.setSeek(value);
-                break;
-            case 'fullscreen':
-                if (value == this._isFullscreen) break;
-                this._isFullscreen = value;
-                this.sendUpdate('fullscreen', this._isFullscreen);
-                this.reInit();
-                this.setResize();
-                break;
-            case 'resize':
-                this.setResize();
-                this.sendUpdate('resize', value);
-                break;
+                case 'error':
+                    this._setState('error');
+                    this.setTestcard(value);
+                    break;
+                case 'play':
+                    if (this.getState('ERROR')) break;
+                    if (this.getState('IDLE')) {
+                        this._setState('awakening');
+                        break;
+                    }
+                    this.setPlay();
+                    break;
+                case 'pause':
+                    if (this.getState('ERROR')) break;
+                    this.setPause();
+                    break;
+                case 'volume':
+                    if (this.getState('ERROR')) break;
+                    if (!this.setVolume(value)) {
+                        this._volume = value;
+                        this.sendUpdate('volume', value);
+                    }
+                    break;
+                case 'stop':
+                    this.setStop();
+                    break;
+                case 'frame':
+                    this.setFrame(value);
+                    break;
+                case 'seek':
+                    if (this.getState('ERROR')) break;
+                    if (this.getSeekState('SEEKING')) break;
+                    if (this.getState('IDLE')) break;
+                    if (this.media.loadProgress == -1) break;
+                    this._setSeekState('seeking', value);
+                    this.setSeek(value);
+                    break;
+                case 'fullscreen':
+                    if (value == this._isFullscreen) break;
+                    this._isFullscreen = value;
+                    this.sendUpdate('fullscreen', this._isFullscreen);
+                    this.reInit();
+                    this.setFullscreen();
+                    break;
+                case 'resize':
+                    this.setResize();
+                    this.sendUpdate('resize', value);
+                    break;
             }
         },
 
@@ -4557,66 +4608,20 @@ jQuery(function ($) {
             if (this._quality == quality) return;
             this._quality = quality;
 
-            try {
-                this.applySrc();
-            } catch (e) {}
+            try {this.applySrc();} catch(e){}
 
             this.qualityChangeListener();
         },
 
-        applySrc: function () {},
-
-        getSource: function () {
-
-            var resultSrc = [],
-                offset = this.media.offset || false,
-                ref = this,
-                pseudoQuery = (this.pp.getConfig('streamType') == 'pseudo') ? this.pp.getConfig('startParameter') : false;
-
-            $.each(this.media.file || [], function () {
-
-                // set proper quality source
-                if (ref._quality != this.quality && ref._quality != null)
-                    return true;
-
-                // nothing todo
-                if (!pseudoQuery || !offset) {
-                    resultSrc.push(this);
-                    return true;
-                }
-
-                // add offset_GET-parameter
-                var u = $p.utils.parseUri(this.src),
-                    src = u.protocol + '://' + u.host + u.path,
-                    query = [];
-
-                $.each(u.queryKey, function (key, value) {
-                    if (key != pseudoQuery) {
-                        query.push(key + "=" + value);
-                    }
-                })
-
-                src += (query.length > 0) ? '?' + query.join('&') + "&" + pseudoQuery + "=" + offset : "?" + pseudoQuery + "=" + offset;
-                this.src = src;
-
-                resultSrc.push(this);
-                return true;
-            })
-
-            if (resultSrc.length == 0)
-                return this.media.file;
-            else
-                return resultSrc;
-        },
-
         /*******************************
             ELEMENT GETTERS
-    *******************************/
+        *******************************/
         getVolume: function () {
-            if (this.mediaElement == null)
+            if (this.mediaElement==null) {
                 return this._volume;
+            }
 
-            return (this.mediaElement.prop('muted') == true) ? 0 : this.mediaElement.prop('volume');
+            return (this.mediaElement.prop('muted')===true) ? 0 : this.mediaElement.prop('volume');
         },
 
         getLoadProgress: function () {
@@ -4661,9 +4666,21 @@ jQuery(function ($) {
             return result;
         },
 
+        getBufferState: function (isThis) {
+            var result = (this._currentBufferState == null) ? 'NONE' : this._currentBufferState;
+            if (isThis != null) return (result == isThis.toUpperCase());
+            return result;
+        },
+
+        getSeekState: function (isThis) {
+            var result = (this._currentSeekState == null) ? 'NONE' : this._currentSeekState;
+            if (isThis != null) return (result == isThis.toUpperCase());
+            return result;
+        },
+
         getSrc: function () {
             try {
-                return this.mediaElement[0].currentSrc;
+                return this.mediaElement.get(0).currentSrc;
             } catch (e) {}
             try {
                 return this.media.file[0].src;
@@ -4702,9 +4719,9 @@ jQuery(function ($) {
 
             qual = this.pp._getAppropriateQuality(quals);
 
-            for (var i in this.pp.getConfig('poster')) {
-                if (this.pp.getConfig('poster')[i].quality == qual) {
-                    result = this.pp.getConfig('poster')[i].src || null;
+            for (var j in this.pp.getConfig('poster')) {
+                if (this.pp.getConfig('poster')[j].quality == qual) {
+                    result = this.pp.getConfig('poster')[j].src || null;
                     break;
                 }
             }
@@ -4720,7 +4737,50 @@ jQuery(function ($) {
             return {
                 width: this.media.videoWidth || 0,
                 height: this.media.videoHeight || 0
-            }
+            };
+        },
+
+        getSource: function () {
+
+            var resultSrc = [],
+                offset = this.media.offset || this.media.position || false,
+                ref = this,
+                pseudoQuery = (this.pp.getConfig('streamType') == 'pseudo') ? this.pp.getConfig('startParameter') : false;
+
+            $.each(this.media.file || [], function () {
+
+                // set proper quality source
+                if (ref._quality != this.quality && ref._quality != null)
+                    return true;
+
+                // nothing todo
+                if (!pseudoQuery || !offset) {
+                    resultSrc.push(this);
+                    return true;
+                }
+
+                // add offset_GET-parameter
+                var u = $p.utils.parseUri(this.src),
+                    src = u.protocol + '://' + u.host + u.path,
+                    query = [];
+
+                $.each(u.queryKey, function (key, value) {
+                    if (key != pseudoQuery) {
+                        query.push(key + "=" + value);
+                    }
+                });
+
+                src += (query.length > 0) ? '?' + query.join('&') + "&" + pseudoQuery + "=" + offset : "?" + pseudoQuery + "=" + offset;
+                this.src = src;
+
+                resultSrc.push(this);
+                return true;
+            });
+
+            if (resultSrc.length === 0)
+                return this.media.file;
+            else
+                return resultSrc;
         },
 
         /*******************************
@@ -4729,7 +4789,6 @@ jQuery(function ($) {
         timeListener: function (obj) {
 
             if (obj == null) return;
-            if (this.getState('SEEKING') && this.isPseudoStream) return;
 
             var position = parseFloat((obj.position || obj.currentTime || this.media.position || 0).toFixed(2)),
                 duration = parseFloat((obj.duration || 0).toFixed(2));
@@ -4739,15 +4798,23 @@ jQuery(function ($) {
 
             // duration has changed:
             if (duration != 0 && (duration != this.media.duration && !this.isPseudoStream) || (this.isPseudoStream && this.media.duration == 0)) {
+
                 this.media.duration = duration;
                 this.sendUpdate('durationChange', duration);
             }
 
-            // remember values & concider pseudo stream position offset
-            this.media.position = this.media.offset + position;
+            // remember values & concider pseudo stream position offset, bypass some strange position hopping effects during pseudostream:
+            if (position==this.media.position) return;
+
+            if (this.isPseudoStream && Math.round(position * 100) / 100==Math.round(this.media.offset * 100) / 100) {
+                this.media.position = this.media.offset;
+            } else {
+                this.media.position = this.media.offset + position;
+            }
             this.media.maxpos = Math.max(this.media.maxpos || 0, this.media.position || 0);
             this.media.playProgress = parseFloat((this.media.position > 0 && this.media.duration > 0) ? this.media.position * 100 / this.media.duration : 0);
             this.media.frame = this.media.position * this.pp.getConfig('fps');
+
             this.sendUpdate('time', this.media.position);
 
             this.loadProgressUpdate();
@@ -4759,7 +4826,7 @@ jQuery(function ($) {
                 progress = 0;
 
             if (typeof me.buffered !== 'object') return;
-            if (me.buffered.length == 0) return;
+            if (me.buffered.length === 0) return;
             if (this.media.loadProgress == 100) return;
 
             if (me.seekable && me.seekable.length > 0) {
@@ -4771,7 +4838,7 @@ jQuery(function ($) {
             if (this.media.loadProgress > progress) return;
 
             this.media.loadProgress = (this.allowRandomSeek === true) ? 100 : -1;
-            this.media.loadProgress = (this.media.loadProgress < 100 || this.media.loadProgress == undefined) ? progress : 100;
+            this.media.loadProgress = (this.media.loadProgress < 100 || this.media.loadProgress === undefined) ? progress : 100;
 
             this.sendUpdate('progress', this.media.loadProgress);
 
@@ -4782,8 +4849,8 @@ jQuery(function ($) {
             // we prefer timeranges but keep catching "progress" events by default
             // for historical and compatibility reasons:
             if (this.mediaElement instanceof jQuery) { // fix this - make sure all instances are jquery objects
-                if (typeof this.mediaElement[0].buffered == 'object') {
-                    if (this.mediaElement[0].buffered.length > 0) {
+                if (typeof this.mediaElement.get(0).buffered == 'object') {
+                    if (this.mediaElement.get(0).buffered.length > 0) {
                         this.mediaElement.unbind('progress');
                         return;
                     }
@@ -4796,6 +4863,7 @@ jQuery(function ($) {
 
             var current = 0,
                 total = 0;
+
             try {
                 if (!isNaN(evt.loaded / evt.total)) {
                     current = evt.loaded;
@@ -4809,15 +4877,6 @@ jQuery(function ($) {
                     current = obj.loaded;
                     total = obj.total;
                 }
-
-                /*else {
-        try {
-        this.media.loadProgress = (this.allowRandomSeek===true) ? 100 : -1;
-        this.sendUpdate('progress', this.media.loadProgress);
-        } catch(e){};
-       return;
-            } */
-
             }
 
             var loadedPercent = (current > 0 && total > 0) ? current * 100 / total : 0;
@@ -4827,17 +4886,16 @@ jQuery(function ($) {
             }
 
             loadedPercent = (this.media.loadProgress !== 100) ? loadedPercent : 100;
-            loadedPercent = (this.allowRandomSeek === true) ? 100 : 5 * Math.round(loadedPercent / 5);;
+            loadedPercent = (this.allowRandomSeek === true) ? 100 : 5 * Math.round(loadedPercent / 5);
 
             if (this.media.loadProgress != loadedPercent) {
-                this.media.loadProgress = loadedPercent
+                this.media.loadProgress = loadedPercent;
                 this.sendUpdate('progress', loadedPercent);
             }
 
             // Mac flash fix:
-            if (this.media.loadProgress >= 100 && this.allowRandomSeek == false) {
+            if (this.media.loadProgress >= 100 && this.allowRandomSeek === false) {
                 this._setBufferState('full');
-
             }
         },
 
@@ -4869,18 +4927,14 @@ jQuery(function ($) {
         },
 
         playingListener: function (obj) {
-            // check for missing source
-            // if (this.getSrc()==null) {
-            // this.setTestcard(10);
-            // return;
-            // }
             this._setState('playing');
         },
 
         startListener: function (obj) {
             this.applyCommand('volume', this.pp.getConfig('volume'));
-            if (!this.isPseudoStream)
+            if (!this.isPseudoStream) {
                 this.setSeek(this.media.position || 0);
+            }
 
             this._setState('playing');
         },
@@ -4907,22 +4961,20 @@ jQuery(function ($) {
             try {
                 this.media.videoWidth = obj.videoWidth;
                 this.media.videoHeight = obj.videoHeight;
-            } catch (e) {};
+            } catch (e) {}
             this._scaleVideo();
         },
 
         setTestcard: function (code, txt) {
             var destContainer = this.pp.getMediaContainer().html('').css({
-                width: '100%',
-                height: '100%'
-            }),
+                    width: '100%',
+                    height: '100%'
+                }),
                 messages = this.pp.getConfig('messages'),
-                msgTxt = (txt != undefined && txt != '') ? txt : (messages[code] != undefined) ? messages[code] : messages[0];
+                msgTxt = (txt !== undefined && txt !== '') ? txt : (messages[code] !== undefined) ? messages[code] : messages[0];
 
-            if (this.pp.getConfig('skipTestcard') && this.pp.getItemCount() > 1) {
-                this._setState('completed');
-                return;
-            }
+            this.removeListeners();
+            this.detachMedia();
 
             if (this.pp.getItemCount() > 1) {
                 // "press next to continue"
@@ -4941,14 +4993,14 @@ jQuery(function ($) {
                 title: this.pp.getConfig('title')
             }));
 
-            this.mediaElement = $('<div\>')
+            this.mediaElement = $('<div/>')
                 .addClass(this.pp.getNS() + 'testcard')
                 .attr('id', this.pp.getId() + '_testcard_media')
                 .html('<p>' + msgTxt + '</p>')
                 .appendTo(destContainer);
-
-            this._setState('error');
         },
+
+        applySrc: function () {},
 
         applyImage: function (url, destObj) {
 
@@ -4958,7 +5010,7 @@ jQuery(function ($) {
             $p.utils.blockSelection(imageObj);
 
             // empty URL... apply placeholder
-            if (url == '' || url == undefined) {
+            if (url === '' || url === undefined) {
                 return $('<span/>').attr({
                     "id": this.pp.getMediaId() + "_image"
                 }).appendTo(destObj);
@@ -4981,7 +5033,7 @@ jQuery(function ($) {
                     imageObj.data('od', {
                         width: dest.naturalWidth,
                         height: dest.naturalHeight
-                    })
+                    });
                 }
                 imageObj.show();
                 $p.utils.stretch(ref.pp.getConfig('imageScaling'), imageObj, destObj.width(), destObj.height());
@@ -5015,7 +5067,7 @@ jQuery(function ($) {
                 if (imgObj.attr('src') != ref.getPoster()) {
                     imgObj.attr('src', ref.getPoster());
                 }
-            }
+            };
 
             this.pp.addListener('fullscreen.poster', function () {
                 onReFull(imageObj, destObj);
@@ -5027,6 +5079,8 @@ jQuery(function ($) {
             return imageObj;
         },
 
+
+
         /* X-Browser flash embedd mess */
         createFlash: function (domOptions, destObj, shield) {
             this.mediaElement = $p.utils.embeddFlash(destObj.html(''), domOptions, shield, true);
@@ -5035,13 +5089,14 @@ jQuery(function ($) {
 
         /* we have to wait for the flash components to load and initialize */
         _waitforPlayer: function () {
-
-            if (this._displayReady == true) return;
-
-            this._setBufferState('empty');
-
             var ref = this,
                 counter = 0;
+
+            if (this._displayReady === true) {
+                return;
+            }
+
+            this._setBufferState('empty');
 
             (function () {
 
@@ -5051,22 +5106,23 @@ jQuery(function ($) {
                     var dest = $(ref.mediaElement).parent(),
                         clone = $(ref.mediaElement).clone();
                     dest.html('').append(clone);
-                    ref.mediaElement = clone.get(0);
+                    ref.mediaElement = clone;
                 }
 
-                var dest = ref.mediaElement;
+                dest = ref.mediaElement;
 
                 try {
-                    if ($(dest).attr('id').indexOf('testcard') > -1)
+                    if ($(dest).attr('id').indexOf('testcard') > -1) {
                         return;
-                } catch (e) {}
+                    }
+                } catch (e) {console.log(e);}
 
                 counter++;
                 try {
 
-                    if (dest == undefined) {
+                    if (dest === undefined) {
                         setTimeout(arguments.callee, 200);
-                    } else if (dest[ref.flashVerifyMethod] == undefined) {
+                    } else if (dest.get(0)[ref.flashVerifyMethod] === undefined) {
                         setTimeout(arguments.callee, 200);
                     } else {
                         ref._setBufferState('full');
@@ -5074,7 +5130,7 @@ jQuery(function ($) {
                         $('#' + $(ref.mediaElement).attr('id') + "_cc").css({
                             width: '100%',
                             height: '100%'
-                        })
+                        });
                     }
 
                 } catch (e) {
@@ -5087,8 +5143,8 @@ jQuery(function ($) {
         _setState: function (state) {
             var ref = this;
             state = state.toUpperCase();
-            if (this._currentState != state) {
 
+            if (this._currentState != state && this._currentState != 'ERROR') {
                 if (this._currentState == 'PAUSED' && state == 'PLAYING') {
                     this.sendUpdate('resume', this.media);
                     this._isPlaying = true;
@@ -5105,7 +5161,7 @@ jQuery(function ($) {
                 if (state == 'ERROR') {
                     this.setPlay = this.setPause = function () {
                         ref.sendUpdate('start');
-                    }
+                    };
                 }
                 this._currentState = state.toUpperCase();
                 this.sendUpdate('state', this._currentState);
@@ -5143,14 +5199,12 @@ jQuery(function ($) {
                         displayHeight: hei
                     });
                 }
-            } catch (e) {};
-
+            } catch (e) {}
         },
 
         _isFF: function () {
             return navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
         }
-
     };
 });
 /*
@@ -5161,47 +5215,44 @@ jQuery(function ($) {
  * Copyright 2010, 2011, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.filenew.org/projekktor/license/
- */
-jQuery(function ($) {
-    $p.newModel({
-        modelId: 'NA',
-        iLove: [
-        {
-            ext: 'NaN',
-            type: 'none/none',
-            platform: 'browser'
-        }
+*/
+jQuery(function($) {
+$p.newModel({
+    modelId: 'NA',
+    iLove: [
+        {ext:'NaN', type:'none/none', platform:'browser'}
     ],
-        hasGUI: true,
+    hasGUI: true,
 
-        applyMedia: function (destContainer) {
+    applyMedia: function(destContainer) {
+        var ref = this;
 
-            destContainer.html('');
+        destContainer.html('');
 
-            var ref = this;
+        this.mouseClick = function(evt){
+            ref.pp.removeListener('mousedown', arguments.callee);
+            ref._setState('completed');
+        };
 
-            this.mouseClick = function (evt) {
-                ref.pp.removeListener('mousedown', arguments.callee);
-                ref._setState('completed');
-            };
+        this.displayReady();
 
-            this.displayReady();
-
-            if (this.pp.getConfig('enableTestcard') && !this.pp.getIsMobileClient()) {
-                this.setTestcard((this.media.file[0].src != null && this.media.errorCode === 7) ? 5 : this.media.errorCode);
-                this.pp.addListener('mousedown', mouseClick);
-            } else {
-                // this.applyImage(this.media.config.poster, destContainer);
-                this.applyCommand('stop');
-                window.location.href = this.media.file[0].src;
-            }
-        },
-
-        detachMedia: function () {
-            this.pp.removeListener('leftclick', this.mouseClick)
+        if (this.pp.getConfig('enableTestcard') && !this.pp.getIsMobileClient()) {
+            this.setTestcard( (this.media.file[0].src!=null && this.media.errorCode===7) ? 5 : this.media.errorCode);
+            this.pp.addListener('mousedown', mouseClick);
+        } else {
+            // this.applyImage(this.media.config.poster, destContainer);
+            this.applyCommand ('stop');
+            window.location.href = this.media.file[0].src;
         }
 
-    });
+    },
+
+    detachMedia: function() {
+        this.pp.removeListener('leftclick', this.mouseClick)
+    }
+
+
+});
 });
 /*
  * this file is part of:
@@ -5211,53 +5262,29 @@ jQuery(function ($) {
  * Copyright 2010, 2011, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.filenew.org/projekktor/license/
- */
-jQuery(function ($) {
-    $p.newModel({
+*/
+jQuery(function($) {
+$p.newModel({
 
-        modelId: 'PLAYLIST',
+    modelId: 'PLAYLIST',
 
-        iLove: [
-        {
-            ext: 'json',
-            type: 'text/json',
-            platform: 'browser'
-        },
-        {
-            ext: 'jsonp',
-            type: 'text/jsonp',
-            platform: 'browser'
-        },
-        {
-            ext: 'xml',
-            type: 'text/xml',
-            platform: 'browser'
-        },
-        {
-            ext: 'json',
-            type: 'application/json',
-            platform: 'browser'
-        },
-        {
-            ext: 'jsonp',
-            type: 'application/jsonp',
-            platform: 'browser'
-        },
-        {
-            ext: 'xml',
-            type: 'application/xml',
-            platform: 'browser'
-        }
+    iLove: [
+        {ext:'json', type:'text/json', platform:'browser'},
+        {ext:'jsonp', type:'text/jsonp', platform:'browser'},
+        {ext:'xml', type:'text/xml', platform:'browser'},
+        {ext:'json', type:'application/json', platform:'browser'},
+        {ext:'jsonp', type:'application/jsonp', platform:'browser'},
+        {ext:'xml', type:'application/xml', platform:'browser'}
     ],
 
-        applyMedia: function (destContainer) {
-            this.displayReady();
-        },
+    applyMedia: function(destContainer) {
+        this.displayReady();
+    },
 
-        setPlay: function () {
-            this.sendUpdate('playlist', this.media);
-        }
-    });
+    setPlay: function() {
+        this.sendUpdate('playlist', this.media);
+    }
+});
 });
 /*
  * this file is part of:
@@ -5267,79 +5294,67 @@ jQuery(function ($) {
  * Copyright 2010, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.filenew.org/projekktor/license/
- */
-jQuery(function ($) {
-    $p.newModel({
+*/
+jQuery(function($) {
+$p.newModel({
 
-        modelId: 'VIDEO',
-        androidVersion: 2,
-        iosVersion: 3,
-        nativeVersion: 0,
-        iLove: [
-    {
-            ext: 'mp4',
-            type: 'video/mp4',
-            platform: ['ios', 'android', 'native'],
-            streamType: ['http', 'pseudo', 'httpVideo'],
-            fixed: 'maybe'
-        },
-        {
-            ext: 'ogv',
-            type: 'video/ogg',
-            platform: 'native',
-            streamType: ['http', 'httpVideo']
-        },
-    {
-            ext: 'webm',
-            type: 'video/webm',
-            platform: 'native',
-            streamType: ['http', 'httpVideo']
-        },
-    {
-            ext: 'ogg',
-            type: 'video/ogg',
-            platform: 'native',
-            streamType: ['http', 'httpVideo']
-        },
-    {
-            ext: 'anx',
-            type: 'video/ogg',
-            platform: 'native',
-            streamType: ['http', 'httpVideo']
-        }
+    modelId: 'VIDEO',
+    androidVersion: "2",
+    iosVersion: "3",
+    nativeVersion: "1",
+    iLove: [
+        {ext:'mp4', type:'video/mp4', platform:['ios', 'android', 'native'], streamType: ['http', 'pseudo', 'httpVideo'], fixed: 'maybe'},
+        {ext:'ogv', type:'video/ogg', platform:'native', streamType: ['http', 'httpVideo']},
+        {ext:'webm',type:'video/webm', platform:'native', streamType: ['http', 'httpVideo']},
+        {ext:'ogg', type:'video/ogg', platform:'native', streamType: ['http', 'httpVideo']},
+        {ext:'anx', type:'video/ogg', platform:'native', streamType: ['http', 'httpVideo']}
     ],
 
-        _eventMap: {
-            pause: "pauseListener",
-            play: "playingListener",
-            volumechange: "volumeListener",
-            progress: "progressListener",
-            timeupdate: "timeListener",
-            ended: "_ended",
-            waiting: "waitingListener",
-            canplaythrough: "canplayListener",
-            canplay: "canplayListener",
-            error: "errorListener",
-            suspend: "suspendListener",
-            seeked: "seekedListener",
-            loadedmetadata: "metaDataListener",
-            loadstart: null
-        },
+    _eventMap: {
+        pause:          "pauseListener",
+        play:           "playingListener",
+        volumechange:   "volumeListener",
+        progress:       "progressListener",
+        timeupdate:     "timeListener",
+        ended:          "_ended",
+        waiting:        "waitingListener",
+        canplaythrough: "canplayListener",
+        canplay:        "canplayListener",
+        error:          "errorListener",
+        suspend:        "suspendListener",
+        seeked:         "seekedListener",
+        loadedmetadata: "metaDataListener",
+        loadstart:      null
+    },
 
-        allowRandomSeek: false,
-        videoWidth: 0,
-        videoHeight: 0,
-        wasPersistent: true,
-        isPseudoStream: false,
+    isGingerbread: false,
+    allowRandomSeek: false,
+    videoWidth: 0,
+    videoHeight: 0,
+    wasPersistent: true,
+    isPseudoStream: false,
 
-        applyMedia: function (destContainer) {
+    init: function() {
+        var ua = navigator.userAgent;
+        if( ua.indexOf("Android") >= 0 )
+        {
+          if (parseFloat(ua.slice(ua.indexOf("Android")+8)) < 3)
+          {
+            this.isGingerbread = true;
+          }
+        }
+        this.ready();
+    },
 
-            if ($('#' + this.pp.getMediaId() + "_html").length == 0) {
-                this.wasPersistent = false;
-                destContainer.html('').append(
+
+    applyMedia: function(destContainer) {
+
+        if ($('#'+this.pp.getMediaId()+"_html").length===0) {
+            this.wasPersistent = false;
+            destContainer.html('').append(
                 $('<video/>')
-                    .attr({
-                    "id": this.pp.getMediaId() + "_html",
+                .attr({
+                    "id": this.pp.getMediaId()+"_html",
                     "poster": (this.pp.getIsMobileClient('ANDROID')) ? this.getPoster() : $p.utils.imageDummy(),
                     "loop": false,
                     "autoplay": false,
@@ -5353,326 +5368,291 @@ jQuery(function ($) {
                     'position': 'absolute',
                     'top': 0,
                     'left': 0
-                }));
-            }
+                })
+        );
+    }
 
-            this.mediaElement = $('#' + this.pp.getMediaId() + "_html");
-            this.applySrc();
-        },
+    this.mediaElement = $('#'+this.pp.getMediaId()+"_html");
+        this.applySrc();
+    },
 
-        applySrc: function () {
-            var ref = this,
-                wasPlaying = ref.getState('PLAYING'),
-                wasAwakening = ref.getState('AWAKENING');
+    applySrc: function() {
+        var ref = this,
+            wasAwakening = ref.getState('AWAKENING');
 
             this.removeListener('error');
             this.removeListener('play');
             this.removeListener('loadstart');
             this.removeListener('canplay');
 
-            this.mediaElement.find('source').remove();
+        this.mediaElement.find('source').remove();
 
-            $.each(this.getSource(), function () {
-                $('<source/>').appendTo(ref.mediaElement).attr({
-                    src: this.src,
-                    type: this.type
-                })
+        $.each(this.getSource(), function() {
+            var src = $('<source/>');
+            src.attr('src', this.src);
+            if (!ref.isGingerbread) {
+                src.attr('type', this.type);
+            }
+            src.appendTo(ref.mediaElement);
+        });
 
-            })
+        var func = function(){
 
-            var func = function () {
+            ref.mediaElement.unbind('loadstart.projekktorqs'+ref.pp.getId());
+            ref.mediaElement.unbind('loadeddata.projekktorqs'+ref.pp.getId());
+            ref.mediaElement.unbind('canplay.projekktorqs'+ref.pp.getId());
 
-                ref.mediaElement.unbind('loadstart.projekktorqs' + ref.pp.getId());
-                ref.mediaElement.unbind('loadeddata.projekktorqs' + ref.pp.getId());
-                ref.mediaElement.unbind('canplay.projekktorqs' + ref.pp.getId());
+            ref.addListeners('error');
+            ref.addListeners('play');
+            ref.addListeners('loadstart');
+            ref.addListeners('canplay');
 
-                ref.addListeners('error');
-                ref.addListeners('play');
-                ref.addListeners('loadstart');
-                ref.addListeners('canplay');
+            ref.mediaElement = $('#'+ref.pp.getMediaId()+"_html");
 
-                ref.mediaElement = $('#' + ref.pp.getMediaId() + "_html");
+            if (wasAwakening) {
+                ref.displayReady();
+                return;
+            }
 
-                if (wasAwakening) {
-                    ref.displayReady();
-                    return;
-                }
+            if (ref.getSeekState('SEEKING')) {
+                if (ref._isPlaying)
+                    ref.setPlay();
 
-                if (ref.getState('SEEKING')) {
-                    if (ref._isPlaying) ref.setPlay();
+                ref.seekedListener();
+                return;
+            }
 
-                    ref.seekedListener();
-                    return;
-                }
+            if (!ref.isPseudoStream)
+                ref.setSeek(ref.media.position || 0);
 
-                if (!ref.isPseudoStream) ref.setSeek(ref.media.position || 0);
+            if (ref._isPlaying)
+                ref.setPlay();
 
-                if (ref._isPlaying) ref.setPlay();
+        };
 
-            };
+        this.mediaElement.bind('loadstart.projekktorqs'+this.pp.getId(), func);
+        this.mediaElement.bind('loadeddata.projekktorqs'+this.pp.getId(), func);
+        this.mediaElement.bind('canplay.projekktorqs'+this.pp.getId(), func);
 
-            this.mediaElement.bind('loadstart.projekktorqs' + this.pp.getId(), func);
-            this.mediaElement.bind('loadeddata.projekktorqs' + this.pp.getId(), func);
-            this.mediaElement.bind('canplay.projekktorqs' + this.pp.getId(), func);
+        this.mediaElement.get(0).load();
 
-            this.mediaElement.get(0).load();
+        func();
 
+        // F*CK!!!!
+        if (this.isGingerbread)
+        {
             func();
+        }
+    },
 
-            // F*CK!!!!
-            var ua = navigator.userAgent;
-            if (ua.indexOf("Android") >= 0) {
-                if (parseFloat(ua.slice(ua.indexOf("Android") + 8)) < 3) {
-                    func();
-                }
+    detachMedia: function() {
+        try {
+            this.mediaElement[0].pause();
+            this.mediaElement.find('source').remove();
+            this.mediaElement.load();
+        } catch(e){}
+    },
+
+    /*****************************************
+     * Handle Events
+     ****************************************/
+    addListeners: function(evtId, subId) {
+        if (this.mediaElement==null) return;
+        var id = (subId!=null) ? '.projekktor'+subId+this.pp.getId() : '.projekktor'+this.pp.getId(),
+            ref = this,
+            evt = (evtId==null) ? '*' : evtId;
+
+        $.each(this._eventMap, function(key, value){
+            if ((key==evt || evt=='*') && value!=null) {
+                ref.mediaElement.bind(key + id, function(evt) {ref[value](this, evt)});
             }
+        });
+    },
 
-        },
+    removeListener: function(evt, subId) {
+        if (this.mediaElement==null) return;
 
-        detachMedia: function () {
-            try {
-                this.mediaElement[0].pause();
-                this.mediaElement.find('source').remove();
-                this.mediaElement.load();
-            } catch (e) {}
-        },
+        var id = (subId!=null) ? '.projekktor'+subId+this.pp.getId() : '.projekktor'+this.pp.getId(),
+            ref = this;
 
-        /*****************************************
-         * Handle Events
-         ****************************************/
-        addListeners: function (evtId, subId) {
-
-            if (this.mediaElement == null) return;
-
-            var id = (subId != null) ? '.projekktor' + subId + this.pp.getId() : '.projekktor' + this.pp.getId(),
-                ref = this,
-                evt = (evtId == null) ? '*' : evtId;
-
-            $.each(this._eventMap, function (key, value) {
-                if ((key == evt || evt == '*') && value != null) {
-                    ref.mediaElement.bind(key + id, function (evt) {
-                        ref[value](this, evt)
-                    });
-                }
-            });
-        },
-
-        removeListener: function (evt, subId) {
-            if (this.mediaElement == null) return;
-
-            var id = (subId != null) ? '.projekktor' + subId + this.pp.getId() : '.projekktor' + this.pp.getId(),
-                ref = this;
-
-            $.each(this._eventMap, function (key, value) {
-                if (key == evt) {
-                    ref.mediaElement.unbind(key + id);
-                }
-            });
-        },
-
-        _ended: function () {
-
-            var dur = this.mediaElement[0].duration, // strange android behavior workaround
-                complete = (Math.round(this.media.position) === Math.round(dur)),
-                fixedEnd = ((dur - this.media.maxpos) < 2) && (this.media.position === 0) || false;
-            if (complete || fixedEnd || this.isPseudoStream) {
-                this.endedListener(this);
-            } else {
-                this.pauseListener(this);
+        $.each(this._eventMap, function(key, value){
+            if (key==evt) {
+                ref.mediaElement.unbind(key + id);
             }
-        },
+        });
+    },
 
-        playingListener: function (obj) {
-            var ref = this;
+    _ended: function() {
+        var dur = this.mediaElement[0].duration, // strange android behavior workaround
+            complete = (Math.round(this.media.position) === Math.round(dur)),
+            fixedEnd = ( (dur-this.media.maxpos) < 2 ) && (this.media.position===0) || false;
 
-            (function () {
-                try {
+        if (complete || fixedEnd || this.isPseudoStream) {
+            this.endedListener(this);
+        } else {
+            this.pauseListener(this);
+        }
+    },
 
-                    if (ref.mediaElement[0].currentSrc != '' && ref.mediaElement[0].networkState == ref.mediaElement[0].NETWORK_NO_SOURCE && ref.getDuration() == 0) {
-                        ref.setTestcard(80);
-                        return;
-                    }
-
-                    if (ref.getDuration() == 0) {
+    playingListener: function(obj) {
+        var ref = this;
+        if (!this.isGingerbread) {
+            (function() {
+                try{
+                    if (ref.getDuration()===0) {
+                        if(ref.mediaElement.get(0).networkState==ref.mediaElement.get(0).NETWORK_NO_SOURCE) {
+                            ref.sendUpdate('error', 80);
+                            return;
+                        }
                         setTimeout(arguments.callee, 500);
                         return;
                     }
-
-                } catch (e) {}
+                } catch(e) {}
             })();
+        }
+        this._setState('playing');
+    },
 
-            this._setState('playing');
-        },
+    errorListener: function(obj, evt) {
+        try {
+            switch (event.target.error.code) {
+                case event.target.error.MEDIA_ERR_ABORTED:
+                    this.sendUpdate('error', 1);
+                    break;
+                case event.target.error.MEDIA_ERR_NETWORK:
+                    this.sendUpdate('error', 2);
+                    break;
+                case event.target.error.MEDIA_ERR_DECODE:
+                    this.sendUpdate('error', 3);
+                    break;
+                case event.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                    this.sendUpdate('error', 4);
+                    break;
+                default:
+                    this.sendUpdate('error', 5);
+                    break;
+            }
+        } catch(e) {}
+    },
 
-        errorListener: function (obj, evt) {
-            try {
-                switch (event.target.error.code) {
-                    case event.target.error.MEDIA_ERR_ABORTED:
-                        this.setTestcard(1);
-                        break;
-                    case event.target.error.MEDIA_ERR_NETWORK:
-                        this.setTestcard(2);
-                        break;
-                    case event.target.error.MEDIA_ERR_DECODE:
-                        this.setTestcard(3);
-                        break;
-                    case event.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                        this.setTestcard(4);
-                        break;
-                    default:
-                        this.setTestcard(5);
-                        break;
-                }
-            } catch (e) {}
-        },
 
-        canplayListener: function (obj) {
-            var ref = this;
-            // pseudo streaming
-            if (this.pp.getConfig('streamType') == 'pseudo') {
-                $.each(this.media.file, function () {
-                    if (this.src.indexOf(ref.mediaElement[0].currentSrc) > -1) {
-                        if (this.type == 'video/mp4') {
-                            ref.isPseudoStream = true;
-                            ref.allowRandomSeek = true;
-                            ref.media.loadProgress = 100;
-                            return false;
-                        }
+
+    canplayListener: function(obj) {
+        var ref = this;
+        // pseudo streaming
+        if (this.pp.getConfig('streamType')=='pseudo') {
+            $.each(this.media.file, function() {
+                if (this.src.indexOf(ref.mediaElement[0].currentSrc)>-1) {
+                    if (this.type=='video/mp4') {
+                        ref.isPseudoStream = true;
+                        ref.allowRandomSeek = true;
+                        ref.media.loadProgress = 100;
+                        return false;
                     }
-                })
-            }
-
-            this._setBufferState('full');
-        },
-
-        /*****************************************
-         * Setters
-         ****************************************/
-        setPlay: function () {
-            try {
-                this.mediaElement[0].play();
-            } catch (e) {}
-        },
-
-        setPause: function () {
-            try {
-                this.mediaElement[0].pause();
-            } catch (e) {}
-        },
-
-        setVolume: function (volume) {
-            this._volume = volume;
-            try {
-                this.mediaElement.prop('volume', volume);
-            } catch (e) {
-                return false;
-            }
-            return volume;
-        },
-
-        setSeek: function (newpos) {
-
-            if (this.isPseudoStream) {
-                this.media.position = 0;
-                this.media.offset = newpos;
-                this.timeListener();
-                this.applySrc();
-                return;
-            }
-            var ref = this;
-
-            // IE9 somtimes raises INDEX_SIZE_ERR
-            (function () {
-                try {
-                    ref.mediaElement[0].currentTime = newpos;
-                    ref.timeListener({
-                        position: newpos
-                    });
-                } catch (e) {
-                    if (ref.mediaElement != null) setTimeout(arguments.callee, 100);
                 }
+                return true;
+            });
+        }
+        this._setBufferState('full');
+    },
 
-            })();
 
-        },
+    /*****************************************
+     * Setters
+     ****************************************/
+    setPlay: function() {
+        try{this.mediaElement[0].play();} catch(e){}
+    },
 
-        setFullscreen: function (inFullscreen) {
-            if (this.element == 'audio') return;
-            this._scaleVideo();
-        },
+    setPause: function() {
+        try {this.mediaElement[0].pause();} catch(e){}
+    },
 
-        setResize: function () {
-            if (this.element == 'audio') return;
-            this._scaleVideo(false);
+    setVolume: function(volume) {
+        this._volume = volume;
+            try {
+            this.mediaElement.prop('volume', volume);
+        } catch(e){
+            return false;
+        }
+        return volume;
+    },
+
+    setSeek: function(newpos) {
+        var ref = this;
+
+        if (this.isPseudoStream) {
+            this.media.position = 0;
+            this.media.offset = newpos;
+            this.applySrc();
+            return;
         }
 
-    });
+        // IE9 somtimes raises INDEX_SIZE_ERR
+        (function() {
+            try {
+                ref.mediaElement[0].currentTime = newpos;
+                ref.timeListener({position: newpos});
+            } catch(e){
+                if (ref.mediaElement!=null) {
+                    setTimeout(arguments.callee,100);
+                }
+            }
 
-    $p.newModel({
+        })();
+    },
 
-        modelId: 'AUDIO',
+    setFullscreen: function(inFullscreen) {
+        if (this.element=='audio') return;
+        this._scaleVideo();
+    },
 
-        iLove: [
-    {
-            ext: 'ogg',
-            type: 'audio/ogg',
-            platform: 'native',
-            streamType: ['http', 'httpAudio']
-        },
-    {
-            ext: 'oga',
-            type: 'audio/ogg',
-            platform: 'native',
-            streamType: ['http', 'httpAudio']
-        },
-    {
-            ext: 'mp3',
-            type: 'audio/mp3',
-            platform: ['ios', 'android', 'native'],
-            streamType: ['http', 'httpAudio']
-        },
-        {
-            ext: 'mp3',
-            type: 'audio/mpeg',
-            platform: ['ios', 'android', 'native'],
-            streamType: ['http', 'httpAudio']
-        }
+    setResize: function() {
+        if (this.element=='audio') return;
+        this._scaleVideo(false);
+    }
+
+});
+
+$p.newModel({
+
+    modelId: 'AUDIO',
+
+    iLove: [
+        {ext:'ogg', type:'audio/ogg', platform:'native', streamType: ['http', 'httpAudio']},
+        {ext:'oga', type:'audio/ogg', platform:'native', streamType: ['http', 'httpAudio']},
+        {ext:'mp3', type:'audio/mp3', platform:['ios', 'android', 'native'], streamType: ['http', 'httpAudio']},
+        {ext:'mp3', type:'audio/mpeg', platform:['ios', 'android', 'native'], streamType: ['http', 'httpAudio']}
     ],
 
-        imageElement: {},
+    imageElement: {},
 
-        applyMedia: function (destContainer) {
+    applyMedia: function(destContainer) {
 
-            var ref = this;
+        $p.utils.blockSelection(destContainer);
 
-            $p.utils.blockSelection(destContainer)
+        // create cover image
+        this.imageElement = this.applyImage(this.pp.getConfig('cover') || this.pp.getConfig('poster'), destContainer);
+        this.imageElement.css({border: '0px'});
 
-            // create cover image
-            this.imageElement = this.applyImage(this.pp.getConfig('cover') || this.pp.getConfig('poster'), destContainer);
-            this.imageElement.css({
-                border: '0px'
-            })
+        var mediaContainer = $('#'+this.pp.getMediaId()+'_audio_container');
 
-            var mediaContainer = $('#' + this.pp.getMediaId() + '_audio_container')
-            if (mediaContainer.length == 0) {
-                mediaContainer = $('<div/>')
-                    .css({
-                    width: '1px',
-                    height: '1px',
-                    marginBottom: '-1px'
-                })
-                    .attr('id', this.pp.getMediaId() + "_audio_container")
-                    .prependTo(this.pp.getDC());
-            }
+        if (mediaContainer.length===0) {
+            mediaContainer = $('<div/>')
+                .css({width: '1px', height: '1px', marginBottom: '-1px'})
+                .attr('id', this.pp.getMediaId()+"_audio_container")
+                .prependTo( this.pp.getDC() );
+        }
 
-            mediaContainer.html('').append(
-            $('<audio/>')
-                .attr({
-                "id": this.pp.getMediaId() + "_html",
+        mediaContainer.html('').append(
+            $((this.isGingerbread) ? '<video/>' : '<audio/>')
+            .attr({
+                "id": this.pp.getMediaId()+"_html",
                 "poster": $p.utils.imageDummy(),
                 "loop": false,
                 "autoplay": false,
-                "x-webkit-airplay": "allow"
+                "x-webkit-airplay": "allow",
+                "preload": "auto"
             }).prop({
                 controls: false,
                 volume: this.getVolume()
@@ -5682,60 +5662,59 @@ jQuery(function ($) {
                 position: 'absolute',
                 top: 0,
                 left: 0
-            }));
+            })
+        );
 
-            this.mediaElement = $('#' + this.pp.getMediaId() + "_html");
+        this.mediaElement = $('#'+this.pp.getMediaId()+"_html");
+        this.applySrc();
+    },
 
-            this.applySrc();
+    setPosterLive: function() {
+        if (this.imageElement.parent) {
+            var dest = this.imageElement.parent(),
+            ref = this;
 
-        },
+            if (this.imageElement.attr('src') == ref.pp.getConfig('poster'))
+                return;
 
-        setPosterLive: function () {
-            if (this.imageElement.parent) {
-                var dest = this.imageElement.parent(),
-                    ref = this;
-
-                if (this.imageElement.attr('src') == ref.pp.getConfig('poster')) return;
-
-                this.imageElement.fadeOut('fast', function () {
-                    $(this).remove();
-                    ref.imageElement = ref.applyImage(ref.pp.getConfig('poster'), dest);
-                })
-            }
+            this.imageElement.fadeOut('fast', function() {
+                $(this).remove();
+                ref.imageElement = ref.applyImage(ref.pp.getConfig('poster'), dest );
+            });
         }
+    }
 
-    }, 'VIDEO');
+}, 'VIDEO');
 
-    $p.newModel({
-
-        modelId: 'VIDEOHLS',
-
-        androidVersion: 3,
-        iosVersion: 4,
-
-        iLove: [
-    {
-            ext: 'm3u8',
-            type: 'application/mpegURL',
-            platform: ['ios', 'android'],
-            streamType: ['http', 'httpVideo', 'httpVideoLive']
-        },
-        {
-            ext: 'm3u',
-            type: 'application/mpegURL',
-            platform: ['ios', 'android'],
-            streamType: ['http', 'httpVideo', 'httpVideoLive']
-        }, // {ext:'m3u8', type:'vnd.apple.mpegURL', platform:'ios'},
-        // {ext:'m3u', type:'vnd.apple.mpegURL', platform:'ios'},
-        {
-            ext: 'ts',
-            type: 'video/MP2T',
-            platforms: ['ios', 'android'],
-            streamType: ['http', 'httpVideo', 'httpVideoLive']
-        }
+$p.newModel({
+    modelId: 'AUDIOLIVE',
+    androidVersion: 3,
+    iosVersion: 4,
+    iLove: [
+        {ext:'m3u8', type:'application/mpegURL', platform: ['ios', 'android'], streamType: ['http','httpAudio', 'httpAudioLive']},
+        {ext:'m3u', type:'application/mpegURL', platform: ['ios', 'android'], streamType: ['http', 'httpAudio', 'httpAudioLive']},
+        {ext:'mp3', type:'audio/mp3', platform: ['ios', 'android'], streamType: ['http', 'httpAudio', 'httpAudioLive']},
+        {ext:'mp3', type:'audio/mpeg3', platform: ['ios', 'android'], streamType: ['http', 'httpAudio', 'httpAudioLive']}
     ]
+}, 'VIDEO');
 
-    }, 'VIDEO');
+
+$p.newModel({
+    modelId: 'VIDEOHLS',
+    androidVersion: 3,
+    iosVersion: 4,
+    iLove: [
+        {ext:'m3u8', type:'application/mpegURL', platform: ['ios', 'android'], streamType: ['http','httpVideo', 'httpVideoLive']},
+        {ext:'m3u', type:'application/mpegURL', platform: ['ios', 'android'], streamType: ['http', 'httpVideo', 'httpVideoLive']},
+        // {ext:'m3u8', type:'vnd.apple.mpegURL', platform:'ios'},
+        // {ext:'m3u', type:'vnd.apple.mpegURL', platform:'ios'},
+        {ext:'ts', type:'video/MP2T', platforms: ['ios' ,'android'], streamType: ['http', 'httpVideo', 'httpVideoLive']}
+    ]
+}, 'VIDEO');
+
+
+
+
 
 });
 /*
@@ -5751,93 +5730,65 @@ jQuery(function ($) {
  * the Projekktor environment.
  *
  * JARIS Player:
- * copyright 2010 Jefferson Gonzalez, Jefferson Gonzalez, http://jarisflvplayer.org
+ * copyright 2010 Jefferson Gonzlez, Jefferson Gonzlez, http://jarisflvplayer.org
  * under GNU LESSER GENERAL PUBLIC LICENSE 3
- */
-jQuery(function ($) {
-    $p.newModel({
+*/
+jQuery(function($) {
+$p.newModel({
 
-        modelId: 'VIDEOFLASH',
-        flashVersion: 9,
-        iLove: [
-            {
-                ext: 'flv',
-                type: 'video/flv',
-                platform: 'flash',
-                streamType: ['http', 'pseudo', 'rtmp'],
-                fixed: true
-            },
-            {
-                ext: 'mp4',
-                type: 'video/mp4',
-                platform: 'flash',
-                streamType: ['http', 'pseudo', 'rtmp'],
-                fixed: 'maybe'
-            },
-            {
-                ext: 'mov',
-                type: 'video/quicktime',
-                streamType: ['http', 'pseudo', 'rtmp'],
-                platform: 'flash'
-            },
-            {
-                ext: 'm4v',
-                type: 'video/mp4',
-                platform: 'flash',
-                streamType: ['http', 'pseudo', 'rtmp'],
-                fixed: 'maybe'
-            },
-            {
-                ext: 'f4m',
-                type: 'video/abst',
-                platform: 'flash',
-                streamType: ['httpVideoLive']
+    modelId: 'VIDEOFLASH',
+    flashVersion: "9",
+    iLove: [
+        {ext:'flv', type:'video/flv', platform:'flash', streamType: ['http', 'httpVideo', 'pseudo', 'rtmp'],fixed: true},
+        {ext:'mp4', type:'video/mp4',  platform:'flash', streamType: ['http', 'httpVideo', 'pseudo',  'rtmp'],fixed: 'maybe'},
+        {ext:'mov', type:'video/quicktime', streamType: ['http', 'httpVideo',  'pseudo', 'rtmp'], platform:'flash'},
+        {ext:'m4v', type:'video/mp4', platform:'flash', streamType: ['http', 'httpVideo', 'pseudo', 'rtmp'], fixed: 'maybe'},
+        {ext:'f4m', type:'video/abst', platform:'flash', streamType: ['httpVideoLive']}
+    ],
+
+    _eventMap: {
+        onprogress:             "progressListener",
+        ontimeupdate:           "timeListener",
+        ondatainitialized:      "metaDataListener",
+        onconnectionsuccess:    "startListener",
+        onplaypause:            "_playpauseListener",
+        onplaybackfinished:     "endedListener",
+        onmute:                 "volumeListener",
+        onvolumechange:         "volumeListener",
+        onbuffering:            "waitingListener",
+        onnotbuffering:         "canplayListener",
+        onconnectionfailed:     "errorListener"
+    },
+
+    isPseudoStream: false,
+    allowRandomSeek: false,
+    flashVerifyMethod: 'api_source',
+    _jarisVolume: null,
+
+    applyMedia: function(destContainer) {
+
+        var domOptions = {
+            id: this.pp.getMediaId()+"_flash",
+            name: this.pp.getMediaId()+"_flash",
+            src: this.pp.getConfig('playerFlashMP4'),
+            width: '100%',
+            height: '100%',
+            allowScriptAccess:"always",
+            allowFullScreen: 'false',
+            allowNetworking: "all",
+            wmode: ($p.utils.ieVersion()) ? 'transparent' : 'opaque',
+            bgcolor: '#000000',
+            FlashVars: {
+                type: "video",
+                streamtype: (this.pp.getConfig('streamType').indexOf('rtmp')==-1) ? 'file' : 'rtmp',
+                server: (this.pp.getConfig('streamType').indexOf('rtmp')>-1) ? this.pp.getConfig('streamServer') : '',
+                autostart: "false",
+                controls: 'false',
+                aspectratio: this.pp.getConfig('videoScaling')
             }
-        ],
+        };
 
-        _eventMap: {
-            onprogress: "progressListener",
-            ontimeupdate: "timeListener",
-            ondatainitialized: "metaDataListener",
-            onconnectionsuccess: "startListener",
-            onplaypause: "_playpauseListener",
-            onplaybackfinished: "endedListener",
-            onmute: "volumeListener",
-            onvolumechange: "volumeListener",
-            onbuffering: "waitingListener",
-            onnotbuffering: "canplayListener",
-            onconnectionfailed: "errorListener"
-        },
-
-        isPseudoStream: false,
-        allowRandomSeek: false,
-        flashVerifyMethod: 'api_source',
-        _jarisVolume: 0,
-
-        applyMedia: function (destContainer) {
-
-            var domOptions = {
-                id: this.pp.getMediaId() + "_flash",
-                name: this.pp.getMediaId() + "_flash",
-                src: this.pp.getConfig('playerFlashMP4'),
-                width: '100%',
-                height: '100%',
-                allowScriptAccess: "always",
-                allowFullScreen: 'false',
-                allowNetworking: "all",
-                wmode: ($p.utils.ieVersion()) ? 'transparent' : 'opaque',
-                bgcolor: '#000000',
-                FlashVars: {
-                    type: "video",
-                    streamtype: (this.pp.getConfig('streamType') != 'rtmp') ? 'file' : 'rtmp',
-                    server: (this.pp.getConfig('streamType') == 'rtmp') ? this.pp.getConfig('streamServer') : '',
-                    autostart: "false",
-                    controls: 'false',
-                    aspectratio: this.pp.getConfig('videoScaling')
-                }
-            };
-
-            switch (this.pp.getConfig('streamType')) {
+        switch(this.pp.getConfig('streamType')) {
             case 'rtmp':
                 this.allowRandomSeek = true;
                 this.media.loadProgress = 100;
@@ -5846,87 +5797,87 @@ jQuery(function ($) {
                 this.isPseudoStream = true;
                 this.allowRandomSeek = true;
                 this.media.loadProgress = 100;
-                break;
-            }
+            break;
+        }
 
-            this.createFlash(domOptions, destContainer);
-        },
+        this.createFlash(domOptions, destContainer);
+    },
 
-        applySrc: function () {
+    applySrc: function() {
+        var ref = this,
+            sources = this.getSource();
 
-            var ref = this,
-                sources = this.getSource();
+        this.mediaElement.get(0).api_source(sources[0].src);
 
-            this.mediaElement.api_source(sources[0].src);
+        this.seekedListener();
 
-            this.seekedListener();
+        if (this.getState('PLAYING')) {
+            this.setPlay();
+            if (ref.isPseudoStream!==true)
+                this.setSeek(this.media.position || 0);
+        }
+    },
 
-            if (this.getState('PLAYING')) {
-                this.setPlay();
-                if (ref.isPseudoStream !== true)
-                    this.setSeek(this.media.position || 0);
-            }
-        },
 
-        /*****************************************
-         * Handle Events
-         ****************************************/
-        addListeners: function () {
-            if (this.mediaElement == null) return;
-            var ref = this;
-            $.each(this._eventMap, function (key, value) {
-                ref.mediaElement.api_addlistener(key, "projekktor('" + ref.pp.getId() + "').playerModel." + value);
-            });
-        },
+    /*****************************************
+     * Handle Events
+     ****************************************/
+    addListeners: function() {
+        if (this.mediaElement==null) return;
+        var ref = this;
+        $.each(this._eventMap, function(key, value){
+            ref.mediaElement.get(0).api_addlistener(key, "projekktor('"+ref.pp.getId()+"').playerModel." + value);
+        });
+    },
 
-        removeListeners: function () {
-            try {
-                this.mediaElement.api_removelistener("*");
-            } catch (e) {};
-        },
+    removeListeners: function() {
+        try {this.mediaElement.get(0).api_removelistener("*");} catch(e){};
+    },
 
-        flashReadyListener: function () {
-            this.applySrc();
-            this.displayReady();
-        },
+    flashReadyListener: function() {
+        this.applySrc();
+        this.displayReady();
+    },
 
-        /* needs a more sophisticated error repoprting */
-        errorListener: function (event) {
-            this.setTestcard(4);
-        },
+    /* needs a more sophisticated error repoprting */
+    errorListener: function(event) {
+        this.sendUpdate('error', 4);
+    },
 
-        /* "volume change event flood" workaround - fix this within jarisplayer! */
-        volumeListener: function (obj) {
-            if (this._jarisVolume != obj.volume) {
-                this._jarisVolume = obj.volume;
-                this.sendUpdate('volume', obj.volume);
-            }
-        },
+    /* "volume change event flood" workaround - fix this within jarisplayer! */
+    volumeListener: function(obj) {
+        if (this._jarisVolume!==obj.volume) {
+            this._jarisVolume=obj.volume;
+            this.sendUpdate('volume', obj.volume);
+        }
+    },
 
-        /* wrapping non-status-based jaris behavior */
-        _playpauseListener: function (obj) {
-            if (obj.isplaying) {
+
+    /* wrapping non-status-based jaris behavior */
+    _playpauseListener: function(obj) {
+
+        if (obj.isplaying) {
                 // jaris player workaround for pause/seek/reset issue
-                if (this.getModelName().indexOf('AUDIO') > -1) {
+                if (this.getModelName().indexOf('AUDIO')>-1) {
                     this.setSeek(this.media.position);
                 }
-                this.playingListener();
-            } else {
-                this.pauseListener();
-            }
-        },
+            this.playingListener();
+        }
+        else {
+            this.pauseListener();
+        }
+        this.setVolume(this._jarisVolume);
+    },
 
-        metaDataListener: function (obj) {
+    metaDataListener: function(obj) {
 
-            this.applyCommand('volume', this.pp.getConfig('volume'));
+        this.applyCommand('volume', this.pp.getConfig('volume'));
 
-            try {
-                this.mediaElement.api_seek(this.media.position || 0);
-            } catch (e) {};
-            this._setState('playing');
+        try {this.mediaElement.get(0).api_seek(this.media.position || 0);} catch(e){};
+        this._setState('playing');
 
-            if (this.modelId.indexOf('AUDIO') > -1) {
-                this.mediaElement.api_removelistener('ondatainitialized');
+            if (this.modelId.indexOf('AUDIO')>-1) {
+                this.mediaElement.get(0).api_removelistener('ondatainitialized');
                 return;
             }
 
@@ -5934,145 +5885,108 @@ jQuery(function ($) {
                 this.videoWidth = obj.width;
                 this.videoHeight = obj.height;
                 // the flash component scales the media by itself
-                this.sendUpdate('scaled', {
-                    width: this.videoWidth,
-                    height: this.videoHeight
-                });
-            } catch (e) {};
+                this.sendUpdate('scaled', {width: this.videoWidth, height:this.videoHeight});
+            } catch(e) {};
 
-        },
+    },
 
-        startListener: function (obj) {
-            this.applyCommand('volume', this.pp.getConfig('volume'));
-            try {
-                this.mediaElement.api_seek(this.media.position || 0);
-            } catch (e) {};
-            this._setState('playing');
-        },
+    startListener: function(obj) {
+        this.applyCommand('volume', this.pp.getConfig('volume'));
+        try {this.mediaElement.get(0).api_seek(this.media.position || 0);} catch(e){};
+        this._setState('playing');
+    },
 
-        /*****************************************
-         * Setters
-         ****************************************/
-        setSeek: function (newpos) {
-            if (this.isPseudoStream) {
-                this.media.offset = newpos;
-                this.timeListener({
-                    position: 0
-                });
-                this.applySrc();
-            } else {
-                try {
-                    this.mediaElement.api_seek(newpos);
-                } catch (e) {};
-                this.seekedListener();
-                this.timeListener({
-                    position: newpos
-                });
-            }
-        },
 
-        setVolume: function (newvol) {
-            this._volume = newvol;
-            try {
-                this.mediaElement.api_volume(newvol);
-            } catch (e) {
-                return false;
-            }
-            return newvol;
-        },
-
-        setPause: function (event) {
-            try {
-                this.mediaElement.api_pause();
-            } catch (e) {};
-        },
-
-        setPlay: function (event) {
-            try {
-                this.mediaElement.api_play();
-            } catch (e) {};
-        },
-
-        getVolume: function () {
-            return this._jarisVolume;
-        },
-
-        detachMedia: function () {
-            this.setPause();
-            try {
-                $(this.mediaElement).remove();
-            } catch (e) {}
+    /*****************************************
+     * Setters
+     ****************************************/
+    setSeek: function(newpos) {
+        if (this.isPseudoStream) {
+            this.media.offset = newpos;
+            // this.timeListener();
+            this.applySrc();
+        } else {
+            try {this.mediaElement.get(0).api_seek(newpos);} catch(e){};
+            this.seekedListener();
+            this.timeListener({position:newpos});
         }
-    });
+        this.setVolume(this._jarisVolume);
+    },
 
-    $p.newModel({
+    setVolume: function(newvol) {
+        this._volume = newvol;
+        try {this.mediaElement.get(0).api_volume(newvol);} catch(e){return false;}
+        return newvol;
+    },
 
-        modelId: 'AUDIOFLASH',
-        iLove: [
-            {
-                ext: 'mp3',
-                type: 'audio/mp3',
-                platform: 'flash',
-                streamType: ['http']
-            },
-            {
-                ext: 'mp3',
-                type: 'audio/mpeg',
-                platform: 'flash',
-                streamType: ['http']
-            },
-            {
-                ext: 'm4a',
-                type: 'audio/mp4',
-                platform: 'flash',
-                streamType: ['http']
-            }
-        ],
+    setPause: function(event) {
+        try {this.mediaElement.get(0).api_pause();} catch(e){};
+    },
 
-        applyMedia: function (destContainer) {
+    setPlay: function(event) {
+        try {this.mediaElement.get(0).api_play();} catch(e){};
+    },
 
-            $p.utils.blockSelection(destContainer)
+    getVolume: function() {
+        return this._jarisVolume;
+    },
 
-            // create image element
-            this.imageElement = this.applyImage(this.pp.getConfig('cover') || this.pp.getConfig('poster'), destContainer);
+    detachMedia: function() {
+        this.setPause();
+        try{$(this.mediaElement).get(0).remove();} catch(e){}
+    }
+});
 
-            var flashContainer = $('#' + this.pp.getMediaId() + '_flash_container')
-            if (flashContainer.length == 0) {
-                flashContainer = $(document.createElement('div'))
-                    .css({
-                    width: '1px',
-                    height: '1px'
-                })
-                    .attr('id', this.pp.getMediaId() + "_flash_container")
-                    .prependTo(this.pp.getDC());
-            }
+$p.newModel({
 
-            var domOptions = {
-                id: this.pp.getMediaId() + "_flash",
-                name: this.pp.getMediaId() + "_flash",
-                src: this.pp.getConfig('playerFlashMP3'),
-                width: '1px',
-                height: '1px',
-                allowScriptAccess: "always",
-                allowFullScreen: 'false',
-                allowNetworking: "all",
-                wmode: 'transparent',
-                bgcolor: '#000000',
-                FlashVars: {
-                    type: "audio",
-                    streamtype: 'file',
-                    server: '',
-                    autostart: "false",
-                    hardwarescaling: "false",
-                    controls: 'false',
-                    jsapi: 'true'
-                }
-            };
+    modelId: 'AUDIOFLASH',
+    iLove: [
+    {ext:'mp3', type:'audio/mp3', platform:'flash', streamType: ['http', 'httpAudio', 'httpAudioLive']},
+    {ext:'mp3', type:'audio/mpeg', platform:'flash', streamType: ['http', 'httpAudio', 'httpAudioLive']},
+    {ext:'m4a', type:'audio/mp4', platform:'flash', streamType: ['http', 'httpAudio', 'httpAudioLive']}
+    ],
 
-            this.createFlash(domOptions, flashContainer, false);
+    applyMedia: function(destContainer) {
+
+        $p.utils.blockSelection(destContainer)
+
+        // create image element
+        this.imageElement = this.applyImage(this.pp.getConfig('cover') || this.pp.getConfig('poster'), destContainer);
+
+        var flashContainer = $('#'+this.pp.getMediaId()+'_flash_container')
+        if (flashContainer.length==0) {
+            flashContainer = $(document.createElement('div'))
+            .css({width: '1px', height: '1px'})
+            .attr('id', this.pp.getMediaId()+"_flash_container")
+            .prependTo( this.pp.getDC() );
         }
 
-    }, 'VIDEOFLASH');
+        var domOptions = {
+            id: this.pp.getMediaId()+"_flash",
+            name: this.pp.getMediaId()+"_flash",
+            src: this.pp.getConfig('playerFlashMP3'),
+            width: '1px',
+            height: '1px',
+            allowScriptAccess:"always",
+            allowFullScreen: 'false',
+            allowNetworking: "all",
+            wmode: 'transparent',
+            bgcolor: '#000000',
+            FlashVars: {
+                type: "audio",
+                streamtype: 'file',
+                server: '',
+                autostart: "false",
+                hardwarescaling: "false",
+                controls: 'false',
+                jsapi: 'true'
+            }
+         };
+
+        this.createFlash(domOptions, flashContainer, false);
+    }
+
+}, 'VIDEOFLASH');
 
 });
 /*
@@ -6430,148 +6344,238 @@ $p.newModel({
 /*
  * this file is part of:
  * projekktor zwei
- * http://filenew.org/projekktor/
+ * http://www.projekktor.com
  *
- * Copyright 2010, 2011, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
+ * Copyright 2010, Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
  * under GNU General Public License
  * http://www.filenew.org/projekktor/license/
- */
-jQuery(function ($) {
-    $p.newModel({
+*/
+jQuery(function($) {
+$p.newModel({
 
-        modelId: 'IMAGE',
-        iLove: [
-    {
-            ext: 'jpg',
-            type: 'image/jpeg',
-            platform: 'browser',
-            streamType: ['http']
-        },
-    {
-            ext: 'gif',
-            type: 'image/gif',
-            platform: 'browser',
-            streamType: ['http']
-        },
-    {
-            ext: 'png',
-            type: 'image/png',
-            platform: 'browser',
-            streamType: ['http']
-        }
-    ],
+    modelId: 'VIDEOVLC',
+    vlcVersion: "2.0.6.0",
+    iLove: [],
 
-        allowRandomSeek: true,
+    _eventMap: {
+        MediaPlayerPaused: "pauseListener",
+        MediaPlayerPlaying: "playingListener",
+        MediaPlayerTimeChanged: "_timeListener",
+        MediaPlayerEndReached: "endedListener",
+        MediaPlayerBuffering: "waitingListener",
+        MediaPlayerEncounteredError: "errorListener",
+        MediaPlayerSeekableChanged: 'seekableListener'
+        // volumechange:   "volumeListener" - not supported
+        // progress:       "progressListener", - not supported
+        // suspend:        "suspendListener", - not supported
+        // seeked:         "seekedListener", - not supported
+        // loadstart:      null - not supported
+    },
 
-        _position: 0,
-        _duration: 0,
+    allowRandomSeek: false,
+    videoWidth: 0,
+    videoHeight: 0,
+    isPseudoStream: false,
 
-        applyMedia: function (destContainer) {
-            this.mediaElement = this.applyImage(this.media.file[0].src, destContainer.html(''));
-            this._duration = this.pp.getConfig('duration');
-            this._position = -1;
-            this.displayReady();
-            this._position = -0.5;
-        },
-
-        /* start timer */
-        setPlay: function () {
-
-            var ref = this;
-
-            this._setBufferState('full');
-            this.progressListener(100);
-            this.playingListener();
-
-            if (this._duration == 0) {
-                ref._setState('completed');
-                return;
-            }
-
-            (function () {
-
-                if (ref._position >= ref._duration) {
-                    ref._setState('completed');
-                    return;
+    setiLove: function() {
+        var model = this;
+        if (navigator.plugins && (navigator.plugins.length > 0)) {
+            for(var i=0;i<navigator.plugins.length;++i) {
+                if (navigator.plugins[i].name.indexOf("VLC")>-1) {
+                    for (var j=0; j<navigator.plugins[i].length; j++) {
+                        var ref = navigator.plugins[i][j];
+                        if (ref.suffixes!=null && ref.type!=null) {
+                            $.each(ref.suffixes.split(','), function(key, value) {
+                                model.iLove.push( {ext:value, type: ref.type.replace(/x-/, ''), platform:['vlc'], streamType: ['http', 'pseudo', 'httpVideo']} );
+                            })
+                        }
+                    }
+                    break;
                 }
-
-                if (!ref.getState('PLAYING')) return;
-
-                ref.timeListener({
-                    duration: ref._duration,
-                    position: ref._position
-                });
-                setTimeout(arguments.callee, 500);
-                ref._position += 0.5;
-            })();
-
-        },
-
-        detachMedia: function () {
-            this.mediaElement.remove();
-        },
-
-        setPause: function () {
-            this.pauseListener();
-        },
-
-        setSeek: function (newpos) {
-            if (newpos < this._duration) {
-                this._position = newpos;
             }
         }
+    },
 
-    });
+    applyMedia: function(destContainer) {
+        destContainer.html('').append(
+            $('<embed/>')
+                .attr({
+                    "id": this.pp.getMediaId()+"_vlc",
+                    "type": 'application/x-vlc-plugin',
+                    "pluginspage": 'http://www.videolan.org',
+                    // "version": 'VideoLAN.VLCPlugin.1',
+                    "width": '100%',
+                    "height": '100%',
+                    "events": true,
+                    "controls": false,
+                    "toolbar": false,
+                    "windowless": true,
+                    "allowfullscreen": true,
+                    "autoplay": false
+                }).css({
+                    'position': 'absolute',
+                    'top': 0,
+                    'left': 0
+                })
+        );
+/*
+        destContainer.append(
+            $('<div/>').attr('id', this.pp.getMediaId()+"_vlc_cc" )
+            .css({
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(255,0,0,0.1)',
+                opacity: '0.1',
+                filter: 'alpha(opacity = 0.1)',
+                position: 'absolute',
+                top: 0,
+                left: 0
+            })
+        )
+  */
 
-    $p.newModel({
+        this.mediaElement = $('#'+this.pp.getMediaId()+"_vlc");
+        this.applySrc();
+    },
 
-        modelId: 'HTML',
-        iLove: [
-    {
-            ext: 'html',
-            type: 'text/html',
-            platform: 'browser',
-            streamType: ['http']
-        }
-    ],
+    applySrc: function() {
 
-        applyMedia: function (destContainer) {
-            var ref = this;
+        var ref = this,
+            sources = this.getSource();
 
-            this.mediaElement = $(document.createElement('iframe')).attr({
-                "id": this.pp.getMediaId() + "_iframe",
-                "name": this.pp.getMediaId() + "_iframe",
-                "src": this.media.file[0].src,
-                "scrolling": 'no',
-                "frameborder": "0",
-                'width': '100%',
-                'height': '100%'
-            }).css({
-                'overflow': 'hidden',
-                'border': '0px',
-                "width": '100%',
-                "height": '100%'
-            }).appendTo(destContainer.html(''));
+        this.mediaElement.get(0).playlist.add(sources[0].src, 'item 1');
 
-            this.mediaElement.load(function (event) {
-                ref.success();
-            });
-            this.mediaElement.error(function (event) {
-                ref.remove();
-            });
-
-            this._duration = this.pp.getConfig('duration');
-
-        },
-
-        success: function () {
+        if (this.getState('PLAYING')) {
+            this.setPlay();
+            if (ref.isPseudoStream!==true)
+                this.setSeek(this.media.position || 0);
+        } else {
             this.displayReady();
-        },
-
-        remove: function () {
-            this.mediaElement.remove();
         }
-    }, 'IMAGE');
+    },
+
+    detachMedia: function() {
+        try {
+            this.mediaElement.get(0).playlist.stop();
+            this.mediaElement.html('');
+        } catch(e){}
+    },
+
+
+
+    /*****************************************
+     * Handle Events
+     ****************************************/
+    addListeners: function() {
+        if (this.mediaElement==null) return;
+
+        var ref = this;
+
+        $.each(this._eventMap, function(event, value){
+            try {
+                if (ref.mediaElement.get(0).attachEvent) {
+                    // Microsoft
+                    ref.mediaElement.get(0).attachEvent (event, function(evt) {ref[value](this, evt)});
+                } else if ( ref.mediaElement.get(0).addEventListener) {
+                    // Mozilla: DOM level 2
+                    ref.mediaElement.get(0).addEventListener (event, function(evt) {ref[value](this, evt)}, false);
+                } else {
+                    // DOM level 0
+                    ref.mediaElement.get(0)["on" + event] = function(evt) {ref[value](this, evt)};
+                }
+            } catch(e){}
+        });
+
+    },
+
+    removeListener: function(evt, subId) {
+        if (this.mediaElement==null) return;
+        var id = (subId!=null) ? '.projekktor'+subId+this.pp.getId() : '.projekktor'+this.pp.getId(),
+            ref = this;
+
+        $.each(this._eventMap, function(key, value){
+            if (key==evt) {
+                ref.mediaElement.unbind(key + id);
+            }
+        });
+    },
+
+    _timeListener: function(obj) {
+        this.timeListener({
+            position: this.mediaElement.get(0).input.time / 1000,
+            duration: this.mediaElement.get(0).input.length / 1000
+        })
+    },
+
+    seekableListener: function() {
+        this.allowRandomSeek = true;
+        this.media.loadProgress = 100;
+    },
+
+    errorListener: function(obj, evt) {
+        try {
+            switch (event.target.error.code) {
+                case event.target.error.MEDIA_ERR_ABORTED:
+                this.sendUpdate('error', 1);
+                break;
+            case event.target.error.MEDIA_ERR_NETWORK:
+                this.sendUpdate('error', 2);
+                break;
+            case event.target.error.MEDIA_ERR_DECODE:
+                this.sendUpdate('error', 3);
+                break;
+            case event.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                this.sendUpdate('error', 4);
+                break;
+            default:
+                this.sendUpdate('error', 5);
+                break;
+            }
+        } catch(e) {}
+    },
+
+
+
+    /*****************************************
+     * Setters
+     ****************************************/
+    setPlay: function() {
+        this.mediaElement.get(0).playlist.play();
+    },
+
+    setPause: function() {
+        this.mediaElement.get(0).playlist.pause();
+    },
+
+    setVolume: function(volume) {
+        this._volume = volume;
+        this.mediaElement.get(0).audio.volume = volume*100;
+        // missing volume event workaround
+        this.volumeListener(volume);
+    },
+
+    setSeek: function(newpos) {
+        this.mediaElement.get(0).input.position = newpos / this.media.duration;
+        // missing "seeked" event workaround
+        this._setSeekState('seeked', newpos);
+    },
+
+
+    setFullscreen: function() {
+        // windowless:true rescaling issue workaround
+        pos = this.mediaElement.get(0).input.position;
+        this.mediaElement.get(0).playlist.stop();
+        this.setPlay();
+        this.mediaElement.get(0).input.position = pos;
+        if (this.getState('PAUSED'))
+            this.setPause();
+    },
+
+    setResize: function() {
+        this._scaleVideo(false);
+    }
+
+});
 });
 /*
  * Projekktor II Plugin: Display
@@ -6583,132 +6587,125 @@ jQuery(function ($) {
  * under GNU General Public License
  * http://www.projekktor.com/license/
  */
-var projekktorDisplay = function () {};
-jQuery(function ($) {
-    projekktorDisplay.prototype = {
+var projekktorDisplay = function(){};
+jQuery(function($) {
+projekktorDisplay.prototype = {
 
-        logo: null,
-        logoIsFading: false,
+    logo: null,
+    logoIsFading: false,
 
-        display: null,
+    display: null,
 
-        displayClicks: 0,
+    displayClicks: 0,
 
-        buffIcn: null,
-        buffIcnSprite: null,
-        bufferDelayTimer: null,
+    buffIcn: null,
+    buffIcnSprite: null,
+    bufferDelayTimer: null,
 
-        _controlsDims: null,
+    _controlsDims: null,
 
-        config: {
+    config: {
+        displayClick: {callback: 'setPlayPause', value: null},
+        displayPlayingClick: {callback: 'setPlayPause', value: null},
+        displayDblClick: {callback: null, value: null},
 
-            displayClick: {
-                callback: 'setPlayPause',
-                value: null
-            },
-            displayPlayingClick: {
-                callback: 'setPlayPause',
-                value: null
-            },
-            displayDblClick: {
-                callback: null,
-                value: null
-            },
+        staticControls:     false,
 
-            staticControls: false,
+        /* time to delay buffering-icon-overlay once "waiting" event has been triggered */
+        bufferIconDelay:    1000,
 
-            /* time to delay buffering-icon-overlay once "waiting" event has been triggered */
-            bufferIconDelay: 1000,
+        /* if set the indicator animation is tinkered from a cssprite - must be horizontal */
+        spriteUrl:          '',
+        spriteWidth:        50,
+        spriteHeight:       50,
+        spriteTiles:        25,
+        spriteOffset:       1,
+        spriteCountUp:      false
+    },
 
-            designMode: false,
 
-            /* if set the indicator animation is tinkered from a cssprite - must be horizontal */
-            spriteUrl: '',
-            spriteWidth: 50,
-            spriteHeight: 50,
-            spriteTiles: 25,
-            spriteOffset: 1,
-            spriteCountUp: false
+    /* triggered on plugin-instanciation */
+    initialize: function() {
 
-        },
+    // create the display container itself
+    this.display = this.applyToPlayer($('<div/>'));
 
-        /* triggered on plugin-instanciation */
-        initialize: function () {
-            // create the display container itself
-            this.display = this.applyToPlayer($('<div/>'));
+    // create the startbutton
+    this.startButton =  this.applyToPlayer( $('<div/>').addClass('start'), 'startbtn');
 
-            // create the startbutton
-            this.startButton = this.applyToPlayer($('<div/>').addClass('start'), 'startbtn');
+    // create buffericon
+    this.buffIcn = this.applyToPlayer( $('<div/>').addClass('buffering'), 'buffericn');
 
-            // create buffericon
-            this.buffIcn = this.applyToPlayer($('<div/>').addClass('buffering'), 'buffericn');
+    this.imaContainer = this.applyToPlayer( $('<div/>').addClass('ima'), 'ima');
 
-            this.imaContainer = this.applyToPlayer($('<div/>').addClass('ima'), 'ima');
 
-            this.setActive();
 
-            // add spritelayer to buffericon (if required)
-            if (this.config.spriteUrl != '') {
-                this.buffIcnSprite = $('<div/>')
-                    .appendTo(this.buffIcn)
-                    .css({
-                    width: this.config.spriteWidth,
-                    height: this.config.spriteHeight,
-                    marginLeft: ((this.buffIcn.width() - this.config.spriteWidth) / 2) + "px",
-                    marginTop: ((this.buffIcn.height() - this.config.spriteHeight) / 2) + "px",
-                    backgroundColor: 'transparent',
-                    backgroundImage: 'url(' + this.config.spriteUrl + ')',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: '0 0'
-                })
-                    .addClass('inactive')
-            }
+        this.setActive();
 
-            // create a dedicated media container (if none exists)
-            this.pp.getMediaContainer();
-            /*
+    // add spritelayer to buffericon (if required)
+    if (this.config.spriteUrl!=='') {
+        this.buffIcnSprite = $('<div/>')
+            .appendTo(this.buffIcn)
+            .css({
+                width: this.config.spriteWidth,
+                height: this.config.spriteHeight,
+                marginLeft: ((this.buffIcn.width()-this.config.spriteWidth) / 2)+"px",
+                marginTop: ((this.buffIcn.height()-this.config.spriteHeight) / 2)+"px",
+                backgroundColor: 'transparent',
+                backgroundImage: 'url('+this.config.spriteUrl+')',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: '0 0'
+            })
+            .addClass('inactive');
+        }
+
+    // create a dedicated media container (if none exists)
+    this.pp.getMediaContainer();
+        /*
         this.display
             .append(this.startButton)
             .append(this.buffIcn)
 */
-            this.pluginReady = true;
-        },
+        this.pluginReady = true;
+    },
 
-        /*****************************************
+
+
+    /*****************************************
         EVENT HANDLERS
     *****************************************/
-        displayReadyHandler: function () {
-            var ref = this;
+    displayReadyHandler: function() {
+        var ref = this;
 
-            // the startbutton
-            this.startButton.unbind().click(function () {
-                ref.pp.setPlay();
-            });
+        // the startbutton
+            this.startButton.unbind().click(function(){
+            ref.pp.setPlay();
+        });
 
-            this.hideStartButton();
-        },
+        this.hideStartButton();
+    },
 
-        syncingHandler: function () {
-            this.showBufferIcon();
-            if (this.pp.getState('IDLE'))
+    syncingHandler: function() {
+        this.showBufferIcon();
+        if (this.pp.getState('IDLE'))
                 this.hideStartButton();
-        },
+    },
 
-        readyHandler: function () {
-            this.hideBufferIcon();
-            if (this.pp.getState('IDLE'))
+    readyHandler: function() {
+        this.hideBufferIcon();
+        if (this.pp.getState('IDLE'))
                 this.showStartButton();
-        },
+    },
 
-        bufferHandler: function (state) {
-            if (!this.pp.getState('PLAYING') && !this.pp.getState('AWAKENING'))
-                return;
-            if (state == 'EMPTY') this.showBufferIcon();
-            else this.hideBufferIcon();
-        },
+    bufferHandler: function(state) {
+        if (!this.pp.getState('PLAYING') && !this.pp.getState('AWAKENING'))
+            return;
+        if (state=='EMPTY') this.showBufferIcon();
+        else this.hideBufferIcon();
+    },
 
-        stateHandler: function (state) {
-            switch (state) {
+    stateHandler: function(state) {
+        switch(state) {
 
             case 'IDLE':
                 clearTimeout(this._cursorTimer);
@@ -6734,179 +6731,176 @@ jQuery(function ($) {
                 this.hideStartButton();
                 break;
 
-            case 'ERROR':
-                this.hideBufferIcon();;
-                this.hideStartButton();
-                break;
-
             case 'COMPLETED':
-                this.hideBufferIcon();;
+                this.hideBufferIcon();
                 break;
 
             default:
                 this.hideStartButton();
-            }
-        },
+        }
+    },
 
-        startHandler: function () {
-            this.mousemoveHandler();
-        },
+    errorHandler: function() {
+        this.hideBufferIcon();
+        this.hideStartButton();
+    },
 
-        stoppedHandler: function () {
-            this.hideBufferIcon();
-        },
+    startHandler: function() {
+        this.mousemoveHandler();
+    },
 
-        scheduleLoadingHandler: function () {
-            this.hideStartButton();
-            this.showBufferIcon();
-        },
+    stoppedHandler: function() {
+        this.hideBufferIcon();
+    },
 
-        scheduledHandler: function () {
-            if (!this.getConfig('autoplay')) {
-                this.showStartButton();
-            }
+    scheduleLoadingHandler: function() {
+        this.hideStartButton();
+        this.showBufferIcon();
+    },
 
-            this.hideBufferIcon();
-        },
+    scheduledHandler: function() {
+        if (!this.getConfig('autoplay')) {
+            this.showStartButton();
+        }
+        this.hideBufferIcon();
+    },
 
-        plugineventHandler: function (data) {
-            if (data.PLUGIN == 'controlbar' && data.EVENT == 'show' && this.getConfig('staticControls')) {
-                var pctCtrl = data.height * 100 / this.pp.getDC().height();
-                this.display.height((100 - pctCtrl) + "%").data('sc', true);
-            }
-        },
+    plugineventHandler: function(data) {
+        if (data.PLUGIN=='controlbar' && data.EVENT=='show' && this.getConfig('staticControls')) {
+            var pctCtrl = data.height * 100 / this.pp.getDC().height();
+            this.display.height( (100 - pctCtrl) + "%").data('sc', true);
+        }
+    },
 
-        qualityChangeHandler: function () {
-            this.hideBufferIcon();
-        },
+    qualityChangeHandler: function() {
+        this.hideBufferIcon();
+    },
 
-        /*****************************************,
+    /*****************************************,
         DISPLAY: Mouse Handling
     *****************************************/
-        mousemoveHandler: function (evt) {
-            var dest = this.display;
-            if (this.pp.getState('IDLE')) {
-                dest.css('cursor', 'pointer');
-                return;
-            }
-            dest.css('cursor', 'auto');
-            clearTimeout(this._cursorTimer);
-            if ("AWAKENING|ERROR|PAUSED".indexOf(this.pp.getState()) == -1)
-                this._cursorTimer = setTimeout(function () {
-                    dest.css('cursor', 'none');
-                }, 3000);
-        },
+    mousemoveHandler: function(evt) {
+        var dest = this.display;
+        if (this.pp.getState('IDLE')) {
+            dest.css('cursor', 'pointer');
+            return;
+        }
+        dest.css('cursor', 'auto');
+        clearTimeout(this._cursorTimer);
+        if ("AWAKENING|ERROR|PAUSED".indexOf(this.pp.getState())==-1)
+            this._cursorTimer=setTimeout(function(){dest.css('cursor', 'none');}, 3000);
+    },
 
-        mousedownHandler: function (evt) {
+    mousedownHandler: function(evt) {
+        var ref = this;
 
-            var ref = this;
+        if( ($(evt.target).attr('id') || '').indexOf('_media')==-1)
+            return;
 
-            if (($(evt.target).attr('id') || '').indexOf('_media') == -1)
-                return;
+        clearTimeout(this._cursorTimer);
+        this.display.css('cursor', 'auto');
 
-            clearTimeout(this._cursorTimer);
-            this.display.css('cursor', 'auto');
+        if(evt.which!=1)
+            return;
 
-            if (evt.which != 1)
-                return;
-
-            switch (this.pp.getState()) {
+        switch(this.pp.getState()) {
             case 'ERROR':
-                this.pp.setConfig({
-                    disallowSkip: false
-                });
+                this.pp.setConfig({disallowSkip: false});
                 this.pp.setActiveItem('next');
                 return;
             case 'IDLE':
                 this.pp.setPlay();
                 return;
-            }
+        }
 
-            if (this.pp.getHasGUI() == true)
-                return;
-
-            this.displayClicks++;
-
-            this.pp._promote('displayClick');
-
-            if (this.displayClicks > 0) {
-                setTimeout(function () {
-                    if (ref.displayClicks == 1) {
-                        if (ref.pp.getState() == 'PLAYING')
-                            ref.clickHandler('displayPlaying');
-                        else
-                            ref.clickHandler('display');
-                    } else if (ref.displayClicks == 2) {
-                        ref.clickHandler('displayDbl');
-                    }
-                    ref.displayClicks = 0;
-                }, 250);
-            }
+        if (this.pp.getHasGUI()===true)
             return;
-        },
 
-        /*****************************************
+        this.displayClicks++;
+
+        this.pp._promote('displayClick');
+
+        if (this.displayClicks > 0) {
+            setTimeout(
+            function(){
+                if(ref.displayClicks == 1) {
+                if (ref.pp.getState()=='PLAYING')
+                    ref.clickHandler('displayPlaying');
+                else
+                    ref.clickHandler('display');
+                } else if(ref.displayClicks == 2) {
+                ref.clickHandler('displayDbl');
+                }
+                ref.displayClicks = 0;
+            }, 250
+            );
+        }
+        return;
+    },
+
+
+    /*****************************************
         STARTBUTTON
     *****************************************/
-        showStartButton: function () {
-            this.startButton.addClass('active').removeClass('inactive');
-        },
+    showStartButton: function() {
+        this.startButton.addClass('active').removeClass('inactive');
+    },
 
-        hideStartButton: function () {
-            this.startButton.addClass('inactive').removeClass('active');
-        },
+    hideStartButton: function() {
+        this.startButton.addClass('inactive').removeClass('active');
+    },
 
-        /*****************************************
+
+    /*****************************************
         BUFFERICON: fader and animator
     *****************************************/
-        hideBufferIcon: function () {
-            var ref = this;
-            clearTimeout(this.bufferDelayTimer);
-            this.buffIcn.addClass('inactive').removeClass('active');
-        },
+    hideBufferIcon: function() {
+        clearTimeout(this.bufferDelayTimer);
+        this.buffIcn.addClass('inactive').removeClass('active');
+    },
 
-        showBufferIcon: function (instant) {
-            var ref = this;
+    showBufferIcon: function(instant) {
+        var ref=this;
 
-            clearTimeout(this.bufferDelayTimer);
+        clearTimeout(this.bufferDelayTimer);
 
-            if (this.pp.getHasGUI())
-                return;
+        if (this.pp.getHasGUI())
+            return;
 
-            if ((this.pp.getModel() === 'YTAUDIO' || this.pp.getModel() === 'YTVIDEO') && !this.pp.getState('IDLE'))
-                instant = true;
+        if ( (this.pp.getModel()==='YTAUDIO' || this.pp.getModel()==='YTVIDEO') && !this.pp.getState('IDLE'))
+            instant=true;
 
-            if (instant != true && this.getConfig('bufferIconDelay') > 0) {
-                this.bufferDelayTimer = setTimeout(function () {
-                    ref.showBufferIcon(true);
-                }, this.getConfig('bufferIconDelay'));
-                return;
-            }
-
-            if (this.buffIcn.hasClass('active')) return;
-            this.buffIcn.addClass('active').removeClass('inactive');
-
-            if (ref.buffIcnSprite == null) return;
-            var startOffset = (ref.config.spriteCountUp == true) ? 0 : (ref.config.spriteHeight + ref.config.spriteOffset) * (ref.config.spriteTiles - 1),
-                spriteOffset = startOffset;
-            ref.buffIcnSprite.addClass('active').removeClass('inactive');
-            (function () {
-
-                if (!ref.buffIcn.is(':visible')) return;
-                ref.buffIcnSprite.css('backgroundPosition', '0px -' + spriteOffset + "px")
-
-                if (ref.config.spriteCountUp == true)
-                    spriteOffset += ref.config.spriteHeight + ref.config.spriteOffset;
-                else
-                    spriteOffset -= ref.config.spriteHeight + ref.config.spriteOffset;
-
-                if (spriteOffset > (startOffset + ref.config.spriteHeight) * ref.config.spriteTiles || spriteOffset < ref.config.spriteOffset) spriteOffset = startOffset;
-
-                setTimeout(arguments.callee, 60);
-            })();
-
+        if (instant!==true && this.getConfig('bufferIconDelay')>0) {
+            this.bufferDelayTimer=setTimeout(function(){ref.showBufferIcon(true);},this.getConfig('bufferIconDelay'));
+            return;
         }
+
+        if (this.buffIcn.hasClass('active') ) return;
+        this.buffIcn.addClass('active').removeClass('inactive');
+
+        if (ref.buffIcnSprite==null) return;
+
+        var startOffset=(ref.config.spriteCountUp===true) ? 0 : (ref.config.spriteHeight + ref.config.spriteOffset)*(ref.config.spriteTiles-1),
+            spriteOffset = startOffset;
+        ref.buffIcnSprite.addClass('active').removeClass('inactive');
+        (function() {
+
+            if (!ref.buffIcn.is(':visible')) return;
+            ref.buffIcnSprite.css('backgroundPosition', '0px -'+spriteOffset+"px")
+
+            if (ref.config.spriteCountUp===true)
+                spriteOffset += ref.config.spriteHeight + ref.config.spriteOffset;
+            else
+                spriteOffset -= ref.config.spriteHeight + ref.config.spriteOffset;
+
+            if (spriteOffset > (startOffset+ref.config.spriteHeight)*ref.config.spriteTiles || spriteOffset<ref.config.spriteOffset) spriteOffset = startOffset;
+
+
+            setTimeout(arguments.callee,60);
+        })();
+
     }
+}
 });
 /*
  * Projekktor II Plugin: cb
@@ -6923,31 +6917,31 @@ jQuery(function ($) {
 
         _cTimer: null,
         _noHide: false,
-        _wasSeeking: false,
-        _cFading: false,
         _vSliderAct: false,
-        _storeVol: null,
-        _timeTags: {},
+
         cb: null,
-        _pos: {
-            left: 0,
-            right: 0
-        },
 
         controlElements: {},
-
         controlElementsConfig: {
             'sec_dur': null,
             'min_dur': null,
+            'sec_abs_dur': null,
+            'min_abs_dur': null,
             'hr_dur': null,
             'sec_elp': null,
             'min_elp': null,
+            'sec_abs_elp': null,
+            'min_abs_elp': null,
             'hr_elp': null,
             'sec_rem': null,
             'min_rem': null,
+            'sec_abs_rem': null,
+            'min_abs_rem': null,
             'hr_rem': null,
             'sec_tip': null,
             'min_tip': null,
+            'sec_abs_tip': null,
+            'min_abs_tip': null,
             'hr_tip': null,
 
             'cb': null,
@@ -6959,6 +6953,7 @@ jQuery(function ($) {
             'loaded': null, // { on:['touchstart', 'click'], call:'scrubberClk'},
             'scrubber': null, // { on:['touchstart', 'click'], call:'scrubberClk'},
             'scrubbertip': null,
+            // @MSHICK: Added
             'scrubberknob': [{
                 on: ['mouseenter'],
                 call: 'scrubberShowTooltip'
@@ -6972,6 +6967,7 @@ jQuery(function ($) {
                 on: ['mousedown'],
                 call: 'scrubberdragStartDragListener'
             }],
+            // @MSHICK: end
             'scrubberdrag': [{
                 on: ['mouseenter'],
                 call: 'scrubberShowTooltip'
@@ -7173,7 +7169,7 @@ jQuery(function ($) {
             showOnIdle: false,
 
             /* Default layout */
-            controlsTemplate: '<ul class="left"><li><div %{play}></div><div %{pause}></div></li></ul><ul class="right"><li><div %{fsexit}></div><div %{fsenter}></div></li><li><div %{loquality}></div><div %{hiquality}></div></li><li><div %{vmax}></div></li><li><div %{vslider}><div %{vmarker}></div><div %{vknob}></div></div></li><li><div %{mute}></div></li><li><div %{timeleft}>%{hr_elp}:%{min_elp}:%{sec_elp} | %{hr_dur}:%{min_dur}:%{sec_dur}</div></li><li><div %{next}></div></li><li><div %{prev}></div></li></ul><ul class="bottom"><li><div %{scrubber}><div %{loaded}></div><div %{playhead}></div><div %{scrubberdrag}></div></div></li></ul>'
+            controlsTemplate: '<ul class="left"><li><div %{play}></div><div %{pause}></div></li></ul><ul class="right"><li><div %{fsexit}></div><div %{fsenter}></div></li><li><div %{loquality}></div><div %{hiquality}></div></li><li><div %{tracksbtn}></div></li><li><div %{vmax}></div></li><li><div %{vslider}><div %{vmarker}></div><div %{vknob}></div></div></li><li><div %{mute}></div></li><li><div %{timeleft}>%{hr_elp}:%{min_elp}:%{sec_elp} | %{hr_dur}:%{min_dur}:%{sec_dur}</div></li><li><div %{next}></div></li><li><div %{prev}></div></li></ul><ul class="bottom"><li><div %{scrubber}><div %{loaded}></div><div %{playhead}></div><div %{scrubberdrag}></div></div></li></ul><div %{scrubbertip}>%{hr_tip}:%{min_tip}:%{sec_tip}</div>'
         },
 
         initialize: function () {
@@ -7278,9 +7274,12 @@ jQuery(function ($) {
             // stop button
             this._active('stop', state !== 'IDLE');
 
+
+
             // rewind & forward
             this._active('forward', state !== 'IDLE');
             this._active('rewind', state !== 'IDLE');
+
 
             // fullscreen button
             if (this.pp.getInFullscreen() === true) {
@@ -7294,6 +7293,7 @@ jQuery(function ($) {
                 this._active('fsenter', false);
             }
 
+
             // loop button
             this._active('loop', this.pp.getConfig('loop'));
 
@@ -7304,7 +7304,7 @@ jQuery(function ($) {
             this.displayTime()
 
             // init volume display
-            this.displayVolume(this._storeVol);
+            this.displayVolume(this._getVolume());
         },
 
         /* assign listener methods to controlbar elements */
@@ -7365,11 +7365,12 @@ jQuery(function ($) {
 
             evt.stopPropagation();
             evt.preventDefault();
-            $p.utils.log('Controlbar: Click', element, callback, evt)
+            // $p.utils.log('Controlbar: Click', element, callback, evt)
             this[callback](evt, element);
 
             return false;
         },
+
 
         touchEnd: function () {
             var ref = this;
@@ -7378,6 +7379,7 @@ jQuery(function ($) {
             }, this.getConfig('fadeDelay'));
             this._noHide = false;
         },
+
 
         /*******************************
         DOM Manipulations
@@ -7398,8 +7400,8 @@ jQuery(function ($) {
                 return;
             }
 
-            if (this.getConfig('showOnIdle') && this.pp.getState('IDLE'))
-                return;
+                        if (this.getConfig('showOnIdle') && this.pp.getState('IDLE'))
+                            return;
 
             if (instant)
                 this._noHide = false;
@@ -7441,9 +7443,11 @@ jQuery(function ($) {
             // show up:
             this.cb.removeClass('inactive').addClass('active');
             this.sendEvent('show', this.cb);
-            this._cTimer = setTimeout(function () {
-                ref.hidecb();
-            }, this.getConfig('fadeDelay'));
+            this._cTimer=setTimeout(
+                function() {
+                    ref.hidecb();
+                }, this.getConfig('fadeDelay')
+            );
         },
 
         displayTime: function (pct, dur, pos) {
@@ -7531,6 +7535,7 @@ jQuery(function ($) {
                 else $(lis[i]).removeClass('active');
             }
 
+
             if (toggleMute) {
                 switch (parseFloat(volume)) {
                 case 0:
@@ -7606,6 +7611,7 @@ jQuery(function ($) {
             this._active('play', true);
         },
 
+
         drawEnterFullscreenButton: function (event) {
             this._active('fsexit', false);
             this._active('fsenter', true);
@@ -7651,17 +7657,13 @@ jQuery(function ($) {
             }
         },
 
+
         /*******************************
         Player Event Handlers
         *******************************/
         itemHandler: function (data) {
-            var volume = parseFloat(this.cookie('volume'));
-
             $(this.cb).find('.' + this.pp.getNS() + 'cuepoint').remove();
-
-            this._storeVol = (volume != null && !isNaN(volume)) ? volume : this.getConfig('volume');
-
-            this.pp.setVolume(this._storeVol)
+            this.pp.setVolume(this._getVolume())
             this.updateDisplay();
             this.hidecb(true);
             this.drawTitle();
@@ -7670,7 +7672,7 @@ jQuery(function ($) {
         },
 
         startHandler: function () {
-            this.pp.setVolume(this._storeVol);
+            this.pp.setVolume(this._getVolume());
             if (this.getConfig('showOnStart') == true) {
                 this.showcb(true);
             } else {
@@ -7720,11 +7722,13 @@ jQuery(function ($) {
         },
 
         volumeHandler: function (value) {
-            if (this.getConfig('fixedVolume') != true && value != 0) {
+            if (value>0)
+                this.cookie('muted', false);
+
+            if (!this.cookie('muted'))
                 this.cookie('volume', value);
-            }
-            // this._storeVol = value;
-            this.displayVolume(value);
+
+            this.displayVolume(this._getVolume());
         },
 
         progressHandler: function (obj) {
@@ -7748,7 +7752,6 @@ jQuery(function ($) {
             clearTimeout(this._cTimer);
 
             this._noHide = false;
-            this._cFading = false;
             this._vSliderAct = false;
 
             if (!this.getConfig('controls')) return;
@@ -7791,7 +7794,7 @@ jQuery(function ($) {
             this.showcb();
         },
 
-        mouseleaveHandler: function () {},
+        mouseleaveHandler: function() {},
 
         mousedownHandler: function (evt) {
             this.showcb();
@@ -7802,7 +7805,7 @@ jQuery(function ($) {
         *******************************/
         controlsFocus: function (evt) {
 
-            this._noHide = true;
+                this._noHide = true;
         },
 
         controlsBlur: function (evt) {
@@ -7848,16 +7851,17 @@ jQuery(function ($) {
         },
 
         muteClk: function (evt) {
-            this._storeVol = this.pp.getVolume();
+            this.cookie('muted', true);
             this.pp.setVolume(0);
         },
 
         unmuteClk: function (evt) {
-            if (this._storeVol <= 0) this._storeVol = 1;
-            this.pp.setVolume(this._storeVol);
+            this.cookie('muted', false);
+            this.pp.setVolume(this._getVolume());
         },
 
         vmaxClk: function (evt) {
+            this.cookie('muted', false);
             this.pp.setVolume(1);
         },
 
@@ -7907,6 +7911,7 @@ jQuery(function ($) {
         vsliderClk: function (evt) {
             if (this._vSliderAct == true) return;
 
+
             var slider = $(this.controlElements['vslider']),
                 orientation = slider.width() > slider.height() ? 'hor' : 'vert',
                 totalDim = (orientation == 'hor') ? slider.width() : slider.height(),
@@ -7922,7 +7927,6 @@ jQuery(function ($) {
             }
 
             this.pp.setVolume(result);
-            this._storeVol = result;
         },
 
         scrubberShowTooltip: function (event) {
@@ -8052,77 +8056,6 @@ jQuery(function ($) {
 
         },
 
-        scrubberdragStartDragListener: function (event) {
-
-            if (this.getConfig('disallowSkip') == true) return;
-            this._sSliderAct = true;
-
-
-            var ref = this,
-                slider = $(this.controlElements['scrubberdrag'][0]),
-                loaded = $(this.controlElements['loaded'][0]),
-                knob = $(this.controlElements['scrubberknob'][0]),
-
-                second = 0,
-                dx = Math.abs(parseInt(slider.offset().left) - event.clientX),
-
-                moveKnob = function (event) {
-                    knob.css({
-                        left: event.clientX
-                    });
-                },
-
-                applyValue = function (event) {
-                    var newPos = Math.abs(slider.offset().left - event.clientX);
-                    newPos = (newPos > slider.width()) ? slider.width() : newPos;
-                    newPos = (newPos > loaded.width()) ? loaded.width() : newPos;
-                    newPos = (newPos < 0) ? 0 : newPos;
-                    newPos = Math.abs(newPos / slider.width()) * ref.pp.getDuration();
-
-                    // avoid strange "mouseMove"-flooding in IE7+8
-                    if (newPos > 0 && newPos != second) {
-                        second = newPos;
-                        ref.pp.setPlayhead(second);
-                    }
-                },
-
-                mouseUp = function (evt) {
-                    evt.stopPropagation();
-                    evt.preventDefault();
-
-                    ref.playerDom.unbind('mouseup.slider');
-
-                    slider.unbind('mousemove', mouseMove);
-                    slider.unbind('mouseup', mouseUp);
-                    ref._sSliderAct = false;
-
-                    // if (playing) {
-                    //     ref.pp.setPlay();
-                    // }
-
-                    return false;
-                },
-
-                mouseMove = function (evt) {
-                    // if (knob) moveKnob(evt);
-
-                    clearTimeout(ref._cTimer);
-                    evt.stopPropagation();
-                    evt.preventDefault();
-                    applyValue(evt);
-                    return false;
-                };
-
-            this.playerDom.bind('mouseup.slider', mouseUp);
-            slider.mouseup(mouseUp);
-            slider.mousemove(mouseMove);
-
-            applyValue(event);
-
-        },
-
-
-
         vknobStartDragListener: function (event, domObj) {
             this._vSliderAct = true;
 
@@ -8156,7 +8089,6 @@ jQuery(function ($) {
                     knob.css('left', newXPos + 'px');
                     volume = Math.abs(newXPos / (slider.width() - (knob.width() / 2)));
                     ref.pp.setVolume(volume);
-                    ref._storeVol = volume;
                     $(ref.controlElements['vmarker'][sliderIdx]).css('width', volume * 100 + "%");
                     return false;
                 };
@@ -8179,15 +8111,16 @@ jQuery(function ($) {
                 dy = Math.abs(parseInt(this.cb.position().top) - evt.clientY);
 
             /*
-  this._initalPosition = {
-      top: this.cb.css('top'),
-      bottom: this.cb.css('bottom'),
-      left: this.cb.css('left'),
-      right: this.cb.css('right')
+    this._initalPosition = {
+        top: this.cb.css('top'),
+        bottom: this.cb.css('bottom'),
+        left: this.cb.css('left'),
+        right: this.cb.css('right')
 
-  };
-  */
+    };
+    */
             // this._initalPosition = $.extend({}, this.cb.attr('style'), this.cb.css());
+
 
             var mouseUp = function (evt) {
                 evt.stopPropagation();
@@ -8221,6 +8154,19 @@ jQuery(function ($) {
         /*******************************
             GENERAL HELPERS
         *******************************/
+        _getVolume: function() {
+
+            var volume = parseFloat(this.cookie('volume') || this.getConfig('volume') || 0.5),
+                muted = this.cookie('muted') || false;
+
+            if (this.getConfig('fixedVolume') || volume==null)
+                return this.getConfig('volume');
+
+            if (muted) return 0;
+
+            return volume;
+        },
+
         _active: function (elmName, on) {
             var dest = this.controlElements[elmName];
             if (on == true) dest.addClass('active').removeClass('inactive');
@@ -8235,20 +8181,1482 @@ jQuery(function ($) {
                 secs = 0;
             }
 
-            var hr = Math.floor(secs / (60 * 60));
+            var hr = Math.floor(secs / (60 * 60)),
+                divisor_for_minutes = secs % (60 * 60),
+                min = Math.floor(divisor_for_minutes / 60),
+                min_abs = hr * 60 + min,
+                divisor_for_seconds = divisor_for_minutes % 60,
+                sec = Math.floor(divisor_for_seconds),
+                sec_abs = secs,
+                result = {};
 
-            var divisor_for_minutes = secs % (60 * 60);
-            var min = Math.floor(divisor_for_minutes / 60);
-
-            var divisor_for_seconds = divisor_for_minutes % 60;
-            var sec = Math.floor(divisor_for_seconds);
-
-            var result = {}
             result['min_' + postfix] = (min < 10) ? "0" + min : min;
+            result['min_abs_' + postfix] = (min_abs < 10) ? "0" + min_abs : min_abs;
             result['sec_' + postfix] = (sec < 10) ? "0" + sec : sec;
+            result['sec_abs_' + postfix] = (sec_abs < 10) ? "0" + sec_abs : sec_abs;
             result['hr_' + postfix] = (hr < 10) ? "0" + hr : hr;
 
             return result;
         }
     }
+});
+/*
+ * Projekktor II Plugin: Contextmenu
+ * VERSION: 1.0
+ *
+ * under GNU General Public License
+ * http://www.projekktor.com/license/
+ */
+var projekktorContextmenu = function(){};
+jQuery(function($) {
+projekktorContextmenu.prototype = {
+
+    _dest: null,
+    _items: {},
+    reqVer: '1.2.13',
+
+    initialize: function() {
+        var ref = this,
+            target = this.pp.getIframeWindow() || $(window);
+
+        this._dest = $p.utils.blockSelection(this.applyToPlayer($('<ul/>')))
+        this._items['player'] = {
+            getContextTitle: function() {
+                return ref.getConfig('playerName') + ' V' + ref.pp.getPlayerVer();
+            },
+            open: function() {
+                if (ref.getConfig('playerHome')!=null) {
+                    target.get(0).location.href = ref.getConfig('playerHome');
+                    ref.pp.setPause();
+                }
+            }
+        }
+
+        if (this.pp.getConfig('helpHome')) {
+            this._items['help'] = {
+                getContextTitle: function() {
+                    return ref.pp.getConfig('messages')[100]
+                },
+                open: function() {
+                    ref.popup(ref.pp.getConfig('helpHome'), 400, 600);
+                }
+            }
+        }
+
+        this.pluginReady = true;
+    },
+
+    mousedownHandler: function(evt) {
+        switch (evt.which) {
+            case 3:
+                var parentOffset = this.pp.getDC().offset(),
+                    yPos = (evt.pageY - parentOffset.top),
+                    xPos = (evt.pageX - parentOffset.left);
+
+                if (xPos + this._dest.width() > this.pp.getDC().width())
+                    xPos = this.pp.getDC().width() - this._dest.width() - 2;
+
+                if (yPos + this._dest.height() > this.pp.getDC().height())
+                    yPos = this.pp.getDC().height() - this._dest.height() - 2;
+
+                this.setActive();
+                this._dest.css({
+                    top: yPos + "px",
+                    left: xPos+ "px"
+                })
+                break;
+            case 1:
+                try {
+                    this._items[$(evt.target).data('plugin')].open();
+                } catch(e) {}
+            default:
+                this.setInactive();
+        }
+    },
+
+    mouseleaveHandler: function() {
+        this.setInactive();
+    },
+
+    eventHandler: function(evt, obj) {
+        if (evt.indexOf('Contextmenu')>-1) {
+            if (this._items[obj.name]==null) {
+                this._items[obj.name] = obj;
+            }
+        }
+    },
+
+    displayReadyHandler: function() {
+        var ref = this,
+            span = null;
+
+        this.setInactive();
+        this._dest.html('');
+
+        for (var i in this._items) {
+
+            span = $('<span/>')
+                .data('plugin', i)
+                .html(this._items[i].getContextTitle() || i);
+
+            try{this._items[i].setContextEntry(span);}catch(e){}
+
+            $('<li/>')
+            .append(span)
+            .data('plugin', i)
+            .appendTo(this._dest)
+        }
+    },
+
+    popup: function(url, width, height) {
+        centeredY = window.screenY + (((window.outerHeight/2) - (height/2)));
+        centeredX = window.screenX + (((window.outerWidth/2) - (width/2)));
+        window.open(url, 'projekktor', 'height=' + height +',width=' + width +',toolbar=0,scrollbars=0,status=0,resizable=1,location=0,menuBar=0'+',left=' + centeredX +',top=' + centeredY).focus();
+    }
+}
+});
+/*
+ * Projekktor II Plugin: IMA
+ * VERSION: 1.0.18
+ * DESC: Implements VAST1, VAST2 support for Projekktor
+ *
+ * Copyright 2011, 2012 by Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
+ * all rights reserved
+ *
+ * Use of this software is NOT free and requires permission of the copyright owner.
+ * Unlicensed use is forbidden and subject to severe penalties of law.
+ */
+var projekktorIma = function () {};
+jQuery(function ($) {
+	projekktorIma.prototype = {
+		reqVer: '1.2.08',
+		pluginReady: false,
+		data: {},
+		_maxElapsed: 0,
+		_enableTracking: false,
+		_compContainers: [],
+		_impressionTrack: [],
+		_adBlocked: false,
+		_wrappedData: [],
+		config: {
+			withCredentials: false,
+			enableCompanions: true,
+			enableOverlay: true,
+			enablePreroll: true,
+			enablePostroll: false,
+			postrollCat: 'post-roll',
+			prerollCat: 'pre-roll',
+			prerollSkip: 0,
+			prerollPauseOnClick: true,
+			prerollSkipHtml: 'Skip this ad in %{secs}',
+			prerollUnlockedHtml: 'Click here to skip this ad.',
+			prerollCappingLimit: 0,
+			prerollCappingPeriod: 1,
+			vastProxy: '',
+			vastNoCache: false,
+			overlayDelay: 1,
+			companionDest: ['companiona', 'companionb', 'companionc'],
+			resourcePriority: ['image', 'iframe', 'html', 'flash'],
+			selectByDimensions: true,
+			adblockCallback: function () {},
+			title: 'advertisement',
+
+			// @MSHICK: Added
+			overlayDuration: 20,
+			overlaySize: { height: 50, width: 300 }
+			// END
+		},
+		initialize: function () {
+			// find companions
+			var cont = null,
+				overlayDummy = $('<div/>').addClass(this.getCN('adoverlay')),
+				ref = this;
+			this._detect_ab(function (result) {
+				if (result == true) {
+					ref.pluginReady = true;
+					ref._adBlocked = true;
+					ref.getConfig('adblockCallback')(ref.pp);
+				}
+			});
+			this.pluginReady = true;
+		},
+		loadVAST: function (itemIdx) {
+			var ref = this,
+				cont = null;
+			// reset
+			this._maxElapsed = 0;
+			this._enableTracking = true;
+			this._wrappedData = [];
+			$('.imatrackingpixel').remove();
+			// mobiles can?t handle JSONP feeds
+			if (this.pp.getIsMobileClient() === true && this.getConfig('type', 'application/xml').indexOf('jsonp') > -1) {
+				this.pluginReady = true;
+				return;
+			}
+			$.each(this.getConfig('companionDest'), function (key, value) {
+				cont = $('#' + value);
+				ref._compContainers.push({
+					obj: cont,
+					width: cont.width(),
+					height: cont.height(),
+					initHtml: cont.html()
+				});
+			});
+			// grab data
+			if (this.getConfig('url') && this.data[this.pp.getItem().ID] == undefined) {
+				this.requestVAST(this.getConfig('url'), this.getConfig('type'), !this.pp.getIsMobileClient());
+			}
+		},
+		requestVAST: function (vastUrl, type, sync) {
+			var data = null,
+				aSync = sync || false,
+				ref = this,
+				dataType = (type.indexOf('/') > -1) ? type.split('/')[1] : type;
+			if (this.getConfig('vastProxy') != '') {
+				vastUrl = this.getConfig('vastProxy') + escape(vastUrl);
+			}
+			// is JSON?
+			if (dataType.indexOf('json') > -1) {
+				// JSON can be parsed?
+				if ($.parseJSON == undefined) {
+					this.pp._raiseError("Projekktor requires at least jQuery 1.4.2 in order to handle JSON playlists.");
+					return false;
+				}
+				// apply JSONP callback
+				if (dataType == 'jsonp') {
+					window['jsonp_callback'] = function (data) {
+						try {
+							delete window[callback];
+						} catch (e) {
+							$p.utils.log(e)
+						}
+						ref['jsonp_callback'](data);
+					};
+				}
+			}
+			// The IE family it the most fascinating sort of browser in the whole wide world. lovin? it.
+			if (window.XDomainRequest && dataType !== 'jsonp') {
+				// Use Microsoft XDR
+				var xdr = new XDomainRequest();
+				xdr.open("get", vastUrl);
+				xdr.onload = function () {
+					try {
+						ref['VASTParser']($p.utils.cleanResponse(xdr.responseText, dataType));
+					} catch (e) {
+						$p.utils.log(e)
+					}
+				};
+				xdr.onprogress = function () {};
+				xdr.ontimeout = function () {};
+				xdr.onerror = function () {
+					ref['VASTParser'](false);
+				};
+				setTimeout(function () {
+					xdr.send();
+				}, 2000);
+			} else {
+				var ajaxConf = {
+					url: vastUrl,
+					complete: function (xhr, status) {
+						if (status != 'error' && dataType != 'jsonp') {
+							try {
+								ref['VASTParser']($p.utils.cleanResponse(xhr.responseText, dataType));
+							} catch (e) {
+								$p.utils.log(e)
+							}
+						}
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						// bypass jq 1.6.1 issues
+						if (dataType != 'jsonp') {
+							ref['VASTParser'](false);
+						}
+					},
+					cache: true,
+					async: aSync,
+					dataType: dataType,
+					crossDomain: true,
+					jsonpCallback: 'jsonp_callback',
+					jsonp: 'callback'
+				}
+				ajaxConf.xhrFields = {
+					withCredentials: this.getConfig('withCredentials')
+				};
+				ajaxConf.beforeSend = function (xhr) {
+					xhr.withCredentials = ref.getConfig('withCredentials');
+				};
+				$.support.cors = true;
+				$.ajax(ajaxConf);
+			}
+		},
+		jsonp_callback: function (data) {
+			try {
+				var xmlStr = data.contents.replace(/^\s*([\S\s]*)\b\s*$/, '$1');
+				if (window.DOMParser) {
+					data = new DOMParser()
+					data = data.parseFromString(xmlStr, "text/xml");
+				} else { // Internet Explorer
+					data = new ActiveXObject("Microsoft.XMLDOM");
+					data.async = "false";
+					data.loadXML(xmlStr);
+				}
+				this.VASTParser(data);
+			} catch (e) {
+				this.VASTParser(false)
+			}
+		},
+		// resolve wrappers, parse da body
+		VASTParser: function (xmlDocument) {
+			var result = [],
+				isWrapper = false,
+				VASTAdTagURI = '';
+			// something went wrong, play content:
+			if (xmlDocument === false) {
+				this._itemReady();
+				return;
+			}
+			// is wrapper?
+			$(xmlDocument).find("Wrapper").each(function () {
+				// VAST2 wrapper
+				$(xmlDocument).find("VASTAdTagURI").each(function () {
+					isWrapper = true;
+					VASTAdTagURI = $.trim($(this).text());
+				})
+			})
+			result = this.VASTBodyParser(xmlDocument);
+			result = this.deepExtend(result, this._wrappedData);
+			if (isWrapper && VASTAdTagURI != '') {
+				this._wrappedData = result;
+				this.requestVAST(VASTAdTagURI, this.getConfig('type'), false);
+				return;
+			}
+			this._wrappedData = {};
+			this._itemReady(result);
+		},
+		deepExtend: function (destination, source) {
+			for (var property in source) {
+				if (source[property] && source[property].constructor && source[property].constructor === Object) {
+					destination[property] = destination[property] || {};
+					arguments.callee(destination[property], source[property]);
+				} else {
+					destination[property] = source[property];
+				}
+			}
+			return destination;
+		},
+		VASTBodyParser: function (xmlDocument) {
+			var result = [],
+				ref = this,
+				VASTVersion = 1,
+				item = {
+					config: {
+						disallowSkip: true,
+						className: 'ad',
+						cat: (this.getConfig('enablePostroll')) ? this.getConfig('postrollCat') : this.getConfig('prerollCat'),
+						plugin_controlbar: {
+							title: this.getConfig('title'),
+							disableFade: true,
+							showOnStart: true
+						},
+						plugin_display: {
+							staticControls: false,
+							displayClick: {
+								callback: null,
+								value: null
+							},
+							displayPlayingClick: {
+								callback: null,
+								value: null
+							},
+							displayDblClick: {
+								callback: null,
+								value: null
+							}
+						},
+						plugin_ima: {
+							title: this.getConfig('title'),
+							prerollPauseOnClick: this.getConfig('prerollPauseOnClick'),
+							prerollSkip: this.getConfig('prerollSkip'),
+							prerollSkipHtml: this.getConfig('prerollSkipHtml'),
+							prerollUnlockedHtml: this.getConfig('prerollUnlockedHtml')
+						},
+						vast: {
+							tracking: {}
+						}
+					}
+				};
+
+			// @MSHICK: Added
+			var linear, nonlinear;
+			// END
+
+			// version 1 or 2?
+			$(xmlDocument).find("VAST").each(function () {
+				VASTVersion = 2;
+			});
+			switch (VASTVersion) {
+			case 2:
+
+				// @MSHICK: Added
+        result['linear'] = {};
+        result['nonlinear'] = {};
+        // END
+
+				// get 2.0 creatives
+				$(xmlDocument).find("Creatives").each(function () {
+					try {
+						// @MSHICK: Removed
+						// result['linear'] = ref._VTwo_grabLinearAds($(this), item);
+						// result['nonlinear'] = ref._VTwo_grabNonLinear($(this), 'NonLinear', ref.getConfig('overlaySize'));
+						// result['companion'] = [];
+						// END
+
+						// @MSHICK: added
+            linear = ref._VTwo_grabLinearAds($(this), item);
+            if (!linear.isEmpty) {
+              result['linear'] = $.extend(result['linear'], linear);
+            }
+
+            nonlinear = ref._VTwo_grabNonLinear($(this), 'NonLinear', ref.getConfig('overlaySize'));
+            if (!nonlinear.isEmpty) {
+              result['nonlinear'] = $.extend(result['nonlinear'], nonlinear);
+            }
+
+            result['companion'] = result['companion'] || [];
+            // END
+
+						for (var i = 0; i < ref._compContainers.length; i++) {
+							result['companion'].push({
+								dest: ref._compContainers[i],
+								data: ref._VTwo_grabNonLinear($(this), 'Companion', ref._compContainers[i])
+							});
+						}
+					} catch (e) {
+						$p.utils.log(e)
+					}
+				});
+				// get 2.0 impressions
+				$(xmlDocument).find("Impression").each(function () {
+					ref._impressionTrack.push($.trim($(this).text()));
+				})
+				break;
+			case 1:
+				result['linear'] = ref._VOne_grabLinearAds($(xmlDocument), item);
+				result['companion'] = [];
+				for (var i = 0; i < ref._compContainers.length; i++) {
+					result['companion'].push({
+						dest: ref._compContainers[i],
+						data: ref._VOne_grabCompanions($(xmlDocument), ref._compContainers[i])
+					});
+				}
+				// get 1.0 impressions - OK
+				$(xmlDocument).find("Impression").each(function () {
+					$(this).find("URL").each(function () {
+						ref._impressionTrack.push($.trim($(this).text()));
+					})
+				})
+				break;
+			}
+			return result;
+		},
+		_VTwo_grabLinearAds: function (node, item) {
+			var index = 0,
+				ref = this;
+			// video ads
+			node.find("Linear").each(function () {
+				index = 0;
+				$(this).find("Tracking").each(function () {
+					var evt = $(this).attr('event').toLowerCase();
+					if (item.config.vast.tracking[evt] == null)
+						item.config.vast.tracking[evt] = {};
+					var url = $.trim($(this).text());
+					if (url != '')
+						item.config.vast.tracking[evt][$p.utils.randomId(8)] = url;
+				})
+				$(this).find('MediaFiles').find('MediaFile').each(function () {
+					$(this).each(function () {
+						if ($(this).attr('delivery').toUpperCase() != 'PROGRESSIVE')
+							return;
+						if (!ref.pp.getCanPlay($(this).attr('type').toLowerCase()))
+							return true;
+						item[index++] = {
+							type: $(this).attr('type').toLowerCase(),
+							src: $.trim($(this).text())
+						};
+					})
+				});
+				try {
+					item.config.vast.clickthrough = {};
+					item.config.vast.clickthrough[$p.utils.randomId(8)] = $.trim($(this).find('ClickThrough').text());
+				} catch (e) {
+					$p.utils.log(e)
+				}
+				try {
+					item.config.vast.tracking['clickthrough'] = {};
+					item.config.vast.tracking['clickthrough'][$p.utils.randomId(8)] = $.trim($(this).find('ClickTracking').text());
+				} catch (e) {
+					$p.utils.log(e)
+				}
+
+				// @MSHICK: added
+        if (!index) {
+          item.isEmpty = true;
+        }
+        // END
+
+			});
+			return item;
+		},
+		_VOne_grabLinearAds: function (node, item) {
+			var ref = this;
+			// VAST ONE tracking
+			node.find("Tracking").each(function () {
+				var evt = $(this).attr('event').toLowerCase();
+				if (item.config.vast.tracking[evt] == null)
+					item.config.vast.tracking[evt] = [];
+				$(this).find('URL').each(function () {
+					var url = $.trim($(this).text());
+					if (url != '')
+						item.config.vast.tracking[evt][$p.utils.randomId(8)] = url;
+				})
+			})
+			// VAST ONE Mediafiles
+			var index = 0,
+				type = 'na/na';
+			$(node).find('VideoClicks').each(function () {
+				// VAST ONE CLICK TRACKING (WRAPPER)
+				$(this).find('ClickTracking').each(function () {
+					$(this).find('URL').each(function () {
+						if (item.config.vast.tracking['clickthrough'] == null)
+							item.config.vast.tracking['clickthrough'] = [];
+						var url = $.trim($(this).text());
+						if (url != '')
+							item.config.vast.tracking['clickthrough'][$p.utils.randomId(8)] = url;
+					})
+				})
+			});
+			$(node).find('Video').each(function () {
+				// VAST ONE clickthrough
+				$(this).find('ClickThrough').each(function () {
+					item.config.vast.clickthrough = {};
+					item.config.vast.clickthrough[$p.utils.randomId(8)] = $.trim($(this).find('URL').text());
+				})
+				// VAST ONE CLICK TRACKING
+				$(this).find('ClickTracking').each(function () {
+					$(this).find('URL').each(function () {
+						if (item.config.vast.tracking['clickthrough'] == null)
+							item.config.vast.tracking['clickthrough'] = [];
+						var url = $.trim($(this).text());
+						if (url != '')
+							item.config.vast.tracking['clickthrough'][$p.utils.randomId(8)] = url;
+					})
+				})
+				// VAST ONE Mediafiles
+				$(this).find('MediaFiles').find('MediaFile').each(function () {
+					$(this).each(function () {
+						if ($(this).attr('delivery').toUpperCase() != 'PROGRESSIVE')
+							return;
+						if ($(this).attr('type') != null && !ref.pp.getCanPlay($(this).attr('type')))
+							return true;
+						$(this).find('URL').each(function () {
+							if ($(this).attr('type') != null && !ref.pp.getCanPlay($(this).attr('type')))
+								return true;
+							item[index++] = {
+								type: $(this).attr('type'),
+								src: $.trim($(this).text())
+							};
+						})
+					})
+				});
+			})
+			return item;
+		},
+		_VTwo_grabNonLinear: function (node, name, destDims) {
+			var ref = this,
+				item = {
+					config: {
+						vast: {
+							tracking: {}
+						}
+					}
+				},
+				resource = {},
+				findings = [],
+				tracking = {};
+			node.find(name + "Ads").each(function () {
+				// overlay: get the first NON flash
+				$(this).find(name).each(function () {
+					var parent = $(this);
+					$(this).each(function () {
+						// Flash or Image
+						$(this).find('StaticResource').each(function () {
+							var type = null;
+							// fLaSh
+							if ($(this).attr('creativeType').indexOf('shockwave') > -1) {
+								if (ref.pp.getFlashVersion() <= 0) return;
+								if (ref._companionTypes('flash') === false) return;
+								type = 'flash';
+							}
+							// images
+							if ($(this).attr('creativeType').indexOf('image') > -1) {
+								if (ref._companionTypes('image') === false) return;
+								type = 'image';
+							}
+							if (type == null)
+								return;
+							resource = {
+								src: $(this).text(),
+								type: type,
+								width: parent.attr('width'),
+								height: parent.attr('height'),
+								level: ref._getLevel(type),
+								tracking: {}
+							};
+							try {
+								if (resource.clickthrough == null) resource.clickthrough = {}
+								resource.clickthrough[$p.utils.randomId(8)] = $.trim(parent.find(name + 'ClickThrough').text());
+							} catch (e) {
+								$p.utils.log(e)
+							}
+							findings.push(resource);
+						}); // close staticresource
+						// HTML
+						$(this).find('HTMLResource').each(function () {
+							if (ref._companionTypes('html') === false) return;
+							resource = {
+								src: $(this).text(),
+								type: 'html',
+								width: parent.attr('width'),
+								height: parent.attr('height'),
+								level: ref._getLevel('html'),
+								tracking: {}
+							};
+							try {
+								if (resource.clickthrough == null) resource.clickthrough = {}
+								resource.clickthrough[$p.utils.randomId(8)] = $.trim(parent.find(name + 'ClickThrough').text());
+							} catch (e) {
+								$p.utils.log(e)
+							}
+							findings.push(resource);
+						});
+						// iframe
+						$(this).find('IFrameResource').each(function () {
+							if (ref._companionTypes('iframe') === false) return;
+							resource = {
+								src: $(this).text(),
+								type: 'iframe',
+								width: parent.attr('width'),
+								height: parent.attr('height'),
+								level: ref._getLevel('iframe'),
+								tracking: {}
+							};
+							try {
+								if (resource.clickthrough == null) resource.clickthrough = {}
+								resource.clickthrough[$p.utils.randomId(8)] = $.trim(parent.find(name + 'ClickThrough').text());
+							} catch (e) {
+								$p.utils.log(e)
+							}
+							findings.push(resource);
+						});
+					})
+					$(this).find("Tracking").each(function () {
+						if (resource.tracking[$(this).attr('event')] == null)
+							resource.tracking[$(this).attr('event')] = {};
+						var url = $.trim($(this).text());
+						if (url != '') resource.tracking[$(this).attr('event')][$p.utils.randomId(8)] = url;
+					});
+				})
+			});
+			// select winner:
+			var winner = null,
+				result = {
+					config: {
+						vast: {
+							tracking: {}
+						}
+					}
+				};
+			// find highest priorized ad form
+			findings.sort(function (a, b) {
+				return a.level - b.level;
+			});
+			if (name == 'NonLinear')
+				winner = 0;
+			else if (this.getConfig('selectByDimensions') === true) {
+				// find best matching size:
+				for (var i = 0; i < findings.length; i++) {
+					if (findings[i].width != destDims.width) continue;
+					if (findings[i].height != destDims.height) continue;
+					winner = i;
+				}
+			}
+			result.config.vast = findings[winner] || null;
+
+			// @MSHICK: added
+      if (!result.config.vast) {
+        result.isEmpty = true;
+      }
+      // END
+
+			return result;
+		},
+		_VOne_grabCompanions: function (node, destDims) {
+			var ref = this,
+				item = {
+					config: {
+						vast: {
+							tracking: {}
+						}
+					}
+				},
+				resource = {},
+				findings = [],
+				tracking = {};
+			// VAST ONE Companions
+			node.find("CompanionAds").each(function () {
+				$(this).find("Companion").each(function () {
+					var type = null,
+						url = null;
+					// fLaSh
+					if ($(this).attr('creativeType').indexOf('shockwave') > -1) {
+						if (ref._companionTypes('flash') === false) return;
+						if (ref.pp.getFlashVersion() <= 0) return;
+						type = 'flash';
+					}
+					// images
+					if ($(this).attr('creativeType').indexOf('image') > -1) {
+						if (ref._companionTypes('image') === false) return;
+						type = 'image';
+					}
+					if (type == null)
+						return;
+					$(this).children('URL').each(function () {
+						url = $.trim($(this).text());
+					})
+					if (url == null)
+						return;
+					resource = {
+						src: url,
+						type: type,
+						width: $(this).attr('width'),
+						height: $(this).attr('height')
+					};
+					$(this).find('CompanionClickThrough').each(function () {
+						$(this).find('URL').each(function () {
+							if (resource.clickthrough == null) resource.clickthrough = {}
+							resource.clickthrough[$p.utils.randomId(8)] = $.trim($(this).text());
+						})
+					})
+					findings.push(resource);
+				});
+			});
+			// select winner:
+			var winner = null,
+				result = {
+					config: {
+						vast: {
+							tracking: {}
+						}
+					}
+				};
+			// find highest priorized ad form
+			findings.sort(function (a, b) {
+				return a.level - b.level;
+			});
+			if (this.getConfig('selectByDimensions') === true) {
+				// find best matching size:
+				for (var i = 0; i < findings.length; i++) {
+					if (findings[i].width != destDims.width) continue;
+					if (findings[i].height != destDims.height) continue;
+					winner = i;
+				}
+			}
+			if (winner != null) {
+				result.config.vast = findings[winner];
+				return result;
+			}
+			return null;
+		},
+		/********************************************************
+		 * Player-Event Handler
+		 ********************************************************/
+		timeHandler: function (secs) {
+			this._handleOverlay(secs);
+		},
+		muteHandler: function () {
+			this._VASTTrack('mute');
+		},
+		unmuteHandler: function () {
+			this._VASTTrack('unmute');
+		},
+		resumeHandler: function () {
+			this._VASTTrack('resume');
+		},
+		startHandler: function () {
+			if (!this._prerollCappingActive()) {
+				this._impressionTracker();
+			}
+			this._VASTTrack('start');
+		},
+		firstquartileHandler: function () {
+			this._VASTTrack('firstquartile');
+		},
+		midpointHandler: function () {
+			this._VASTTrack('midpoint');
+		},
+		thirdquartileHandler: function () {
+			this._VASTTrack('thirdquartile');
+		},
+		durationChangeHandler: function () {
+			this._addClick();
+		},
+		itemHandler: function (itemIdx) {
+			this.pp.getDC().find('.' + this.getCN('adskip')).remove();
+			this.pp.getDC().find('.' + this.getCN('adtitle')).remove();
+			this.pp.getDC().find('.' + this.getCN('clickthrough')).remove();
+			try {
+        // @MSHICK: removed because it breaks overly + pre-roll support
+        // this.overlay.remove();
+        // END
+			} catch (e) {
+				$p.utils.log(e)
+			}
+			$('.imatrackingpixel').remove();
+		},
+		errorHandler: function () {},
+		stateHandler: function (state) {
+			switch (state) {
+			case 'AWAKENING':
+				try {
+					if (this.pp.getItem().config.vast == null && this.data[this.pp.getItem().ID] == null && this.getConfig('url') != null && this._adBlocked == false) {
+						this.pluginReady = false;
+						this.loadVAST();
+					} else {
+						this.pluginReady = true;
+					}
+				} catch (e) {
+					$p.utils.log(e)
+				}
+				break;
+			case 'PAUSED':
+				this._VASTTrack('pause');
+				break;
+			case 'COMPLETED':
+				this._VASTTrack('complete');
+				break;
+			case 'STARTING':
+				// no ad
+				if (this.pp.getItem().config.className != 'ad')
+					return;
+				if (this.getConfig('enablePreroll') && this.getConfig('prerollSkip'))
+					this._handleSkipOption();
+				if (this.getConfig('title') != '') {
+					this.applyToPlayer($('<div/>').addClass('adtitle').html(this.getConfig('title')), 'title', true)
+				}
+			}
+		},
+		fullscreenHandler: function (on) {
+			if (on)
+				this._VASTTrack('fullscreen');
+		},
+		leftclickHandler: function (evt) {},
+		/********************************************************
+		 * COMPANIONS
+		 ********************************************************/
+		_setCompanions: function (itemIdx) {
+			var ref = this,
+				id = this.pp.getItem(itemIdx).ID,
+				data = this.data[id],
+				result = false;
+			if (
+				data == null ||
+				data.companion == null) return;
+			// remove companions if none is defined for current media
+			$.each(this._compContainers, function () {
+				this.obj.html(this.initHtml);
+				this.obj.click(function () {
+					return false;
+				})
+			});
+			for (var i = 0; i < data.companion.length; i++) {
+				try {
+					cfg = data.companion[i].data.config.vast;
+					if (cfg == null) continue;
+
+					dest = data.companion[i].dest;
+					url = '';
+					$.each(cfg.clickthrough, function (key, value) {
+						if (value == '' || value == null) return true;
+						url = value;
+						return false;
+					})
+					switch (cfg.type) {
+					case 'image':
+						dest.obj.html('');
+						$('<img/>')
+							.attr('src', cfg.src)
+							.attr('width', cfg.width)
+							.attr('height', cfg.height)
+							.appendTo(dest.obj);
+						break;
+					case 'flash':
+						dest.obj.html('');
+						dest.obj.html($p.utils.embeddFlash(null, {
+							src: cfg.src,
+							width: '100%',
+							height: '100%',
+							allowScriptAccess: "always",
+							allowFullScreen: 'true',
+							allowNetworking: "all",
+							wmode: 'transparent'
+						}));
+						break;
+					case 'iframe':
+						dest.obj.html('');
+						$('<iframe/>')
+							.attr('src', cfg.src)
+							.attr('width', cfg.width)
+							.attr('height', cfg.height)
+							.attr('frameborder', 0)
+							.attr('allowtransparency', 'true')
+							.attr('scrolling', 'no')
+							.attr('marginwidth', 0)
+							.attr('marginheight', 0)
+							.attr('vspace', 0)
+							.attr('hspace', 0)
+							.appendTo(dest.obj);
+						break;
+					default:
+						dest.obj.html(cfg.src)
+					}
+					dest.obj
+						.data('url', url)
+						.click(function () {
+						window.open($(this).data('url'));
+					})
+
+					$.each(cfg.tracking['creativeView'] || [], function (key, value) {
+						ref._addPixel(value)
+					})
+					result = true;
+				} catch (e) {
+					$p.utils.log(e)
+				}
+			}
+			return result;
+		},
+		/********************************************************
+		 * OVERLAY ADS
+		 ********************************************************/
+		_setOverlay: function (itemIdx) {
+			var id = this.pp.getItem(itemIdx).ID,
+				nonlinearAdCfg = this.data[id].nonlinear.config.vast;
+			ref = this;
+			// remove overlay if none is defined for current media
+			try {
+				this.overlay.remove();
+			} catch (e) {
+				$p.utils.log(e)
+			}
+			this.overlay = null;
+			if (!nonlinearAdCfg) return;
+			this.overlay = this.applyToPlayer($('<div/>').addClass('adoverlay'), 'overlay');
+
+			// @MSHICK: added
+      // Apply containing dimensions for close button positioning
+      this.overlay.css({
+        width: nonlinearAdCfg.width + "px",
+        height: nonlinearAdCfg.height + "px"
+      });
+      // END
+
+			$(('<div/>'))
+				.addClass(this.getCN('adclose'))
+				.appendTo(this.overlay)
+				.click(function () {
+				ref._handleOverlayClose();
+			})
+			var adContainer = $('<div/>')
+				.addClass(this.getCN('adcontent'))
+				.css({
+				width: nonlinearAdCfg.width + "px",
+				height: nonlinearAdCfg.height + "px"
+			})
+				.appendTo(this.overlay)
+				.click(function () {
+				ref.pp.setPause();
+				ref._handleOverlayClick()
+			});
+			switch (nonlinearAdCfg.type) {
+			case 'image':
+				adContainer
+					.css({
+					background: "url('" + nonlinearAdCfg.src + "') transparent center center no-repeat"
+				});
+				break;
+			case 'flash':
+				adContainer
+					.html($p.utils.embeddFlash(null, {
+					src: nonlinearAdCfg.src,
+					width: nonlinearAdCfg.width + 'px',
+					height: nonlinearAdCfg.height + 'px',
+					allowScriptAccess: "always",
+					allowFullScreen: 'true',
+					allowNetworking: "all",
+					wmode: 'transparent'
+				}));
+				break;
+			default:
+				adContainer.html(nonlinearAdCfg.src)
+			}
+		},
+		_handleOverlay: function (secs) {
+			if (this.overlay == undefined || this.overlay == null)
+				return;
+
+			// @MSHICK: removed
+			// var duration = this.pp.getDuration()
+			// ref = this;
+			// if (secs >= this.getConfig('overlayDelay') && this.overlay.hasClass('inactive')) {
+			// 	this.overlay.addClass('active').removeClass('inactive');
+			// }
+			// END
+
+			// @MSHICK: added
+      var overlay = this.overlay;
+      var delay = this.getConfig('overlayDelay');
+      var duration = this.getConfig('overlayDuration');
+
+      if (secs >= delay && overlay.hasClass('inactive') && !this._currentItemIsAd()) {
+        overlay.addClass('active').removeClass('inactive');
+      }
+
+      if (overlay.hasClass('active') && secs >= (delay + duration)) {
+        this._handleOverlayClose();
+      }
+      // END
+    },
+
+    // @MSHICK: added
+    _currentItemIsAd: function () {
+      var currentItem = this.pp.getItem('current');
+      if (currentItem && currentItem.config && currentItem.config.className === 'ad') {
+        return true;
+      }
+      return false;
+		},
+		// END
+
+		_handleOverlayClick: function () {
+			var item = this.pp.getItem(),
+				cfg = this.data[item.ID].nonlinear.config.vast,
+				dest = null;
+			$.each(cfg.clickthrough, function (key, value) {
+				if (value == '' || value == null) return true;
+				dest = value;
+				return false;
+			})
+			try {
+				window.open(dest);
+			} catch (e) {
+				$p.utils.log(e)
+			}
+		},
+		_handleOverlayClose: function () {
+			this.overlay.remove();
+			this.overlay = null;
+		},
+		/********************************************************
+		 * PRE / POSTOLL INJECTION
+		 ********************************************************/
+		_itemReady: function (data) {
+			if (typeof data != 'object') {
+				this.pluginReady = true;
+				return;
+			}
+			this.data[this.pp.getItem().ID] = data;
+			var ref = this;
+			try {
+				if (this.getConfig('enableOverlay'))
+					this._setOverlay(this.pp.getItemIdx());
+			} catch (e) {
+				$p.utils.log(e)
+			}
+			try {
+				if (this.getConfig('enableCompanions')) {
+					if (this._setCompanions(this.pp.getItemIdx())) {
+						this._impressionTracker();
+					}
+				}
+			} catch (e) {
+				$p.utils.log(e)
+			}
+			try {
+				if (this.getConfig('enablePreroll') && !this.getConfig('enablePostroll'))
+					this._setPreroll(this.pp.getItemIdx());
+				else if (this.getConfig('enablePostroll'))
+					this._setPostroll(this.pp.getItemIdx());
+			} catch (e) {
+				$p.utils.log(e)
+			}
+			this.pluginReady = true;
+		},
+		_setPreroll: function (itemIdx) {
+			if (itemIdx === false) return;
+			var id = this.pp.getItem(itemIdx).ID;
+			// quite ugly but...
+			if (
+				this.data[id] == null ||
+				this.data[id]._ACTIVE == true ||
+				this.data[id].linear == null ||
+				this.data[id].linear.config == null ||
+				this.data[id].linear[0] == null) return;
+			if (this._prerollCappingActive())
+				return;
+			this._prerollCappingCount();
+			this.data[id]._ACTIVE = true;
+			this.pp.setItem(this.data[id].linear, itemIdx);
+		},
+		_setPostroll: function () {
+			var id = this.pp.getItem(this.pp.getItemIdx()).ID,
+				destIdx = this.pp.getPlaylist().length;
+			// quite ugly but...
+			if (
+				this.data[id] == null ||
+				this.data[id]._ACTIVE == true ||
+				this.data[id].linear == null ||
+				this.data[id].linear.config == null ||
+				this.data[id].linear[0] == null) return;
+			this.data[id]._ACTIVE = true;
+			this.pp.setItem(this.data[id].linear, destIdx);
+		},
+		_addClick: function () {
+			var ref = this,
+				dest = '';
+			this.pp.getDC().find('.' + this.getCN('clickthrough')).remove();
+			try {
+				$.each(this.pp.getItem().config.vast.clickthrough, function (key, value) {
+					if (value == '' || value == null) return true;
+					dest = value;
+					return false;
+				})
+			} catch (e) {
+				$p.utils.log(e)
+				return;
+			}
+			try {
+				this.applyToPlayer(
+					$(document.createElement('a'))
+					.addClass('clickthrough')
+					.attr({
+					'href': dest,
+					target: '_blank'
+				})
+					.css({
+					border: '1px solid red',
+					position: 'absolute',
+					backgroundColor: '#fff',
+					opacity: 0,
+					filter: 'alpha(opacity=1)',
+					top: 0,
+					left: 0,
+					width: '100%',
+					height: '100%',
+					display: 'block',
+					zIndex: '999'
+				})
+					.click(function (evt) {
+					if (ref.pp.getState('PLAYING')) {
+						if (ref.getConfig('prerollPauseOnClick') == true) ref.pp.setPause();
+						ref._VASTTrack('clickthrough');
+						return true;
+					} else {
+						evt.preventDefault();
+						ref.pp.setPlay();
+						return false;
+					}
+				})
+					.mousemove(function (event) {
+					ref.pp._playerFocusListener(event);
+				})
+					.mouseenter(function (event) {;
+					ref.pp._playerFocusListener(event);
+				})
+					.mouseleave(function (event) {
+					ref.pp._playerFocusListener(event);
+				}), 'clickthrough')
+			} catch (e) {
+				$p.utils.log(e)
+			}
+		},
+		/********************************************************
+		 * PREROLL OPTIONS
+		 ********************************************************/
+		_prerollCappingActive: function () {
+			if (this.cookie('capping') == null)
+				return false;
+			if (this.cookie('capping') >= this.getConfig('prerollCappingLimit') && this.getConfig('prerollCappingLimit') > 0)
+				return true;
+			return false;
+		},
+		_prerollCappingCount: function () {
+			var count = (this.cookie('capping') != null) ? parseInt(this.cookie('capping')) + 1 : 1;
+			if (this.getConfig('prerollCappingLimit') > 0) {
+				if (count <= this.getConfig('prerollCappingLimit'))
+					this.cookie('capping', count, this.getConfig('prerollCappingPeriod'));
+			}
+		},
+		_handleSkipOption: function () {
+			var skipOn = this.getConfig('prerollSkip') || 0,
+				ref = this;
+			// disabled
+			if (skipOn == 0)
+				return;
+			var skipContainer = this.applyToPlayer(
+				$('<div/>')
+				.addClass('adskip')
+				.addClass('locked')
+				.css('zIndex', 1000)
+				.click(function () {
+				ref.pp.setActiveItem('next')
+			}),
+				'skip');
+			var listener = function () {
+				var maxSecs = ref.pp.getMaxPosition(),
+					left = skipOn - Math.ceil(maxSecs) + 1
+					skipContainer.html($p.utils.parseTemplate(ref.getConfig('prerollSkipHtml'), {
+						secs: left
+					}));
+				if (skipOn / 2 >= left)
+					skipContainer.addClass('active').removeClass('inactive');
+				// enable skip
+				if (maxSecs < skipOn && skipOn > 0)
+					return;
+				ref.pp.setConfig({
+					'disallowSkip': false
+				}, 0);
+				ref.pp.removeListener('time', arguments.callee);
+				skipContainer.removeClass('locked').addClass('unlocked').html(ref.getConfig('prerollUnlockedHtml'));
+			}
+			this.pp.addListener('time', listener);
+		},
+		/********************************************************
+		 * VAST TRACKING STUFF
+		 ********************************************************/
+		_impressionTracker: function () {
+			var ref = this;
+			if (this._enableTracking == false) return;
+			if ((this.getConfig('postrollCat') + "|" + this.getConfig('prerollCat')).indexOf(this.pp.getItem().cat) > -1) {
+				$.each(this._impressionTrack, function (key, value) {
+					ref._addPixel(value, 'impression');
+				})
+				this._impressionTrack = [];
+			}
+		},
+		_VASTTrack: function (event) {
+			if (this._enableTracking == false)
+				return;
+			if (this.pp.getCanPlay())
+				var item = this.pp.getItem(),
+			cfg = {},
+			ref = this;
+			try {
+				if (this.data[item.ID] != null)
+					cfg = this.data[item.ID].nonlinear.config;
+				else
+					cfg = item.config;
+				if (cfg == null) return;
+				if (cfg.vast.tracking[event] == null) return;
+				for (var i in cfg.vast.tracking[event]) {
+					this._addPixel(cfg.vast.tracking[event][i], event);
+				}
+			} catch (e) {
+				$p.utils.log(e)
+			}
+		},
+		_addPixel: function (u, name) {
+			if (u == null || u == '') return;
+			var d = new Date(),
+				url = unescape(u); //    $('<p/>').html(u).text(),
+			noCache = "ver=" + d.getTime();
+			$p.utils.log('VAST Tracking', name, url)
+			if (this.getConfig('vastNoCache') == true) {
+				if (url.indexOf('?') > -1) {
+					url = url + '&' + noCache;
+				} else {
+					url = url + '?' + noCache;
+				}
+			}
+			$('body').append(
+				$('<img/>')
+				.attr('src', url)
+				.attr('alt', name)
+				.addClass('imatrackingpixel')
+				.hide());
+		},
+		_detect_ab: function (callback) {
+			var id = $p.utils.randomId(8);
+			img = $(document.createElement("IMG"))
+				.attr({
+				src: 'http://ad-emea.doubleclick.net/textlink-ads.jpg',
+				id: 'img' + id
+			})
+				.css({
+				display: 'block',
+				border: '5px solid red',
+				width: '1px',
+				height: '1px',
+				position: 'absolute',
+				top: '-10px',
+				left: '-10px'
+			});
+			img.ready(function () {
+				setTimeout(function () {
+					if ($('#img' + id + ':visible').length == 0) {
+						try {
+							callback(true);
+						} catch (e) {
+							$p.utils.log(e)
+						}
+						return;
+					}
+					try {
+						callback(false);
+					} catch (e) {
+						$p.utils.log(e)
+					}
+				}, 500);
+			});
+			img.appendTo($('body'));
+		},
+		_getLevel: function (type) {
+			return this._companionTypes(type);
+		},
+		/* ugly "hotfix" */
+		_companionTypes: function (type) {
+			var types = this.getConfig('resourcePriority');
+			for (var i in types) {
+				if (types[i] == type) return i;
+			}
+			return false;
+		},
+		_isAd: function () {
+			return this.pp.getDC().hasClass('ad') || false;
+		}
+	}
+});
+/*
+ * Projekktor II Plugin: Logo
+ * VERSION: 1.0.0
+ * DESC: Provides a standard display for cover-art, video or html content
+ * features startbutton, logo-overlay and buffering indicator
+ * Copyright 2010-2012 Sascha Kluger, Spinning Airwhale Media, http://www.spinningairwhale.com
+ *
+ * under GNU General Public License
+ * http://www.projekktor.com/license/
+ */
+var projekktorLogo = function () {};
+jQuery(function ($) {
+  projekktorLogo.prototype = {
+
+    logo: null,
+
+    config: {
+
+      /* Plugin: Logo - URL to your logo file */
+      image: false,
+
+      /* Plugin: Logo - Seconds to be played back before logo fades in, 0=instantly */
+      delay: 1,
+
+      /* if set clicking the logo will trigger the given callback function */
+      logoClick: false
+
+    },
+
+    /* triggered on plugin-instanciation */
+    initialize: function () {
+      var ref = this;
+
+      this.logo = this.applyToPlayer(
+      $('<img/>')
+        .addClass('logo')
+        .addClass('inactive')
+        .attr('src', $p.utils.imageDummy()))
+
+      this.pluginReady = true;
+    },
+
+    /*****************************************
+        EVENT HANDLERS
+    *****************************************/
+
+    stateHandler: function (state) {
+      switch (state) {
+        case 'ERROR':
+          this.logo.addClass('inactive').removeClass('active');
+          break;
+      }
+    },
+
+    itemHandler: function () {
+      this.setActive(
+      this.logo.attr('src', $p.utils.imageDummy())
+        .unbind(), false);
+    },
+
+    timeHandler: function () {
+
+      // manage delayed logo fade:
+      if (this.getConfig('image') == false) return;
+      if (this.pp.getIsMobileClient('android')) return;
+
+      // get required player data
+      var timeIndex = this.pp.getPosition(),
+        itemDuration = this.pp.getDuration(),
+        delay = this.getConfig('delay'),
+        ref = this;
+
+      // ON
+      // fade logo in after <this.config.logoDelay> seconds of playback
+      if (!this.getActive(this.logo) && timeIndex + delay + 1 < itemDuration && !this._currentItemIsAd()) {
+        if (timeIndex > delay && itemDuration > (delay * 2)) {
+          this.logo.css({
+            cursor: (this.getConfig('logoClick') != false) ? 'pointer' : 'normal'
+          })
+            .unbind()
+            .bind('touchstart', function () {
+            ref.clickHandler('logo')
+          })
+            .error(function () {
+            $(this).attr('src', $p.utils.imageDummy());
+            ref.setActive($(this), true);
+          })
+            .load(function () {
+            ref.setActive(ref.logo, true);
+          })
+            .click(function () {
+            ref.clickHandler('logo')
+          })
+            .attr('src', this.getConfig('image'))
+        }
+      }
+
+      // OFF
+      // fade logo out <this.config.logoDelay> seconds before end of item
+      if (this.getActive(this.logo)) {
+        if (timeIndex + delay + 1 > itemDuration) {
+          this.setActive(this.logo, false);
+        }
+      }
+    },
+
+    _currentItemIsAd: function () {
+      var currentItem = this.pp.getItem('current');
+      if (currentItem && currentItem.config && currentItem.config.className === 'ad') {
+        return true;
+      }
+      return false;
+    }
+  }
 });

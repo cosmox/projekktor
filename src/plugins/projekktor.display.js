@@ -8,132 +8,125 @@
  * under GNU General Public License
  * http://www.projekktor.com/license/
  */
-var projekktorDisplay = function () {};
-jQuery(function ($) {
-    projekktorDisplay.prototype = {
+var projekktorDisplay = function(){};
+jQuery(function($) {
+projekktorDisplay.prototype = {
 
-        logo: null,
-        logoIsFading: false,
+    logo: null,
+    logoIsFading: false,
 
-        display: null,
+    display: null,
 
-        displayClicks: 0,
+    displayClicks: 0,
 
-        buffIcn: null,
-        buffIcnSprite: null,
-        bufferDelayTimer: null,
+    buffIcn: null,
+    buffIcnSprite: null,
+    bufferDelayTimer: null,
 
-        _controlsDims: null,
+    _controlsDims: null,
 
-        config: {
+    config: {
+        displayClick: {callback: 'setPlayPause', value: null},
+        displayPlayingClick: {callback: 'setPlayPause', value: null},
+        displayDblClick: {callback: null, value: null},
 
-            displayClick: {
-                callback: 'setPlayPause',
-                value: null
-            },
-            displayPlayingClick: {
-                callback: 'setPlayPause',
-                value: null
-            },
-            displayDblClick: {
-                callback: null,
-                value: null
-            },
+        staticControls:     false,
 
-            staticControls: false,
+        /* time to delay buffering-icon-overlay once "waiting" event has been triggered */
+        bufferIconDelay:    1000,
 
-            /* time to delay buffering-icon-overlay once "waiting" event has been triggered */
-            bufferIconDelay: 1000,
+        /* if set the indicator animation is tinkered from a cssprite - must be horizontal */
+        spriteUrl:          '',
+        spriteWidth:        50,
+        spriteHeight:       50,
+        spriteTiles:        25,
+        spriteOffset:       1,
+        spriteCountUp:      false
+    },
 
-            designMode: false,
 
-            /* if set the indicator animation is tinkered from a cssprite - must be horizontal */
-            spriteUrl: '',
-            spriteWidth: 50,
-            spriteHeight: 50,
-            spriteTiles: 25,
-            spriteOffset: 1,
-            spriteCountUp: false
+    /* triggered on plugin-instanciation */
+    initialize: function() {
 
-        },
+    // create the display container itself
+    this.display = this.applyToPlayer($('<div/>'));
 
-        /* triggered on plugin-instanciation */
-        initialize: function () {
-            // create the display container itself
-            this.display = this.applyToPlayer($('<div/>'));
+    // create the startbutton
+    this.startButton =  this.applyToPlayer( $('<div/>').addClass('start'), 'startbtn');
 
-            // create the startbutton
-            this.startButton = this.applyToPlayer($('<div/>').addClass('start'), 'startbtn');
+    // create buffericon
+    this.buffIcn = this.applyToPlayer( $('<div/>').addClass('buffering'), 'buffericn');
 
-            // create buffericon
-            this.buffIcn = this.applyToPlayer($('<div/>').addClass('buffering'), 'buffericn');
+    this.imaContainer = this.applyToPlayer( $('<div/>').addClass('ima'), 'ima');
 
-            this.imaContainer = this.applyToPlayer($('<div/>').addClass('ima'), 'ima');
 
-            this.setActive();
 
-            // add spritelayer to buffericon (if required)
-            if (this.config.spriteUrl != '') {
-                this.buffIcnSprite = $('<div/>')
-                    .appendTo(this.buffIcn)
-                    .css({
-                    width: this.config.spriteWidth,
-                    height: this.config.spriteHeight,
-                    marginLeft: ((this.buffIcn.width() - this.config.spriteWidth) / 2) + "px",
-                    marginTop: ((this.buffIcn.height() - this.config.spriteHeight) / 2) + "px",
-                    backgroundColor: 'transparent',
-                    backgroundImage: 'url(' + this.config.spriteUrl + ')',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: '0 0'
-                })
-                    .addClass('inactive')
-            }
+        this.setActive();
 
-            // create a dedicated media container (if none exists)
-            this.pp.getMediaContainer();
-            /*
+    // add spritelayer to buffericon (if required)
+    if (this.config.spriteUrl!=='') {
+        this.buffIcnSprite = $('<div/>')
+            .appendTo(this.buffIcn)
+            .css({
+                width: this.config.spriteWidth,
+                height: this.config.spriteHeight,
+                marginLeft: ((this.buffIcn.width()-this.config.spriteWidth) / 2)+"px",
+                marginTop: ((this.buffIcn.height()-this.config.spriteHeight) / 2)+"px",
+                backgroundColor: 'transparent',
+                backgroundImage: 'url('+this.config.spriteUrl+')',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: '0 0'
+            })
+            .addClass('inactive');
+        }
+
+    // create a dedicated media container (if none exists)
+    this.pp.getMediaContainer();
+        /*
         this.display
             .append(this.startButton)
             .append(this.buffIcn)
 */
-            this.pluginReady = true;
-        },
+        this.pluginReady = true;
+    },
 
-        /*****************************************
+
+
+    /*****************************************
         EVENT HANDLERS
     *****************************************/
-        displayReadyHandler: function () {
-            var ref = this;
+    displayReadyHandler: function() {
+        var ref = this;
 
-            // the startbutton
-            this.startButton.unbind().click(function () {
-                ref.pp.setPlay();
-            });
+        // the startbutton
+            this.startButton.unbind().click(function(){
+            ref.pp.setPlay();
+        });
 
-            this.hideStartButton();
-        },
+        this.hideStartButton();
+    },
 
-        syncingHandler: function () {
-            this.showBufferIcon();
-            if (this.pp.getState('IDLE'))
+    syncingHandler: function() {
+        this.showBufferIcon();
+        if (this.pp.getState('IDLE'))
                 this.hideStartButton();
-        },
+    },
 
-        readyHandler: function () {
-            this.hideBufferIcon();
-            if (this.pp.getState('IDLE'))
+    readyHandler: function() {
+        this.hideBufferIcon();
+        if (this.pp.getState('IDLE'))
                 this.showStartButton();
-        },
+    },
 
-        bufferHandler: function (state) {
-            if (!this.pp.getState('PLAYING') && !this.pp.getState('AWAKENING'))
-                return;
-            if (state == 'EMPTY') this.showBufferIcon();
-            else this.hideBufferIcon();
-        },
+    bufferHandler: function(state) {
+        if (!this.pp.getState('PLAYING') && !this.pp.getState('AWAKENING'))
+            return;
+        if (state=='EMPTY') this.showBufferIcon();
+        else this.hideBufferIcon();
+    },
 
-        stateHandler: function (state) {
-            switch (state) {
+    stateHandler: function(state) {
+        switch(state) {
 
             case 'IDLE':
                 clearTimeout(this._cursorTimer);
@@ -159,177 +152,174 @@ jQuery(function ($) {
                 this.hideStartButton();
                 break;
 
-            case 'ERROR':
-                this.hideBufferIcon();;
-                this.hideStartButton();
-                break;
-
             case 'COMPLETED':
-                this.hideBufferIcon();;
+                this.hideBufferIcon();
                 break;
 
             default:
                 this.hideStartButton();
-            }
-        },
+        }
+    },
 
-        startHandler: function () {
-            this.mousemoveHandler();
-        },
+    errorHandler: function() {
+        this.hideBufferIcon();
+        this.hideStartButton();
+    },
 
-        stoppedHandler: function () {
-            this.hideBufferIcon();
-        },
+    startHandler: function() {
+        this.mousemoveHandler();
+    },
 
-        scheduleLoadingHandler: function () {
-            this.hideStartButton();
-            this.showBufferIcon();
-        },
+    stoppedHandler: function() {
+        this.hideBufferIcon();
+    },
 
-        scheduledHandler: function () {
-            if (!this.getConfig('autoplay')) {
-                this.showStartButton();
-            }
+    scheduleLoadingHandler: function() {
+        this.hideStartButton();
+        this.showBufferIcon();
+    },
 
-            this.hideBufferIcon();
-        },
+    scheduledHandler: function() {
+        if (!this.getConfig('autoplay')) {
+            this.showStartButton();
+        }
+        this.hideBufferIcon();
+    },
 
-        plugineventHandler: function (data) {
-            if (data.PLUGIN == 'controlbar' && data.EVENT == 'show' && this.getConfig('staticControls')) {
-                var pctCtrl = data.height * 100 / this.pp.getDC().height();
-                this.display.height((100 - pctCtrl) + "%").data('sc', true);
-            }
-        },
+    plugineventHandler: function(data) {
+        if (data.PLUGIN=='controlbar' && data.EVENT=='show' && this.getConfig('staticControls')) {
+            var pctCtrl = data.height * 100 / this.pp.getDC().height();
+            this.display.height( (100 - pctCtrl) + "%").data('sc', true);
+        }
+    },
 
-        qualityChangeHandler: function () {
-            this.hideBufferIcon();
-        },
+    qualityChangeHandler: function() {
+        this.hideBufferIcon();
+    },
 
-        /*****************************************,
+    /*****************************************,
         DISPLAY: Mouse Handling
     *****************************************/
-        mousemoveHandler: function (evt) {
-            var dest = this.display;
-            if (this.pp.getState('IDLE')) {
-                dest.css('cursor', 'pointer');
-                return;
-            }
-            dest.css('cursor', 'auto');
-            clearTimeout(this._cursorTimer);
-            if ("AWAKENING|ERROR|PAUSED".indexOf(this.pp.getState()) == -1)
-                this._cursorTimer = setTimeout(function () {
-                    dest.css('cursor', 'none');
-                }, 3000);
-        },
+    mousemoveHandler: function(evt) {
+        var dest = this.display;
+        if (this.pp.getState('IDLE')) {
+            dest.css('cursor', 'pointer');
+            return;
+        }
+        dest.css('cursor', 'auto');
+        clearTimeout(this._cursorTimer);
+        if ("AWAKENING|ERROR|PAUSED".indexOf(this.pp.getState())==-1)
+            this._cursorTimer=setTimeout(function(){dest.css('cursor', 'none');}, 3000);
+    },
 
-        mousedownHandler: function (evt) {
+    mousedownHandler: function(evt) {
+        var ref = this;
 
-            var ref = this;
+        if( ($(evt.target).attr('id') || '').indexOf('_media')==-1)
+            return;
 
-            if (($(evt.target).attr('id') || '').indexOf('_media') == -1)
-                return;
+        clearTimeout(this._cursorTimer);
+        this.display.css('cursor', 'auto');
 
-            clearTimeout(this._cursorTimer);
-            this.display.css('cursor', 'auto');
+        if(evt.which!=1)
+            return;
 
-            if (evt.which != 1)
-                return;
-
-            switch (this.pp.getState()) {
+        switch(this.pp.getState()) {
             case 'ERROR':
-                this.pp.setConfig({
-                    disallowSkip: false
-                });
+                this.pp.setConfig({disallowSkip: false});
                 this.pp.setActiveItem('next');
                 return;
             case 'IDLE':
                 this.pp.setPlay();
                 return;
-            }
+        }
 
-            if (this.pp.getHasGUI() == true)
-                return;
-
-            this.displayClicks++;
-
-            this.pp._promote('displayClick');
-
-            if (this.displayClicks > 0) {
-                setTimeout(function () {
-                    if (ref.displayClicks == 1) {
-                        if (ref.pp.getState() == 'PLAYING')
-                            ref.clickHandler('displayPlaying');
-                        else
-                            ref.clickHandler('display');
-                    } else if (ref.displayClicks == 2) {
-                        ref.clickHandler('displayDbl');
-                    }
-                    ref.displayClicks = 0;
-                }, 250);
-            }
+        if (this.pp.getHasGUI()===true)
             return;
-        },
 
-        /*****************************************
+        this.displayClicks++;
+
+        this.pp._promote('displayClick');
+
+        if (this.displayClicks > 0) {
+            setTimeout(
+            function(){
+                if(ref.displayClicks == 1) {
+                if (ref.pp.getState()=='PLAYING')
+                    ref.clickHandler('displayPlaying');
+                else
+                    ref.clickHandler('display');
+                } else if(ref.displayClicks == 2) {
+                ref.clickHandler('displayDbl');
+                }
+                ref.displayClicks = 0;
+            }, 250
+            );
+        }
+        return;
+    },
+
+
+    /*****************************************
         STARTBUTTON
     *****************************************/
-        showStartButton: function () {
-            this.startButton.addClass('active').removeClass('inactive');
-        },
+    showStartButton: function() {
+        this.startButton.addClass('active').removeClass('inactive');
+    },
 
-        hideStartButton: function () {
-            this.startButton.addClass('inactive').removeClass('active');
-        },
+    hideStartButton: function() {
+        this.startButton.addClass('inactive').removeClass('active');
+    },
 
-        /*****************************************
+
+    /*****************************************
         BUFFERICON: fader and animator
     *****************************************/
-        hideBufferIcon: function () {
-            var ref = this;
-            clearTimeout(this.bufferDelayTimer);
-            this.buffIcn.addClass('inactive').removeClass('active');
-        },
+    hideBufferIcon: function() {
+        clearTimeout(this.bufferDelayTimer);
+        this.buffIcn.addClass('inactive').removeClass('active');
+    },
 
-        showBufferIcon: function (instant) {
-            var ref = this;
+    showBufferIcon: function(instant) {
+        var ref=this;
 
-            clearTimeout(this.bufferDelayTimer);
+        clearTimeout(this.bufferDelayTimer);
 
-            if (this.pp.getHasGUI())
-                return;
+        if (this.pp.getHasGUI())
+            return;
 
-            if ((this.pp.getModel() === 'YTAUDIO' || this.pp.getModel() === 'YTVIDEO') && !this.pp.getState('IDLE'))
-                instant = true;
+        if ( (this.pp.getModel()==='YTAUDIO' || this.pp.getModel()==='YTVIDEO') && !this.pp.getState('IDLE'))
+            instant=true;
 
-            if (instant != true && this.getConfig('bufferIconDelay') > 0) {
-                this.bufferDelayTimer = setTimeout(function () {
-                    ref.showBufferIcon(true);
-                }, this.getConfig('bufferIconDelay'));
-                return;
-            }
-
-            if (this.buffIcn.hasClass('active')) return;
-            this.buffIcn.addClass('active').removeClass('inactive');
-
-            if (ref.buffIcnSprite == null) return;
-            var startOffset = (ref.config.spriteCountUp == true) ? 0 : (ref.config.spriteHeight + ref.config.spriteOffset) * (ref.config.spriteTiles - 1),
-                spriteOffset = startOffset;
-            ref.buffIcnSprite.addClass('active').removeClass('inactive');
-            (function () {
-
-                if (!ref.buffIcn.is(':visible')) return;
-                ref.buffIcnSprite.css('backgroundPosition', '0px -' + spriteOffset + "px")
-
-                if (ref.config.spriteCountUp == true)
-                    spriteOffset += ref.config.spriteHeight + ref.config.spriteOffset;
-                else
-                    spriteOffset -= ref.config.spriteHeight + ref.config.spriteOffset;
-
-                if (spriteOffset > (startOffset + ref.config.spriteHeight) * ref.config.spriteTiles || spriteOffset < ref.config.spriteOffset) spriteOffset = startOffset;
-
-                setTimeout(arguments.callee, 60);
-            })();
-
+        if (instant!==true && this.getConfig('bufferIconDelay')>0) {
+            this.bufferDelayTimer=setTimeout(function(){ref.showBufferIcon(true);},this.getConfig('bufferIconDelay'));
+            return;
         }
+
+        if (this.buffIcn.hasClass('active') ) return;
+        this.buffIcn.addClass('active').removeClass('inactive');
+
+        if (ref.buffIcnSprite==null) return;
+
+        var startOffset=(ref.config.spriteCountUp===true) ? 0 : (ref.config.spriteHeight + ref.config.spriteOffset)*(ref.config.spriteTiles-1),
+            spriteOffset = startOffset;
+        ref.buffIcnSprite.addClass('active').removeClass('inactive');
+        (function() {
+
+            if (!ref.buffIcn.is(':visible')) return;
+            ref.buffIcnSprite.css('backgroundPosition', '0px -'+spriteOffset+"px")
+
+            if (ref.config.spriteCountUp===true)
+                spriteOffset += ref.config.spriteHeight + ref.config.spriteOffset;
+            else
+                spriteOffset -= ref.config.spriteHeight + ref.config.spriteOffset;
+
+            if (spriteOffset > (startOffset+ref.config.spriteHeight)*ref.config.spriteTiles || spriteOffset<ref.config.spriteOffset) spriteOffset = startOffset;
+
+
+            setTimeout(arguments.callee,60);
+        })();
+
     }
+}
 });

@@ -235,7 +235,7 @@ jQuery(function ($) {
 				)
 			}
 
-			return $('#' + domOptions.id)[0];
+			return $('#' + domOptions.id);
 		},
 
 		ieVersion: function () {
@@ -451,10 +451,72 @@ jQuery(function ($) {
 			}
 			return test_props_all('animationName');
 		},
+        
+        versionCompare: function (installed, required) {
+            var a = installed.split('.'),
+                b = required.split('.');
+    
+            for (var i = 0; i < a.length; ++i) {
+                a[i] = Number(a[i]);
+            }
+            for (var i = 0; i < b.length; ++i) {
+                b[i] = Number(b[i]);
+            }
+            if (a.length == 2) {
+                a[2] = 0;
+            }
+    
+            if (a[0] > b[0]) return true;
+            if (a[0] < b[0]) return false;
+    
+            if (a[1] > b[1]) return true;
+            if (a[1] < b[1]) return false;
+    
+            if (a[2] > b[2]) return true;
+            if (a[2] < b[2]) return false;
+    
+            return true;
+        },
 
+        /**
+         * serializes a simple object to a JSON formatted string.
+         * Note: stringify() is different from jQuery.serialize() which URLEncodes form elements
+         * CREDITS: http://blogs.sitepointstatic.com/examples/tech/json-serialization/json-serialization.js
+         */        
+        stringify: function(obj) {         
+            if ("JSON" in window) {
+                return JSON.stringify(obj);
+            }
+    
+            var t = typeof (obj);
+            if (t != "object" || obj === null) {
+                // simple data type
+                if (t == "string") obj = '"' + obj + '"';
+    
+                return String(obj);
+            } else {
+                // recurse array or object
+                var n, v, json = [], arr = (obj && obj.constructor == Array);
+    
+                for (n in obj) {
+                    v = obj[n];
+                    t = typeof(v);
+                    if (obj.hasOwnProperty(n)) {
+                        if (t == "string") {
+                            v = '"' + v + '"';
+                        } else if (t == "object" && v !== null){
+                            v = $p.utils.stringify(v);
+                        }
+    
+                        json.push((arr ? "" : '"' + n + '":') + String(v));
+                    }
+                }
+    
+                return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+            }
+        },
+        
 		logging: false
-
-
 	}
 });
 
@@ -463,16 +525,26 @@ jQuery(function ($) {
 
 	$p.platforms = {
 
-		/*
-	VLC: function() {
-                        return 3;
-            console.log("VLC", navigator.plugins)
-	    try {
-		return navigator.plugins['VLC Multimedia Plug-in'].version.match(/^,?(.+),?$/)[1].match(/\d+/g)[0]
-	    } catch(e) {}
-	    return '0,0,0'.match(/\d+/g)[0];
-	},
-        */
+        VLC: function() {
+            if (navigator.plugins && (navigator.plugins.length > 0)) {
+                for(var i=0;i<navigator.plugins.length;++i) {
+                    if (navigator.plugins[i].name.indexOf("VLC") != -1) {
+                        if (navigator.plugins[i].version!=null)
+                            return navigator.plugins[i].version || "0";
+                        if (navigator.plugins[i].description!=null)
+                            if (navigator.plugins[i].description.match(/\d{1,}\.\d{1,}\.\d{1,}/i)[0])
+                                return navigator.plugins[i].description.match(/\d{1,}\.\d{1,}\.\d{1,}/i)[0];
+                    }
+                }
+            }
+            else {
+                try {
+                    new ActiveXObject("VideoLAN.VLCPlugin.2");
+                    return "0"; // no, please, no
+                } catch (err) {}
+            }        
+            return "0";
+        },
 
 		/* returns the version of the flash player installed for user´s browser. returns 0 on none. */
 		FLASH: function (typ) {
@@ -484,61 +556,59 @@ jQuery(function ($) {
 					try {
 						axo.AllowScriptAccess = 'always';
 					} catch (e) {
-						return '6,0,0';
+						return '6.0.0';
 					}
 				} catch (e) {}
-				return new ActiveXObject('ShockwaveFlash.ShockwaveFlash').GetVariable('$version').replace(/\D+/g, ',').match(/^,?(.+),?$/)[1].match(/\d+/g)[0];
+				return (new ActiveXObject('ShockwaveFlash.ShockwaveFlash').GetVariable('$version').replace(/\D+/g, ',').match(/^,?(.+),?$/)[1].match(/\d+/g)[0]).toString();
 			} catch (e) {
 				try {
 					if (navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin) {
-						return (navigator.plugins["Shockwave Flash 2.0"] || navigator.plugins["Shockwave Flash"]).description.replace(/\D+/g, ",").match(/^,?(.+),?$/)[1].match(/\d+/g)[0];
+						return ((navigator.plugins["Shockwave Flash 2.0"] || navigator.plugins["Shockwave Flash"]).description.replace(/\D+/g, ",").match(/^,?(.+),?$/)[1].match(/\d+/g)[0] ).toString()
 					}
 				} catch (e) {}
 			}
-			return 0;
+			return "0";
 		},
 
 		ANDROID: function (type) {
 			try {
-				return parseInt(navigator.userAgent.toLowerCase().match(/android\s+(([\d\.]+))?/)[1]);
-			} catch (e) {
-				return 0;
-			}
+				return (navigator.userAgent.toLowerCase().match(/android\s+(([\d\.]+))?/)[1]).toString();
+			} catch (e) {}
+            return "0";
 		},
 
 		IOS: function (type) {
 			var agent = navigator.userAgent.toLowerCase(),
 				start = agent.indexOf('os ');
 			if ((agent.indexOf('iphone') > -1 || agent.indexOf('ipad') > -1) && start > -1) {
-				return parseInt(agent.substr(start + 3, 3).replace('_', '.'));
+				return (agent.substr(start + 3, 3).replace('_', '.')).toString()
 			}
-			return 0;
+			return "0";
 		},
 
 		NATIVE: function (type) {
 			try {
-				var testObject = document.createElement((type.indexOf('video') > -1) ? 'video' : 'audio');
-				if (testObject.canPlayType != null) {
-					if (type == '*')
-						return 1;
-
+				var testObject = $((type.indexOf('video')>-1) ? '<video/>' : '<audio/>').get(0);
+				if (testObject.canPlayType!=null) {
+					if (type==='*') {
+						return "1";
+					}
 					switch (testObject.canPlayType(type)) {
-					case "no":
-					case "":
-						return 0;
-						// case "maybe":			
+                        case "no":
+                        case "":
+                            return "0";
+                        // case "maybe":			
 						// case "probably":
-					default:
-						return 1;
+                        default:
+                        	return "1";
 					}
 				}
-			} catch (e) {
-				return 0;
-			}
+			} catch (e) {}
+            return "0";
 		},
 
 		BROWSER: function (type) {
-			return 1;
+			return "1";
 		}
 	}
 });
